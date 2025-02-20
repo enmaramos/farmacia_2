@@ -7,10 +7,14 @@ include_once "Ctrl/head.php";
 // Incluir el archivo de conexión
 include('../pages/Cnx/conexion.php');
 
+// Verificar si se ha seleccionado un filtro de estado
+$estado = isset($_GET['estado']) ? intval($_GET['estado']) : 1; // Por defecto, mostrar solo usuarios activos
+
 // Consulta SQL para obtener los usuarios y el nombre del rol
 $sql = "SELECT usuarios.*, roles.Nombre_Rol 
         FROM usuarios 
-        JOIN roles ON usuarios.IdRol = roles.ID_Rol"; // Relación entre usuarios.IdRol y roles.ID_Rol
+        JOIN roles ON usuarios.IdRol = roles.ID_Rol
+        WHERE usuarios.estado_usuario = $estado";
 $result = $conn->query($sql);
 ?>
 
@@ -123,15 +127,26 @@ include_once "Ctrl/menu.php";
            </style>
 
 <body>
-<!--  TABLE JQUERY COMPLETA -->
-<div class="container">
+
+    
+
+        <!-- TABLA DE USUARIOS -->
+        <div class="container">
     <div class="card p-3 shadow-sm">
         <div class="d-flex justify-content-between mb-3">
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarUsuario">
                 <i class="fas fa-user-plus"></i> Agregar
             </button>
             <h3 class="text-center flex-grow-1">Lista de usuarios</h3>
+            <div>
+                <label for="filtroEstado" class="me-2">Filtrar:</label>
+                <select id="filtroEstado" class="form-select d-inline-block w-auto">
+                    <option value="1" <?= $estado == 1 ? 'selected' : '' ?>>Activos</option>
+                    <option value="0" <?= $estado == 0 ? 'selected' : '' ?>>Dados de Baja</option>
+                </select>
+            </div>
         </div>
+
         <table id="empleadosTable" class="display text-center">
             <thead>
                 <tr>
@@ -145,29 +160,36 @@ include_once "Ctrl/menu.php";
                 </tr>
             </thead>
             <tbody>
-                <?php
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $row['ID_Usuario'] . "</td>";
-                        echo "<td>" . $row['Nombre_Usuario'] . "</td>";
-                        echo "<td>" . $row['Email'] . "</td>";
-                        echo "<td>" . $row['Contraseña'] . "</td>";
-                        echo "<td>" . $row['Nombre_Rol'] . "</td>";
-                        echo "<td class='avatar-column'><img src='uploads/" . $row['Imagen'] . "' alt='Avatar'></td>";
-                        echo "<td class='btn-actions'>
-                                  <button class='btn btn-success VerUsuarioBtn' data-bs-toggle='modal' data-bs-target='#modalVerUsuario' data-id='" . $row['ID_Usuario'] . "'><i class='fas fa-edit'></i></button>
-                                  <a href='' class='btn btn-warning editarUsuarioBtn' data-bs-toggle='modal' data-bs-target='#modalEditarUsuario'  data-id='" . $row['ID_Usuario'] . "'><i class='fas fa-edit'></i></a>
-                                 <button class='btn btn-danger bajaUsuarioBtn' data-id='" . $row['ID_Usuario'] . "'><i class='fas fa-trash-alt'></i></button>
-
-
-                              </td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='7'>No hay usuarios disponibles.</td></tr>";
-                }
-                ?>
+                <?php while ($row = $result->fetch_assoc()) { ?>
+                    <tr>
+                        <td><?= $row['ID_Usuario'] ?></td>
+                        <td><?= $row['Nombre_Usuario'] ?></td>
+                        <td><?= $row['Email'] ?></td>
+                        <td><?= $row['Contraseña'] ?></td>
+                        <td><?= $row['Nombre_Rol'] ?></td>
+                        <td class='avatar-column'><img src='uploads/<?= $row['Imagen'] ?>' alt='Avatar'></td>
+                        <td class='btn-actions'>
+                            <?php if ($row['estado_usuario'] == 1) { ?>
+                                <button class='btn btn-success VerUsuarioBtn' data-bs-toggle='modal' data-bs-target='#modalVerUsuario' data-id='<?= $row['ID_Usuario'] ?>'>
+                                    <i class='fas fa-eye'></i>
+                                </button>
+                                <a href='' class='btn btn-warning editarUsuarioBtn' data-bs-toggle='modal' data-bs-target='#modalEditarUsuario' data-id='<?= $row['ID_Usuario'] ?>'>
+                                    <i class='fas fa-edit'></i>
+                                </a>
+                                <button class='btn btn-danger bajaUsuarioBtn' data-id='<?= $row['ID_Usuario'] ?>'>
+                                    <i class='fas fa-trash-alt'></i>
+                                </button>
+                            <?php } else { ?>
+                                <button class='btn btn-success VerUsuarioBtn' data-bs-toggle='modal' data-bs-target='#modalVerUsuario' data-id='<?= $row['ID_Usuario'] ?>'>
+                                    <i class='fas fa-eye'></i>
+                                </button>
+                                <button class='btn btn-primary reactivarUsuarioBtn' data-id='<?= $row['ID_Usuario'] ?>'>
+                                    <i class='fas fa-user-check'></i>
+                                </button>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                <?php } ?>
             </tbody>
         </table>
     </div>
@@ -199,7 +221,7 @@ include_once "Ctrl/menu.php";
                     <!-- Contraseña -->
                     <div class="mb-3">
                         <label for="contraseñaUsuario" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" name="contraseñaUsuario" id="contraseñaUsuario" required>
+                        <input type="" class="form-control" name="contraseñaUsuario" id="contraseñaUsuario" required>
                     </div>
 
                     <!-- Teléfono -->
@@ -357,8 +379,9 @@ $conn->close();
   
 <script src="../js/editar_usuario.js?2345"></script>
 <script src="../js/Ver_usuario.js?1234"></script>
+<script src="../js/mostar_filtro.js?1234"></script>
 <script src="../js/baja_usuario.js?1234"></script>
-
+<script src="../js/reactivar_usuario.js?1234"></script>
 
 <?php
 

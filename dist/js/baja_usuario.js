@@ -5,14 +5,19 @@ $(document).ready(function() {
         if (confirm('¿Estás seguro de que deseas dar de baja a este usuario?')) {
             $.ajax({
                 type: 'POST',
-                url: '../pages/Ctrl/baja_usuario.php', // Archivo PHP que maneja la baja
+                url: '../pages/Ctrl/baja_usuario.php', // Ruta del archivo PHP
                 data: { id_usuario: userId },
+                dataType: 'json',
                 success: function(response) {
-                    alert(response); // Mostrar mensaje de respuesta
-                    location.reload(); // Recargar la página para actualizar la tabla
+                    if (response.success) {
+                        alert(response.message);
+                        location.reload(); // Recargar la página
+                    } else {
+                        alert("Error: " + response.message);
+                    }
                 },
                 error: function(xhr, status, error) {
-                    console.error("Error en la solicitud AJAX: ", status, error);
+                    console.error("Error en AJAX: ", status, error);
                     alert("Hubo un error al intentar dar de baja al usuario.");
                 }
             });

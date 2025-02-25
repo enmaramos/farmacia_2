@@ -13,35 +13,31 @@
                                 <p>INICIO</p>
                             </a> </li>
 
-                            <li class="nav-item"> <a href="./clientes.php" class="nav-link"> <i class="fa-solid fa-users"></i>
-                                <p>CLIENTE</p>
-                            </a> </li>
-
-                            <li class="nav-item"> <a href="./categoria.php" class="nav-link"> <i class="fa-solid fa-layer-group"></i>
-                            <p>CATEGORIAS</p>
-                        </a> </li>
-
-                        <li class="nav-item"> <a href="./proveedor.php" class="nav-link"> <i class="fa-solid fa-truck-field"></i>
-                            <p>PROVEEDOR</p>
-                        </a> </li>
-
-                        <li class="nav-item"> <a href="./medicamento.php" class="nav-link"> <i class="fa-solid fa-tablets"></i>
-                            <p>MEDICAMENTOS</p>
-                        </a> </li>
-
-                        <li class="nav-item"> <a href="./caja.php" class="nav-link"> <i class="fa-solid fa-cash-register"></i>
-                                <p>CAJA</p>
-                            </a> </li>
-
-                            <li class="nav-item"> <a href="./compra.php" class="nav-link"> <i class="fa-solid fa-cart-shopping"></i>
-                                <p>COMPRAS</p>
-                            </a> </li>
-                       
-
-                     <li class="nav-item"> <a href="./Almacen.html" class="nav-link"> <i class="fa-solid fa-box-open"></i>
-                                <p>AlMACEN</p>
-                            </a> </li>
-
+                            <li class="nav-item has-treeview"> 
+                            <a href="#" class="nav-link"> 
+                                <i class="fa-solid fa-users"></i>
+                                <p>
+                                    CLIENTE
+                                    <i class="right fas fa-angle-left"></i> <!-- Icono de flecha -->
+                                </p>
+                            </a> 
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="./clientes_registro.php" class="nav-link">
+                                        <i class="fa-solid fa-user-plus"></i>
+                                        <p>Registrar Cliente</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="./clientes_lista.php" class="nav-link">
+                                        <i class="fa-solid fa-list"></i>
+                                        <p>Lista de Clientes</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        
                             <li class="nav-item"> <a href="./usuarios.php" class="nav-link"> 
                                 <p>Usuarios</p>
                             </a> </li>
+                           

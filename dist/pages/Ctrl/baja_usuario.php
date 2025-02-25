@@ -1,3 +1,4 @@
+
 <?php
 include '../Cnx/conexion.php'; // Asegúrate de que este archivo contiene la conexión correcta
 

@@ -1,17 +1,15 @@
 $(document).ready(function() {
-    var isRequestInProgress = false; // Flag para evitar múltiples solicitudes
-
     $(document).on('click', '.reactivarUsuarioBtn', function() {
-        if (isRequestInProgress) return; // Evitar múltiples clics
-
         var userId = $(this).data('id'); // Obtener ID del usuario
+        
+        if (!userId) {
+            alert("Error: ID de usuario no válido.");
+            return;
+        }
 
         if (confirm('¿Estás seguro de que deseas reactivar a este usuario?')) {
-            var $btn = $(this); // Referencia al botón para prevenir múltiples clics
-            isRequestInProgress = true; // Establecer el flag como verdadero
-
-            // Deshabilitar el botón para evitar clics repetidos
-            $btn.prop('disabled', true);
+            var $btn = $(this); // Guardar referencia al botón
+            $btn.prop('disabled', true); // Deshabilitar el botón para evitar múltiples clics
 
             $.ajax({
                 type: 'POST',
@@ -20,19 +18,19 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        alert(response.message); // Mostrar mensaje de éxito
-                        location.reload(); // Recargar la página
+                        setTimeout(function() { // Esperar un poco antes de recargar
+                            alert(response.message);
+                            location.reload(); // Recargar la página después de cerrar el alert
+                        }, 300);
                     } else {
-                        alert("Error: " + response.message); // Mostrar mensaje de error
+                        alert("Error: " + response.message);
+                        $btn.prop('disabled', false); // Habilitar el botón en caso de error
                     }
                 },
                 error: function(xhr, status, error) {
                     console.error("Error en AJAX: ", status, error);
                     alert("Hubo un error al intentar reactivar al usuario.");
-                },
-                complete: function() {
-                    $btn.prop('disabled', false); // Habilitar el botón nuevamente
-                    isRequestInProgress = false; // Restaurar el flag para permitir futuras solicitudes
+                    $btn.prop('disabled', false); // Habilitar el botón en caso de error
                 }
             });
         }

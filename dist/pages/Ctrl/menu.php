@@ -9,35 +9,34 @@
                         <!-----------------------------------------------------------INICIO DEL MENU------------------------------------------------------------------------------>
                      
                         <!--------------------------------------------------------LO QUE EST EN USO ---------------------------------------------------->
-                        <li class="nav-item"> <a href="./inicio.php" class="nav-link"> <i class="fa-solid fa-house-user"></i>
-                                <p>INICIO</p>
-                            </a> </li>
+                       
 
-                            <li class="nav-item has-treeview"> 
-                            <a href="#" class="nav-link"> 
-                                <i class="fa-solid fa-users"></i>
+                            <li class="nav-item">
+                                <a href="./inicio.php" class="nav-link">
+                                <i class="nav-icon far fa-image"></i>
                                 <p>
-                                    CLIENTE
-                                    <i class="right fas fa-angle-left"></i> <!-- Icono de flecha -->
+                                    Inicio
                                 </p>
-                            </a> 
-                            <ul class="nav nav-treeview">
+                                </a>
+                            </li>
+
+                            <li class="nav-item menu-open">
+                                <a href="#" class="nav-link active">
+                                <i class="nav-icon bi bi-pencil-square"></i>
+                                <p>
+                                    Administracion
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
+                                </a>
+                                <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="./clientes_registro.php" class="nav-link">
-                                        <i class="fa-solid fa-user-plus"></i>
-                                        <p>Registrar Cliente</p>
+                                    <a href="./usuarios.php" class="nav-link active">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Usuario</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="./clientes_lista.php" class="nav-link">
-                                        <i class="fa-solid fa-list"></i>
-                                        <p>Lista de Clientes</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                                </ul>
+                            </li>
                         
-                            <li class="nav-item"> <a href="./usuarios.php" class="nav-link"> 
-                                <p>Usuarios</p>
-                            </a> </li>
+                          
                            

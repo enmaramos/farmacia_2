@@ -381,7 +381,7 @@ $conn->close();
 <script src="../js/Ver_usuario.js?1234"></script>
 <script src="../js/mostar_filtro.js?1234"></script>
 <script src="../js/baja_usuario.js?1234"></script>
-<script src="../js/reactivar_usuario.js?1234"></script>
+<script src="../js/reactivar_usuario.js?12345"></script>
 
 <?php
 

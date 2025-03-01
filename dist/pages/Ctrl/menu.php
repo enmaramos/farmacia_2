@@ -35,9 +35,9 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./widgets/info-box.html" class="nav-link">
+                            <a href="./proveedores.php" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
-                                <p>Info Box</p>
+                                <p>Proveedor</p>
                             </a>
                         </li>
                         <li class="nav-item">

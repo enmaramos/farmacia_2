@@ -153,7 +153,7 @@ $result = $conn->query($sql);
                             <tr>
                                 <th>Id</th>
                                 <th>Nombre</th>
-                                <th>Correo electrónico</th>
+                                <th>Correo</th>
                                 <th>Contraseña</th>
                                 <th>Cargo</th>
                                 <th>Avatar</th>

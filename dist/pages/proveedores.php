@@ -6,11 +6,12 @@ include_once "Ctrl/head.php";
 // Incluir el archivo de conexión
 include('../pages/Cnx/conexion.php');
 
-// Consulta SQL para obtener los proveedores
-$sql = "SELECT * FROM proveedor";
+// Verificar si se ha seleccionado un filtro de estado
+$estado = isset($_GET['estado']) ? intval($_GET['estado']) : 1; // Por defecto, mostrar solo proveedores activos
+
+// Consulta SQL para obtener los proveedores y su estado
+$sql = "SELECT * FROM proveedor WHERE estado = $estado";
 $result = $conn->query($sql);
-
-
 ?>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
@@ -98,56 +99,75 @@ $result = $conn->query($sql);
         </script>
 
 
-        <!-- TABLA DE PROVEEDORES -->
-        <div class="container">
-            <div class="card p-3 shadow-sm">
-                <div class="d-flex justify-content-between mb-3">
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarProveedor">
-                        <i class="fas fa-plus-circle"></i> Agregar
-                    </button>
-                    <h3 class="text-center flex-grow-1">Lista de Proveedores</h3>
-                </div>
-
-                <table id="proveedoresTable" class="display text-center">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Nombre</th>
-                            <th>Empresa/Laboratorio</th>
-                            <th>Correo</th>
-                            <th>Ciudad</th>
-                            <th>Teléfono</th>
-                            <th>RUC</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while ($row = $result->fetch_assoc()) { ?>
-                            <tr>
-                                <td><?= $row['ID_Proveedor'] ?></td>
-                                <td><?= $row['Nombre'] ?> <?= $row['Apellido'] ?></td>
-                                <td><?= $row['Empresa_Laboratorio'] ?></td>
-                                <td><?= $row['Email'] ?></td>
-                                <td><?= $row['Ciudad'] ?></td>
-                                <td><?= $row['Telefono'] ?></td>
-                                <td><?= $row['RUC'] ?></td>
-                                <td class='btn-actions'>
-                                    <button class='btn btn-success VerProveedorBtn' data-bs-toggle='modal' data-bs-target='#modalVerProveedor' data-id='<?= $row['ID_Proveedor'] ?>'>
-                                        <i class='fas fa-eye'></i>
-                                    </button>
-                                    <a href='' class='btn btn-warning editarProveedorBtn' data-bs-toggle='modal' data-bs-target='#modalEditarProveedor' data-id='<?= $row['ID_Proveedor'] ?>'>
-                                        <i class='fas fa-edit'></i>
-                                    </a>
-                                    <button class='btn btn-danger bajaProveedorBtn' data-id='<?= $row['ID_Proveedor'] ?>'>
-                                        <i class='fas fa-trash-alt'></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
+       <!-- TABLA DE PROVEEDORES -->
+<div class="container">
+    <div class="card p-3 shadow-sm">
+        <div class="d-flex justify-content-between mb-3">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarProveedor">
+                <i class="fas fa-plus-circle"></i> Agregar
+            </button>
+            <h3 class="text-center flex-grow-1">Lista de Proveedores</h3>
+            <div>
+                <label for="filtroEstado" class="me-2">Filtrar:</label>
+                <select id="filtroEstado" class="form-select d-inline-block w-auto" onchange="filtrarProveedores()">
+                    <option value="1" <?= $estado == 1 ? 'selected' : '' ?>>Activos</option>
+                    <option value="0" <?= $estado == 0 ? 'selected' : '' ?>>Dados de Baja</option>
+                </select>
             </div>
         </div>
+
+        <table id="proveedoresTable" class="display text-center">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Empresa/Laboratorio</th>
+                    <th>Correo</th>
+                    <th>Ciudad</th>
+                    <th>Teléfono</th>
+                    <th>RUC</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = $result->fetch_assoc()) { ?>
+                    <tr>
+                        <td><?= $row['ID_Proveedor'] ?></td> <!-- Aquí se muestra el ID del proveedor -->
+                        <td><?= $row['Nombre'] ?></td>
+                        <td><?= $row['Empresa_Laboratorio'] ?></td>
+                        <td><?= $row['Email'] ?></td>
+                        <td><?= $row['Ciudad'] ?></td>
+                        <td><?= $row['Telefono'] ?></td>
+                        <td><?= $row['RUC'] ?></td>
+                        <td>
+                            <?php if ($row['estado'] == 1) { ?>
+                                <!-- Proveedor Activo -->
+                                <button class="btn btn-success VerProveedorBtn" data-bs-toggle="modal" data-bs-target="#modalVerProveedor" data-id="<?= $row['ID_Proveedor'] ?>">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-warning editarProveedorBtn" data-bs-toggle="modal" data-bs-target="#modalEditarProveedor" data-id="<?= $row['ID_Proveedor'] ?>">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger bajaProveedorBtn" data-id="<?= $row['ID_Proveedor'] ?>">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            <?php } else { ?>
+                                <!-- Proveedor de Baja -->
+                                <button class="btn btn-success VerProveedorBtn" data-bs-toggle="modal" data-bs-target="#modalVerProveedor" data-id="<?= $row['ID_Proveedor'] ?>">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-primary reactivarProveedorBtn" data-id="<?= $row['ID_Proveedor'] ?>">
+                                    <i class="fas fa-user-check"></i>
+                                </button>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
 
         <!-- Modal para agregar proveedor -->
@@ -312,56 +332,56 @@ $result = $conn->query($sql);
                     <div class="modal-body">
                         <!-- Nombre -->
                         <div class="mb-3">
-                            <label for="nombre_Proveedor" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" name="nombre_Proveedor" id="nombre_Proveedor" disabled>
+                            <label for="Nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="Nombre" disabled>
                         </div>
 
                         <!-- Apellido -->
                         <div class="mb-3">
-                            <label for="apellido_Proveedor" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" name="apellido_Proveedor" id="apellido_Proveedor" disabled>
+                            <label for="Apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="Apellido" disabled>
                         </div>
 
                         <!-- Empresa/Laboratorio -->
                         <div class="mb-3">
-                            <label for="empresa_Laboratorio" class="form-label">Empresa/Laboratorio</label>
-                            <input type="text" class="form-control" name="empresa_Laboratorio" id="empresa_Laboratorio" disabled>
+                            <label for="Empresa_Laboratorio" class="form-label">Empresa/Laboratorio</label>
+                            <input type="text" class="form-control" id="Empresa_Laboratorio" disabled>
                         </div>
 
                         <!-- Dirección -->
                         <div class="mb-3">
-                            <label for="direccion_Proveedor" class="form-label">Dirección</label>
-                            <input type="text" class="form-control" name="direccion_Proveedor" id="direccion_Proveedor" disabled>
+                            <label for="Direccion" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="Direccion" disabled>
                         </div>
 
                         <!-- Ciudad -->
                         <div class="mb-3">
-                            <label for="ciudad_Proveedor" class="form-label">Ciudad</label>
-                            <input type="text" class="form-control" name="ciudad_Proveedor" id="ciudad_Proveedor" disabled>
+                            <label for="Ciudad" class="form-label">Ciudad</label>
+                            <input type="text" class="form-control" id="Ciudad" disabled>
                         </div>
 
                         <!-- Departamento -->
                         <div class="mb-3">
-                            <label for="departamento_Proveedor" class="form-label">Departamento</label>
-                            <input type="text" class="form-control" name="departamento_Proveedor" id="departamento_Proveedor" disabled>
+                            <label for="Departamento" class="form-label">Departamento</label>
+                            <input type="text" class="form-control" id="Departamento" disabled>
                         </div>
 
                         <!-- Teléfono -->
                         <div class="mb-3">
-                            <label for="telefono_Proveedor" class="form-label">Teléfono</label>
-                            <input type="text" class="form-control" name="telefono_Proveedor" id="telefono_Proveedor" disabled>
+                            <label for="Telefono" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="Telefono" disabled>
                         </div>
 
                         <!-- Email -->
                         <div class="mb-3">
-                            <label for="email_Proveedor" class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" name="email_Proveedor" id="email_Proveedor" disabled>
+                            <label for="Email" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="Email" disabled>
                         </div>
 
                         <!-- RUC -->
                         <div class="mb-3">
-                            <label for="ruc_Proveedor" class="form-label">RUC</label>
-                            <input type="text" class="form-control" name="ruc_Proveedor" id="ruc_Proveedor" disabled>
+                            <label for="RUC" class="form-label">RUC</label>
+                            <input type="text" class="form-control" id="RUC" disabled>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -371,18 +391,11 @@ $result = $conn->query($sql);
             </div>
         </div>
 
-
-
-
-
-
-
-
-
-
         <script src="../js/editar_proveedor.js?2345"></script>
-        <script src="../js/ver_provee.js?12345"></script>
-
+        <script src="../js/ver_proveedor.js?12345"></script>
+        <script src="../js/baja_proveedor.js?12345"></script>
+        <script src="../js/reactivar_proveedor.js?12345"></script>
+        <script src="../js/mostar_filtro.js?12345"></script>
 
         <?php
 

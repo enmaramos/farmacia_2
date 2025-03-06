@@ -127,9 +127,6 @@ $result = $conn->query($sql);
             }
         </style>
 
-        <body>
-
-
 
             <!-- TABLA DE USUARIOS -->
             <div class="container">
@@ -314,7 +311,7 @@ $result = $conn->query($sql);
 
             <!-- Modal Ver Usuario -->
             <div class="modal fade" id="modalVerUsuario" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-                <div class="modal-dialog  modal-sm">
+                <div class="modal-dialog  modal-">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="modalLabel">Datos del Usuario</h5>
@@ -326,22 +323,22 @@ $result = $conn->query($sql);
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label for="nombreUsuario" class="form-label">Nombre</label>
-                                    <input type="text" class="form-control" name="nombre_Usuario" id="nombre_Usuario" readonly>
+                                    <input type="text" class="form-control" name="nombre_Usuario" id="nombre_Usuario" disabled>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="emailUsuario" class="form-label">Correo Electrónico</label>
-                                    <input type="email" class="form-control" name="email_Usuario" id="email_Usuario" readonly>
-                                </div>
+                                    <input type="email" class="form-control" name="email_Usuario" id="email_Usuario" disabled>
+                                </div>disabled
 
                                 <div class="mb-3">
                                     <label for="contraseñaUsuario" class="form-label">Contraseña</label>
-                                    <input type="" class="form-control" name="contraseña_Usuario" id="contraseña_Usuario" readonly>
+                                    <input type="" class="form-control" name="contraseña_Usuario" id="contraseña_Usuario" disabled>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="telefonoUsuario" class="form-label">Teléfono</label>
-                                    <input type="text" class="form-control" name="telefono_Usuario" id="telefono_Usuario" readonly>
+                                    <input type="text" class="form-control" name="telefono_Usuario" id="telefono_Usuario" disabled>
                                 </div>
 
                                 <div class="mb-3">

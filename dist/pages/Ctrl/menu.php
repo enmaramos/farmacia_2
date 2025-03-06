@@ -41,9 +41,9 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./widgets/cards.html" class="nav-link">
+                            <a href="./vendedor.php" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
-                                <p>Cards</p>
+                                <p>Vendedores</p>
                             </a>
                         </li>
                     </ul>

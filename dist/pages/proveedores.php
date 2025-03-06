@@ -133,7 +133,7 @@ $result = $conn->query($sql);
                 <?php while ($row = $result->fetch_assoc()) { ?>
                     <tr>
                         <td><?= $row['ID_Proveedor'] ?></td> <!-- Aquí se muestra el ID del proveedor -->
-                        <td><?= $row['Nombre'] ?></td>
+                        <td><?= $row['Nombre']," ", $row['Apellido']?> </td>
                         <td><?= $row['Empresa_Laboratorio'] ?></td>
                         <td><?= $row['Email'] ?></td>
                         <td><?= $row['Ciudad'] ?></td>

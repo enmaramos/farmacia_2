@@ -93,6 +93,7 @@ $result = $conn->query($query);
             });
         </script>
 
+<!-- TABLA DE VENDEDORES -->
 <div class="container">
     <div class="card p-3 shadow-sm">
         <div class="d-flex justify-content-between mb-3">
@@ -105,25 +106,35 @@ $result = $conn->query($query);
         <table id="vendedoresTable" class="display text-center">
             <thead>
                 <tr>
-                    <th>Id</th>
+                    <th>ID</th> <!-- Agregado campo ID -->
                     <th>Nombre</th>
-                    <th>N° Cédula</th>
                     <th>Teléfono</th>
-                    <th>Dirección</th>
-                    <th>Sexo</th>
+                    <th>Correo Electrónico</th>
+                    <th>Rol</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <?php while ($row = $result->fetch_assoc()) { ?>
                     <tr>
+                        <!-- Mostrar ID -->
                         <td><?= $row['ID_Vendedor'] ?></td>
-                        <td><?= $row['Nombre'] ?></td>
-                        <td><?= $row['N_Cedula'] ?></td>
+                        <!-- Mostrar solo el primer nombre y primer apellido -->
+                        <td><?= explode(' ', $row['Nombre'])[0] . ' ' . explode(' ', $row['Apellido'])[0] ?></td>
                         <td><?= $row['Telefono'] ?></td>
-                        <td><?= $row['Direccion'] ?></td>
-                        <td><?= $row['Sexo'] == 'H' ? 'Hombre' : 'Mujer' ?></td>
+                        <td><?= $row['Email'] ?></td>
+                        <td>
+                            <?php
+                                // Mostrar el rol del vendedor
+                                if ($row['ID_Rol'] == 1) {
+                                    echo "Administrador";
+                                } else {
+                                    echo "Vendedor";
+                                }
+                            ?>
+                        </td>
                         <td class='btn-actions'>
+                            <!-- Botones de acción -->
                             <button class='btn btn-success VerVendedorBtn' data-bs-toggle='modal' data-bs-target='#modalVerVendedor' data-id='<?= $row['ID_Vendedor'] ?>'>
                                 <i class='fas fa-eye'></i>
                             </button>
@@ -143,6 +154,7 @@ $result = $conn->query($query);
 
 
 
+
 <!-- Modal para agregar vendedor -->
 <div class="modal fade" id="modalAgregarVendedor" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -156,7 +168,13 @@ $result = $conn->query($query);
                     <!-- Nombre -->
                     <div class="mb-3">
                         <label for="nombreVendedor" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" name="nombreVendedor" id="nombreVendedor" required>
+                        <input type="text" class="form-control" name="nombreVendedor" id="nombreVendedor" placeholder="Ingrese el nombre completo" required>
+                    </div>
+
+                    <!-- Apellido -->
+                    <div class="mb-3">
+                        <label for="apellidoVendedor" class="form-label">Apellido</label>
+                        <input type="text" class="form-control" name="apellidoVendedor" id="apellidoVendedor" placeholder="Ingrese el apellido completo" required>
                     </div>
 
                     <!-- Número de Cédula -->
@@ -181,8 +199,8 @@ $result = $conn->query($query);
                     <div class="mb-3">
                         <label for="sexoVendedor" class="form-label">Sexo</label>
                         <select class="form-control" name="sexoVendedor" id="sexoVendedor" required>
-                            <option value="H">Hombre</option>
-                            <option value="M">Mujer</option>
+                            <option value="H">Masculino</option>
+                            <option value="M">Femenino</option>
                         </select>
                     </div>
 
@@ -190,6 +208,15 @@ $result = $conn->query($query);
                     <div class="mb-3">
                         <label for="emailVendedor" class="form-label">Correo</label>
                         <input type="email" class="form-control" name="emailVendedor" id="emailVendedor" required>
+                    </div>
+
+                    <!-- Rol -->
+                    <div class="mb-3">
+                        <label for="rolVendedor" class="form-label">Rol</label>
+                        <select class="form-control" name="rolVendedor" id="rolVendedor" required>
+                            <option value="2">Empleado</option>
+                            <option value="1">Administrador</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -204,6 +231,65 @@ $result = $conn->query($query);
 
 
 
+<!-- Modal para editar vendedor -->
+<div class="modal fade" id="modalEditarVendedor" tabindex="-1" aria-labelledby="modalLabelEditar" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabelEditar">Editar Vendedor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formEditarVendedor">
+                <div class="modal-body">
+                    <input type="hidden" name="idVendedor" id="idVendedor">
+
+                    <div class="mb-3">
+                        <label for="editarNombreVendedor" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" name="editarNombreVendedor" id="editarNombreVendedor" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editarCedulaVendedor" class="form-label">N° Cédula</label>
+                        <input type="text" class="form-control" name="editarCedulaVendedor" id="editarCedulaVendedor" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editarTelefonoVendedor" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" name="editarTelefonoVendedor" id="editarTelefonoVendedor">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editarDireccionVendedor" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" name="editarDireccionVendedor" id="editarDireccionVendedor">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editarSexoVendedor" class="form-label">Sexo</label>
+                        <select class="form-control" name="editarSexoVendedor" id="editarSexoVendedor" required>
+                            <option value="H">Hombre</option>
+                            <option value="M">Mujer</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editarEmailVendedor" class="form-label">Correo</label>
+                        <input type="email" class="form-control" name="editarCorreoVendedor" id="editarCorreoVendedor" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script src="../js/editar_vendedor.js?12345"></script>
 
 <?php
 $conn->close();

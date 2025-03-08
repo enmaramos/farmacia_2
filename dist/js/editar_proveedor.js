@@ -3,7 +3,7 @@ $(document).ready(function() {
         var proveedoresTable = $('#proveedoresTable').DataTable({
             destroy: true,
             ajax: {
-                url: '../pages/Ctrl/obtener_proveedores.php',
+                url: '../pages/Ctrl/obtener_proveedor.php',
                 dataSrc: ''
             },
             columns: [

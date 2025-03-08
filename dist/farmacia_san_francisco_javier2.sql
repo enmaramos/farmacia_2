@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-02-2025 a las 23:38:02
+-- Tiempo de generación: 08-03-2025 a las 23:52:00
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -29,7 +29,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `almacen` (
   `IdPedido` int(11) DEFAULT NULL,
-  `IdBodega` int(11) DEFAULT NULL
+  `IdBodega` int(11) NOT NULL,
+  `ID_Medicamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -110,7 +111,9 @@ CREATE TABLE `factura_compra` (
   `Subtotal_Fact_Comp` float DEFAULT NULL,
   `Iva_Fact_Comp` float DEFAULT NULL,
   `Precio_Lote` float DEFAULT NULL,
-  `Total_Fact_Comp` float DEFAULT NULL
+  `Total_Fact_Comp` float DEFAULT NULL,
+  `ID_Proveedor` int(11) DEFAULT NULL,
+  `ID_Medicamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -131,7 +134,8 @@ CREATE TABLE `factura_venta` (
   `Subtotal` double DEFAULT NULL,
   `Iva` double DEFAULT NULL,
   `Total` double DEFAULT NULL,
-  `IdCliente` int(11) DEFAULT NULL
+  `IdCliente` int(11) NOT NULL,
+  `ID_Vendedor` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -150,7 +154,8 @@ CREATE TABLE `lote` (
   `Fecha_Emision_Lote` datetime DEFAULT NULL,
   `Fecha_Recibido_Lote` datetime DEFAULT NULL,
   `Prec_Unidad_Lote` float DEFAULT NULL,
-  `Precio_Total_Lote` float DEFAULT NULL
+  `Precio_Total_Lote` float DEFAULT NULL,
+  `ID_Medicamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -223,7 +228,8 @@ CREATE TABLE `pedido` (
   `Fecha_Solicitud` datetime DEFAULT NULL,
   `Fecha_Recibo` datetime DEFAULT NULL,
   `Estado_Pedido` varchar(200) DEFAULT NULL,
-  `IdVendedor` int(11) DEFAULT NULL
+  `IdVendedor` int(11) DEFAULT NULL,
+  `IdFacturaV` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -248,17 +254,19 @@ CREATE TABLE `proveedor` (
   `Nombre` varchar(100) DEFAULT NULL,
   `Laboratorio` varchar(100) DEFAULT NULL,
   `Direccion` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `Telefono` varchar(8) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `Telefono` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `Email` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `RUC` int(11) DEFAULT NULL
+  `RUC` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `Estado` tinyint(1) DEFAULT 1,
+  `Fecha_Registro` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `proveedor`
 --
 
-INSERT INTO `proveedor` (`ID_Proveedor`, `Nombre`, `Laboratorio`, `Direccion`, `Telefono`, `Email`, `RUC`) VALUES
-(1, 'Derek', 'somoza', 'barrio milagro', '15415151', 'mcadavo@gamail', 3515645);
+INSERT INTO `proveedor` (`ID_Proveedor`, `Nombre`, `Laboratorio`, `Direccion`, `Telefono`, `Email`, `RUC`, `Estado`, `Fecha_Registro`) VALUES
+(1, 'Derek', 'somoza', 'barrio milagro', '15415151', 'mcadavo@gamail', '3515645', 1, '2025-03-08 19:34:50');
 
 -- --------------------------------------------------------
 
@@ -280,16 +288,17 @@ CREATE TABLE `provped` (
 CREATE TABLE `roles` (
   `ID_Rol` int(11) NOT NULL,
   `Nombre_Rol` varchar(50) DEFAULT NULL,
-  `Descripcion_Rol` varchar(200) DEFAULT NULL
+  `Descripcion_Rol` varchar(200) DEFAULT NULL,
+  `Estado` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `roles`
 --
 
-INSERT INTO `roles` (`ID_Rol`, `Nombre_Rol`, `Descripcion_Rol`) VALUES
-(1, 'Administrador', 'Todos los Accesos'),
-(2, 'Empleado', 'Acceso limitado a funciones básicas');
+INSERT INTO `roles` (`ID_Rol`, `Nombre_Rol`, `Descripcion_Rol`, `Estado`) VALUES
+(1, 'Administrador', 'Todos los Accesos', 1),
+(2, 'Empleado', 'Acceso limitado a funciones básicas', 1);
 
 -- --------------------------------------------------------
 
@@ -312,23 +321,23 @@ CREATE TABLE `usuarios` (
   `ID_Usuario` int(11) NOT NULL,
   `Nombre_Usuario` varchar(50) DEFAULT NULL,
   `Imagen` text DEFAULT NULL,
-  `Contraseña` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `Email` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `Telefono` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `Password` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `ID_Vendedor` int(11) DEFAULT NULL,
-  `IdRol` int(11) DEFAULT NULL,
-  `estado_usuario` tinyint(1) DEFAULT 1
+  `estado_usuario` tinyint(1) DEFAULT 1,
+  `Fecha_Creacion` timestamp NOT NULL DEFAULT current_timestamp(),
+  `Ultimo_Acceso` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`ID_Usuario`, `Nombre_Usuario`, `Imagen`, `Contraseña`, `Email`, `Telefono`, `ID_Vendedor`, `IdRol`, `estado_usuario`) VALUES
-(1, 'Derek', '449310638_122108766050369563_655787570102137785_n.jpg', 'Djsomoza31', 'jamesonsomoza@gmail.com', '86018985', 1, 1, 1),
-(2, 'Nestor Aguirre', 'images.PNG', 'Aguire25', 'NestorAguirre25@gmail.com', '54596235', NULL, 2, 1),
-(3, 'Enmanuel', 'goku.jpg', 'Serrano13', 'EnmaRamos@gmail.com', '88688476', NULL, 1, 1),
-(4, 'Maisho', 'images.jpg', 'Maishi10', 'maisho13@gmail.com', '88688476', NULL, 1, 0);
+INSERT INTO `usuarios` (`ID_Usuario`, `Nombre_Usuario`, `Imagen`, `Password`, `ID_Vendedor`, `estado_usuario`, `Fecha_Creacion`, `Ultimo_Acceso`) VALUES
+(1, 'Derek', '449310638_122108766050369563_655787570102137785_n.jpg', 'Djsomoza31', 1, 1, '2025-03-08 19:22:06', NULL),
+(2, 'Nestor Aguirre', 'images.PNG', 'Aguire25', NULL, 1, '2025-03-08 19:22:06', NULL),
+(4, 'Maisho', 'images.jpg', 'Maishi10', NULL, 0, '2025-03-08 19:22:06', NULL),
+(5, 'Nestor', NULL, '123456', 2, 1, '2025-03-08 20:08:10', NULL),
+(21, 'Emmanuel Serrano', NULL, '123456', 28, 1, '2025-03-08 22:49:51', NULL);
 
 -- --------------------------------------------------------
 
@@ -339,18 +348,24 @@ INSERT INTO `usuarios` (`ID_Usuario`, `Nombre_Usuario`, `Imagen`, `Contraseña`,
 CREATE TABLE `vendedor` (
   `ID_Vendedor` int(11) NOT NULL,
   `Nombre` varchar(70) DEFAULT NULL,
-  `N_Cedula` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `Telefono` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `N_Cedula` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `Telefono` varchar(10) NOT NULL,
+  `Email` varchar(100) NOT NULL,
   `Direccion` varchar(200) DEFAULT NULL,
-  `Sexo` char(1) DEFAULT NULL CHECK (`Sexo` in ('H','M'))
+  `Sexo` char(1) DEFAULT NULL CHECK (`Sexo` in ('H','M')),
+  `Estado` tinyint(1) DEFAULT 1,
+  `ID_Rol` int(11) DEFAULT NULL,
+  `Apellido` varchar(50) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `vendedor`
 --
 
-INSERT INTO `vendedor` (`ID_Vendedor`, `Nombre`, `N_Cedula`, `Telefono`, `Direccion`, `Sexo`) VALUES
-(1, 'Derek', '001-311001-1085U', '86018985', 'Milagro de Dios', 'H');
+INSERT INTO `vendedor` (`ID_Vendedor`, `Nombre`, `N_Cedula`, `Telefono`, `Email`, `Direccion`, `Sexo`, `Estado`, `ID_Rol`, `Apellido`) VALUES
+(1, 'Derek', '001-311001-1085U', '86018985', 'Djsomoza@gmail.com', 'Milagro de Dios', 'H', 1, NULL, ''),
+(2, 'Nestor', '001-233525-1211V', '12365487', 'AguirreCanales@gmail.com', 'Villa el carmen ', 'H', 1, 2, ''),
+(28, 'Emmanuel', '001-130901-1010W', '88688476', 'mcdavo1309@gmail.com', 'Vi.Venezuela Colegio Hispano Americano 1/2 C.O Casa #1993-94', 'H', 1, 2, 'Serrano Ramos');
 
 -- --------------------------------------------------------
 
@@ -359,8 +374,8 @@ INSERT INTO `vendedor` (`ID_Vendedor`, `Nombre`, `N_Cedula`, `Telefono`, `Direcc
 --
 
 CREATE TABLE `venta_medicamento` (
-  `IdFacturaV` int(11) DEFAULT NULL,
-  `IdMedicamento` int(11) DEFAULT NULL
+  `ID_Medicamento` int(11) DEFAULT NULL,
+  `ID_FacturaV` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -372,7 +387,8 @@ CREATE TABLE `venta_medicamento` (
 --
 ALTER TABLE `almacen`
   ADD KEY `IdPedido` (`IdPedido`),
-  ADD KEY `IdBodega` (`IdBodega`);
+  ADD KEY `IdBodega` (`IdBodega`),
+  ADD KEY `fk_almacen_medicamento` (`ID_Medicamento`);
 
 --
 -- Indices de la tabla `bodega`
@@ -396,20 +412,24 @@ ALTER TABLE `clientes`
 -- Indices de la tabla `factura_compra`
 --
 ALTER TABLE `factura_compra`
-  ADD PRIMARY KEY (`ID_FacturaC`);
+  ADD PRIMARY KEY (`ID_FacturaC`),
+  ADD KEY `fk_factura_compra_proveedor` (`ID_Proveedor`),
+  ADD KEY `fk_factura_compra_medicamento` (`ID_Medicamento`);
 
 --
 -- Indices de la tabla `factura_venta`
 --
 ALTER TABLE `factura_venta`
   ADD PRIMARY KEY (`ID_FacturaV`),
-  ADD KEY `IdCliente` (`IdCliente`);
+  ADD KEY `IdCliente` (`IdCliente`),
+  ADD KEY `fk_factura_venta_vendedor` (`ID_Vendedor`);
 
 --
 -- Indices de la tabla `lote`
 --
 ALTER TABLE `lote`
-  ADD PRIMARY KEY (`ID_Lote`);
+  ADD PRIMARY KEY (`ID_Lote`),
+  ADD KEY `fk_lote_medicamento` (`ID_Medicamento`);
 
 --
 -- Indices de la tabla `lotefact`
@@ -437,7 +457,8 @@ ALTER TABLE `ofertalote`
 --
 ALTER TABLE `pedido`
   ADD PRIMARY KEY (`ID_Pedido`),
-  ADD KEY `IdVendedor` (`IdVendedor`);
+  ADD KEY `IdVendedor` (`IdVendedor`),
+  ADD KEY `fk_pedido_factura` (`IdFacturaV`);
 
 --
 -- Indices de la tabla `pedido_fact`
@@ -478,21 +499,24 @@ ALTER TABLE `suministro`
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`ID_Usuario`),
   ADD UNIQUE KEY `Nombre_Usuario` (`Nombre_Usuario`),
-  ADD KEY `ID_Vendedor` (`ID_Vendedor`),
-  ADD KEY `IdRol` (`IdRol`);
+  ADD UNIQUE KEY `unique_vendedor` (`ID_Vendedor`),
+  ADD KEY `ID_Vendedor` (`ID_Vendedor`);
 
 --
 -- Indices de la tabla `vendedor`
 --
 ALTER TABLE `vendedor`
-  ADD PRIMARY KEY (`ID_Vendedor`);
+  ADD PRIMARY KEY (`ID_Vendedor`),
+  ADD UNIQUE KEY `Email` (`Email`),
+  ADD UNIQUE KEY `N_Cedula` (`N_Cedula`),
+  ADD KEY `fk_rol` (`ID_Rol`);
 
 --
 -- Indices de la tabla `venta_medicamento`
 --
 ALTER TABLE `venta_medicamento`
-  ADD KEY `IdFacturaV` (`IdFacturaV`),
-  ADD KEY `IdMedicamento` (`IdMedicamento`);
+  ADD KEY `IdMedicamento` (`ID_Medicamento`),
+  ADD KEY `fk_venta_medicamento_factura` (`ID_FacturaV`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -556,13 +580,13 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `ID_Usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `ID_Usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `vendedor`
 --
 ALTER TABLE `vendedor`
-  MODIFY `ID_Vendedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID_Vendedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- Restricciones para tablas volcadas
@@ -573,13 +597,29 @@ ALTER TABLE `vendedor`
 --
 ALTER TABLE `almacen`
   ADD CONSTRAINT `almacen_ibfk_1` FOREIGN KEY (`IdPedido`) REFERENCES `pedido` (`ID_Pedido`),
-  ADD CONSTRAINT `almacen_ibfk_2` FOREIGN KEY (`IdBodega`) REFERENCES `bodega` (`ID_Bodega`);
+  ADD CONSTRAINT `almacen_ibfk_2` FOREIGN KEY (`IdBodega`) REFERENCES `bodega` (`ID_Bodega`),
+  ADD CONSTRAINT `fk_almacen_bodega` FOREIGN KEY (`IdBodega`) REFERENCES `bodega` (`ID_Bodega`),
+  ADD CONSTRAINT `fk_almacen_medicamento` FOREIGN KEY (`ID_Medicamento`) REFERENCES `medicamento` (`ID_Medicamento`);
+
+--
+-- Filtros para la tabla `factura_compra`
+--
+ALTER TABLE `factura_compra`
+  ADD CONSTRAINT `fk_factura_compra_medicamento` FOREIGN KEY (`ID_Medicamento`) REFERENCES `medicamento` (`ID_Medicamento`),
+  ADD CONSTRAINT `fk_factura_compra_proveedor` FOREIGN KEY (`ID_Proveedor`) REFERENCES `proveedor` (`ID_Proveedor`);
 
 --
 -- Filtros para la tabla `factura_venta`
 --
 ALTER TABLE `factura_venta`
-  ADD CONSTRAINT `factura_venta_ibfk_1` FOREIGN KEY (`IdCliente`) REFERENCES `clientes` (`ID_Cliente`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_factura_venta_cliente` FOREIGN KEY (`IdCliente`) REFERENCES `clientes` (`ID_Cliente`),
+  ADD CONSTRAINT `fk_factura_venta_vendedor` FOREIGN KEY (`ID_Vendedor`) REFERENCES `usuarios` (`ID_Usuario`);
+
+--
+-- Filtros para la tabla `lote`
+--
+ALTER TABLE `lote`
+  ADD CONSTRAINT `fk_lote_medicamento` FOREIGN KEY (`ID_Medicamento`) REFERENCES `medicamento` (`ID_Medicamento`);
 
 --
 -- Filtros para la tabla `lotefact`
@@ -602,6 +642,12 @@ ALTER TABLE `ofertalote`
   ADD CONSTRAINT `ofertalote_ibfk_2` FOREIGN KEY (`IdProveedor`) REFERENCES `proveedor` (`ID_Proveedor`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Filtros para la tabla `pedido`
+--
+ALTER TABLE `pedido`
+  ADD CONSTRAINT `fk_pedido_factura` FOREIGN KEY (`IdFacturaV`) REFERENCES `factura_venta` (`ID_FacturaV`);
+
+--
 -- Filtros para la tabla `pedido_fact`
 --
 ALTER TABLE `pedido_fact`
@@ -619,8 +665,28 @@ ALTER TABLE `provped`
 -- Filtros para la tabla `suministro`
 --
 ALTER TABLE `suministro`
+  ADD CONSTRAINT `fk_suministro_proveedor` FOREIGN KEY (`IdProveedor`) REFERENCES `proveedor` (`ID_Proveedor`),
   ADD CONSTRAINT `suministro_ibfk_1` FOREIGN KEY (`IdMedicamento`) REFERENCES `medicamento` (`ID_Medicamento`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `suministro_ibfk_2` FOREIGN KEY (`IdProveedor`) REFERENCES `proveedor` (`ID_Proveedor`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD CONSTRAINT `fk_usuarios_vendedor` FOREIGN KEY (`ID_Vendedor`) REFERENCES `vendedor` (`ID_Vendedor`);
+
+--
+-- Filtros para la tabla `vendedor`
+--
+ALTER TABLE `vendedor`
+  ADD CONSTRAINT `fk_rol` FOREIGN KEY (`ID_Rol`) REFERENCES `roles` (`ID_Rol`);
+
+--
+-- Filtros para la tabla `venta_medicamento`
+--
+ALTER TABLE `venta_medicamento`
+  ADD CONSTRAINT `fk_venta_medicamento` FOREIGN KEY (`ID_Medicamento`) REFERENCES `medicamento` (`ID_Medicamento`),
+  ADD CONSTRAINT `fk_venta_medicamento_factura` FOREIGN KEY (`ID_FacturaV`) REFERENCES `factura_venta` (`ID_FacturaV`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1,24 +1,30 @@
 <?php
-include '../config/conexion.php';
+include '../Cnx/conexion.php';
 
-if (isset($_POST['vendedorId'])) {
-    $vendedorId = $_POST['vendedorId'];
-    
-    $query = "SELECT * FROM vendedor WHERE ID_Vendedor = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $vendedorId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows > 0) {
-        $vendedor = $result->fetch_assoc();
-        echo json_encode($vendedor);
-    } else {
-        echo json_encode(["error" => "No se encontró el vendedor."]);
-    }
-    
-    $stmt->close();
-    $conn->close();
-} else {
-    echo json_encode(["error" => "ID de vendedor no proporcionado."]);
+header("Content-Type: application/json");
+
+if (!isset($_POST['vendedorId']) || empty($_POST['vendedorId'])) {
+    echo json_encode(['error' => 'ID de vendedor no proporcionado']);
+    exit;
 }
+
+$vendedorId = $_POST['vendedorId'];
+
+// Debug: Mostrar el ID recibido
+error_log("ID de vendedor recibido: " . $vendedorId);
+
+$sql = "SELECT ID_Vendedor, Nombre, N_Cedula, Telefono, Direccion, Sexo, Correo FROM vendedor WHERE ID_Vendedor = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $vendedorId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    echo json_encode($result->fetch_assoc());
+} else {
+    echo json_encode(['error' => 'Vendedor no encontrado']);
+}
+
+$stmt->close();
+$conn->close();
+?>

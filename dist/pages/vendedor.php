@@ -3,7 +3,7 @@ include_once "Ctrl/head.php";
 ?>
 
 <?php
-include ('../pages/Cnx/conexion.php');
+include('../pages/Cnx/conexion.php');
 
 $query = "SELECT * FROM vendedor";
 $result = $conn->query($query);
@@ -93,70 +93,70 @@ $result = $conn->query($query);
             });
         </script>
 
-<!-- TABLA DE VENDEDORES -->
-<div class="container">
-    <div class="card p-3 shadow-sm">
-        <div class="d-flex justify-content-between mb-3">
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarVendedor">
-                <i class="fas fa-user-plus"></i> Agregar
-            </button>
-            <h3 class="text-center flex-grow-1">Lista de Vendedores</h3>
+        <!-- TABLA DE VENDEDORES -->
+        <div class="container">
+            <div class="card p-3 shadow-sm">
+                <div class="d-flex justify-content-between mb-3">
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarVendedor">
+                        <i class="fas fa-user-plus"></i> Agregar
+                    </button>
+                    <h3 class="text-center flex-grow-1">Lista de Vendedores</h3>
+                </div>
+
+                <table id="vendedoresTable" class="display text-center">
+                    <thead>
+                        <tr>
+                            <th>ID</th> <!-- Agregado campo ID -->
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Correo Electrónico</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $result->fetch_assoc()) { ?>
+                            <tr>
+                                <!-- Mostrar ID -->
+                                <td><?= $row['ID_Vendedor'] ?></td>
+                                <!-- Mostrar solo el primer nombre y primer apellido -->
+                                <td><?= explode(' ', $row['Nombre'])[0] . ' ' . explode(' ', $row['Apellido'])[0] ?></td>
+                                <td><?= $row['Telefono'] ?></td>
+                                <td><?= $row['Email'] ?></td>
+                                <td>
+                                    <?php
+                                    // Mostrar el rol del vendedor
+                                    if ($row['ID_Rol'] == 1) {
+                                        echo "Administrador";
+                                    } else {
+                                        echo "Vendedor";
+                                    }
+                                    ?>
+                                </td>
+                                <td class='btn-actions'>
+                                    <!-- Botones de acción -->
+                                    <button class='btn btn-success VerVendedorBtn' data-bs-toggle='modal' data-bs-target='#modalVerVendedor' data-id='<?= $row['ID_Vendedor'] ?>'>
+                                        <i class='fas fa-eye'></i>
+                                    </button>
+                                    <a href='' class='btn btn-warning editarVendedorBtn' data-bs-toggle='modal' data-bs-target='#modalEditarVendedor' data-id='<?= $row['ID_Vendedor'] ?>'>
+                                        <i class='fas fa-edit'></i>
+                                    </a>
+                                    <button class='btn btn-danger eliminarVendedorBtn' data-id='<?= $row['ID_Vendedor'] ?>'>
+                                        <i class='fas fa-trash-alt'></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <table id="vendedoresTable" class="display text-center">
-            <thead>
-                <tr>
-                    <th>ID</th> <!-- Agregado campo ID -->
-                    <th>Nombre</th>
-                    <th>Teléfono</th>
-                    <th>Correo Electrónico</th>
-                    <th>Rol</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($row = $result->fetch_assoc()) { ?>
-                    <tr>
-                        <!-- Mostrar ID -->
-                        <td><?= $row['ID_Vendedor'] ?></td>
-                        <!-- Mostrar solo el primer nombre y primer apellido -->
-                        <td><?= explode(' ', $row['Nombre'])[0] . ' ' . explode(' ', $row['Apellido'])[0] ?></td>
-                        <td><?= $row['Telefono'] ?></td>
-                        <td><?= $row['Email'] ?></td>
-                        <td>
-                            <?php
-                                // Mostrar el rol del vendedor
-                                if ($row['ID_Rol'] == 1) {
-                                    echo "Administrador";
-                                } else {
-                                    echo "Vendedor";
-                                }
-                            ?>
-                        </td>
-                        <td class='btn-actions'>
-                            <!-- Botones de acción -->
-                            <button class='btn btn-success VerVendedorBtn' data-bs-toggle='modal' data-bs-target='#modalVerVendedor' data-id='<?= $row['ID_Vendedor'] ?>'>
-                                <i class='fas fa-eye'></i>
-                            </button>
-                            <a href='' class='btn btn-warning editarVendedorBtn' data-bs-toggle='modal' data-bs-target='#modalEditarVendedor' data-id='<?= $row['ID_Vendedor'] ?>'>
-                                <i class='fas fa-edit'></i>
-                            </a>
-                            <button class='btn btn-danger eliminarVendedorBtn' data-id='<?= $row['ID_Vendedor'] ?>'>
-                                <i class='fas fa-trash-alt'></i>
-                            </button>
-                        </td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
-    </div>
-</div>
 
 
 
-
-<!-- Modal para agregar vendedor -->
-<div class="modal fade" id="modalAgregarVendedor" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+ <!-- Modal para agregar vendedor -->
+<div class="modal fade" id="modalAgregarVendedor" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -186,7 +186,7 @@ $result = $conn->query($query);
                     <!-- Teléfono -->
                     <div class="mb-3">
                         <label for="telefonoVendedor" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" name="telefonoVendedor" id="telefonoVendedor">
+                        <input type="text" class="form-control" name="telefonoVendedor" id="telefonoVendedor" placeholder="(+505) 1234-5678" required>
                     </div>
 
                     <!-- Dirección -->
@@ -228,72 +228,142 @@ $result = $conn->query($query);
     </div>
 </div>
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let modal = document.getElementById("modalAgregarVendedor");
+    let formulario = modal.querySelector("form");
+
+    // Resetear formulario al cerrar el modal con la "X" o el botón Cancelar
+    modal.addEventListener("hidden.bs.modal", function () {
+        formulario.reset();
+    });
+
+    let btnCancelar = modal.querySelector(".btn-secondary");
+    if (btnCancelar) {
+        btnCancelar.addEventListener("click", function() {
+            formulario.reset();
+        });
+    }
+
+    // Validación del campo teléfono
+    const telefonoInput = document.getElementById("telefonoVendedor");
+
+    // Establecer el valor inicial con el prefijo
+    telefonoInput.value = "(+505) ";
+
+    telefonoInput.addEventListener("input", function(event) {
+        let valor = telefonoInput.value;
+
+        // Asegurar que el prefijo siempre esté presente
+        if (!valor.startsWith("(+505) ")) {
+            telefonoInput.value = "(+505) ";
+            return;
+        }
+
+        // Obtener solo los números después del prefijo
+        let numeros = valor.replace(/\D/g, "").substring(3); // Removemos todo excepto números y evitamos modificar el prefijo (+505)
+
+        // Limitar a 8 caracteres después del prefijo
+        if (numeros.length > 8) {
+            numeros = numeros.slice(0, 8);
+        }
+
+        // Formatear el número con guion después de los primeros 4 dígitos
+        let telefonoFormateado = "(+505) ";
+        if (numeros.length > 4) {
+            telefonoFormateado += numeros.slice(0, 4) + "-" + numeros.slice(4);
+        } else {
+            telefonoFormateado += numeros;
+        }
+
+        // Asignar el valor formateado
+        telefonoInput.value = telefonoFormateado;
+    });
+
+    // Evitar que el usuario borre el prefijo (+505)
+    telefonoInput.addEventListener("keydown", function(event) {
+        if (telefonoInput.selectionStart < 7 && (event.key === "Backspace" || event.key === "Delete")) {
+            event.preventDefault(); // Evita que se borre el prefijo
+        }
+    });
+
+    // Restaurar el prefijo si el usuario borra todo
+    telefonoInput.addEventListener("blur", function() {
+        if (telefonoInput.value.trim() === "" || telefonoInput.value === "(+505)") {
+            telefonoInput.value = "(+505) ";
+        }
+    });
+});
+</script>
 
 
 
-<!-- Modal para editar vendedor -->
-<div class="modal fade" id="modalEditarVendedor" tabindex="-1" aria-labelledby="modalLabelEditar" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalLabelEditar">Editar Vendedor</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+
+
+        <!-- Modal para editar vendedor -->
+        <div class="modal fade" id="modalEditarVendedor" tabindex="-1" aria-labelledby="modalLabelEditar" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabelEditar">Editar Vendedor</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="formEditarVendedor">
+                        <div class="modal-body">
+                            <input type="hidden" name="idVendedor" id="idVendedor">
+
+                            <div class="mb-3">
+                                <label for="editarNombreVendedor" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" name="editarNombreVendedor" id="editarNombreVendedor" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editarCedulaVendedor" class="form-label">N° Cédula</label>
+                                <input type="text" class="form-control" name="editarCedulaVendedor" id="editarCedulaVendedor" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editarTelefonoVendedor" class="form-label">Teléfono</label>
+                                <input type="text" class="form-control" name="editarTelefonoVendedor" id="editarTelefonoVendedor">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editarDireccionVendedor" class="form-label">Dirección</label>
+                                <input type="text" class="form-control" name="editarDireccionVendedor" id="editarDireccionVendedor">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editarSexoVendedor" class="form-label">Sexo</label>
+                                <select class="form-control" name="editarSexoVendedor" id="editarSexoVendedor" required>
+                                    <option value="H">Hombre</option>
+                                    <option value="M">Mujer</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editarEmailVendedor" class="form-label">Correo</label>
+                                <input type="email" class="form-control" name="editarCorreoVendedor" id="editarCorreoVendedor" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <form id="formEditarVendedor">
-                <div class="modal-body">
-                    <input type="hidden" name="idVendedor" id="idVendedor">
-
-                    <div class="mb-3">
-                        <label for="editarNombreVendedor" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" name="editarNombreVendedor" id="editarNombreVendedor" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="editarCedulaVendedor" class="form-label">N° Cédula</label>
-                        <input type="text" class="form-control" name="editarCedulaVendedor" id="editarCedulaVendedor" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="editarTelefonoVendedor" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" name="editarTelefonoVendedor" id="editarTelefonoVendedor">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="editarDireccionVendedor" class="form-label">Dirección</label>
-                        <input type="text" class="form-control" name="editarDireccionVendedor" id="editarDireccionVendedor">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="editarSexoVendedor" class="form-label">Sexo</label>
-                        <select class="form-control" name="editarSexoVendedor" id="editarSexoVendedor" required>
-                            <option value="H">Hombre</option>
-                            <option value="M">Mujer</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="editarEmailVendedor" class="form-label">Correo</label>
-                        <input type="email" class="form-control" name="editarCorreoVendedor" id="editarCorreoVendedor" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                </div>
-            </form>
         </div>
-    </div>
-</div>
 
 
 
 
 
-<script src="../js/editar_vendedor.js?12345"></script>
+        <script src="../js/editar_vendedor.js?12345"></script>
 
-<?php
-$conn->close();
-?>
+        <?php
+        $conn->close();
+        ?>
 
 
 

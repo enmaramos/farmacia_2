@@ -86,71 +86,73 @@ $result = $conn->query($query);
             </div> <!--end::Container-->
         </div> <!--end::App Content Header--> <!--begin::App Content-->
 
-        <!---table JQUERY -->
-        <script>
-            $(document).ready(function() {
-                $('#vendedoresTable').DataTable();
-            });
-        </script>
+     <!---table JQUERY -->
+<script>
+    $(document).ready(function() {
+        $('#vendedoresTable').DataTable();
+    });
+</script>
 
-        <!-- TABLA DE VENDEDORES -->
-        <div class="container">
-            <div class="card p-3 shadow-sm">
-                <div class="d-flex justify-content-between mb-3">
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarVendedor">
-                        <i class="fas fa-user-plus"></i> Agregar
-                    </button>
-                    <h3 class="text-center flex-grow-1">Lista de Vendedores</h3>
-                </div>
 
-                <table id="vendedoresTable" class="display text-center">
-                    <thead>
-                        <tr>
-                            <th>ID</th> <!-- Agregado campo ID -->
-                            <th>Nombre</th>
-                            <th>Teléfono</th>
-                            <th>Correo Electrónico</th>
-                            <th>Rol</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while ($row = $result->fetch_assoc()) { ?>
-                            <tr>
-                                <!-- Mostrar ID -->
-                                <td><?= $row['ID_Vendedor'] ?></td>
-                                <!-- Mostrar solo el primer nombre y primer apellido -->
-                                <td><?= explode(' ', $row['Nombre'])[0] . ' ' . explode(' ', $row['Apellido'])[0] ?></td>
-                                <td><?= $row['Telefono'] ?></td>
-                                <td><?= $row['Email'] ?></td>
-                                <td>
-                                    <?php
-                                    // Mostrar el rol del vendedor
-                                    if ($row['ID_Rol'] == 1) {
-                                        echo "Administrador";
-                                    } else {
-                                        echo "Vendedor";
-                                    }
-                                    ?>
-                                </td>
-                                <td class='btn-actions'>
-                                    <!-- Botones de acción -->
-                                    <button class='btn btn-success VerVendedorBtn' data-bs-toggle='modal' data-bs-target='#modalVerVendedor' data-id='<?= $row['ID_Vendedor'] ?>'>
-                                        <i class='fas fa-eye'></i>
-                                    </button>
-                                    <a href='' class='btn btn-warning editarVendedorBtn' data-bs-toggle='modal' data-bs-target='#modalEditarVendedor' data-id='<?= $row['ID_Vendedor'] ?>'>
-                                        <i class='fas fa-edit'></i>
-                                    </a>
-                                    <button class='btn btn-danger eliminarVendedorBtn' data-id='<?= $row['ID_Vendedor'] ?>'>
-                                        <i class='fas fa-trash-alt'></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-            </div>
+<!-- TABLA DE VENDEDORES -->
+<div class="container">
+    <div class="card p-3 shadow-sm">
+        <div class="d-flex justify-content-between mb-3">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarVendedor">
+                <i class="fas fa-user-plus"></i> Agregar
+            </button>
+            <h3 class="text-center flex-grow-1">Lista de Vendedores</h3>
         </div>
+
+        <table id="vendedoresTable" class="display text-center">
+            <thead>
+                <tr>
+                    <th>ID</th> <!-- Agregado campo ID -->
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>Correo Electrónico</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = $result->fetch_assoc()) { ?>
+                    <tr>
+                        <!-- Mostrar ID -->
+                        <td><?= $row['ID_Vendedor'] ?></td>
+                        <!-- Mostrar solo el primer nombre y primer apellido -->
+                        <td><?= explode(' ', $row['Nombre'])[0] . ' ' . explode(' ', $row['Apellido'])[0] ?></td>
+                        <!-- Agregar el prefijo (+505) al número de teléfono -->
+                        <td>(+505) <?= $row['Telefono'] ?></td>
+                        <td><?= $row['Email'] ?></td>
+                        <td>
+                            <?php
+                            // Mostrar el rol del vendedor
+                            if ($row['ID_Rol'] == 1) {
+                                echo "Administrador";
+                            } else {
+                                echo "Vendedor";
+                            }
+                            ?>
+                        </td>
+                        <td class='btn-actions'>
+                            <!-- Botones de acción -->
+                            <button class='btn btn-success VerVendedorBtn' data-bs-toggle='modal' data-bs-target='#modalVerVendedor' data-id='<?= $row['ID_Vendedor'] ?>'>
+                                <i class='fas fa-eye'></i>
+                            </button>
+                            <a href='' class='btn btn-warning editarVendedorBtn' data-bs-toggle='modal' data-bs-target='#modalEditarVendedor' data-id='<?= $row['ID_Vendedor'] ?>'>
+                                <i class='fas fa-edit'></i>
+                            </a>
+                            <button class='btn btn-danger eliminarVendedorBtn' data-id='<?= $row['ID_Vendedor'] ?>'>
+                                <i class='fas fa-trash-alt'></i>
+                            </button>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 
 
@@ -204,7 +206,7 @@ $result = $conn->query($query);
                         </select>
                     </div>
 
-                    <!-- Email (Correo) -->
+                    <!-- Email -->
                     <div class="mb-3">
                         <label for="emailVendedor" class="form-label">Correo</label>
                         <input type="email" class="form-control" name="emailVendedor" id="emailVendedor" required>
@@ -228,6 +230,7 @@ $result = $conn->query($query);
     </div>
 </div>
 
+<!-- Validaciones de los Modales -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     let modal = document.getElementById("modalAgregarVendedor");
@@ -293,8 +296,18 @@ document.addEventListener("DOMContentLoaded", function() {
             telefonoInput.value = "(+505) ";
         }
     });
+
+    // Verificar si el modal debe abrirse después de un error
+    if (sessionStorage.getItem("modalOpen") === "true") {
+        var modalBootstrap = new bootstrap.Modal(modal);
+        modalBootstrap.show();
+        sessionStorage.removeItem("modalOpen"); // Limpiar el estado para futuros intentos
+    }
 });
 </script>
+
+
+
 
 
 

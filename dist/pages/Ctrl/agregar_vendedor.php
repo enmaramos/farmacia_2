@@ -5,13 +5,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombreVendedor = $_POST['nombreVendedor'];
     $apellidoVendedor = $_POST['apellidoVendedor'];
     $cedulaVendedor = $_POST['cedulaVendedor'];
-    $telefonoVendedor = $_POST['telefonoVendedor'];
+    
+    // Eliminar el prefijo (+505) del teléfono
+    $telefonoVendedor = str_replace("(+505) ", "", $_POST['telefonoVendedor']);
+    
     $direccionVendedor = $_POST['direccionVendedor'];
     $sexoVendedor = $_POST['sexoVendedor'];
     $emailVendedor = $_POST['emailVendedor'];
     $rolVendedor = $_POST['rolVendedor'];
 
     $contraseñaUsuario = "123456"; // Contraseña por defecto
+
+    // Verificar si la cédula ya existe en la tabla 'vendedor'
+    $queryVerificarCedula = "SELECT COUNT(*) FROM vendedor WHERE N_Cedula = ?";
+    $stmtVerificarCedula = $conn->prepare($queryVerificarCedula);
+    $stmtVerificarCedula->bind_param("s", $cedulaVendedor);
+    $stmtVerificarCedula->execute();
+    $stmtVerificarCedula->bind_result($existeCedula);
+    $stmtVerificarCedula->fetch();
+    $stmtVerificarCedula->close();
+
+    if ($existeCedula > 0) {
+        echo "<script> 
+                alert('Error: La cédula ya está registrada. Por favor, ingrese una cédula diferente.');
+                sessionStorage.setItem('modalOpen', 'true');
+                window.location.href = '../vendedor.php';
+              </script>";
+        exit();
+    }
 
     // Verificar si el correo ya existe en la tabla 'vendedor'
     $queryVerificarCorreo = "SELECT COUNT(*) FROM vendedor WHERE Email = ?";
@@ -23,9 +44,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmtVerificar->close();
 
     if ($existeCorreo > 0) {
-        echo "<script>
+        echo "<script> 
                 alert('Error: El correo ya está registrado. Por favor, ingrese un correo diferente.');
-                window.history.back();
+                sessionStorage.setItem('modalOpen', 'true');
+                window.location.href = '../vendedor.php';
               </script>";
         exit();
     }
@@ -33,7 +55,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Insertar en la tabla 'vendedor'
     $queryVendedor = "INSERT INTO vendedor (Nombre, Apellido, N_Cedula, Telefono, Direccion, Sexo, Email, ID_Rol) 
                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
     $stmtVendedor = $conn->prepare($queryVendedor);
     $stmtVendedor->bind_param("sssssssi", $nombreVendedor, $apellidoVendedor, $cedulaVendedor, $telefonoVendedor, $direccionVendedor, $sexoVendedor, $emailVendedor, $rolVendedor);
 
@@ -44,7 +65,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Insertar en la tabla 'usuarios'
         $queryUsuario = "INSERT INTO usuarios (Nombre_Usuario, Password, ID_Vendedor, estado_usuario) 
                          VALUES (?, ?, ?, ?)";
-
         $estado_usuario = 1;
         $stmtUsuario = $conn->prepare($queryUsuario);
         $stmtUsuario->bind_param("ssii", $nombreUsuario, $contraseñaUsuario, $idVendedor, $estado_usuario);

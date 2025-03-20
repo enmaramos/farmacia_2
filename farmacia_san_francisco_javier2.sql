@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-03-2025 a las 23:52:00
+-- Tiempo de generación: 20-03-2025 a las 03:39:19
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,6 +20,28 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `farmacia_san_francisco_javier2`
 --
+
+DELIMITER $$
+--
+-- Procedimientos
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AgregarVendedorConUsuario` (IN `p_Nombre` VARCHAR(70), IN `p_Apellido` VARCHAR(50), IN `p_N_Cedula` VARCHAR(30), IN `p_Telefono` VARCHAR(10), IN `p_Email` VARCHAR(100), IN `p_Direccion` VARCHAR(200), IN `p_Sexo` CHAR(1), IN `p_Estado` TINYINT, IN `p_ID_Rol` INT, IN `p_Nombre_Usuario` VARCHAR(50), IN `p_Password` VARCHAR(100), IN `p_Imagen` TEXT)   BEGIN
+    DECLARE v_ID_Vendedor INT;
+
+    -- Insertar el vendedor en la tabla vendedor
+    INSERT INTO vendedor (Nombre, Apellido, N_Cedula, Telefono, Email, Direccion, Sexo, Estado, ID_Rol)
+    VALUES (p_Nombre, p_Apellido, p_N_Cedula, p_Telefono, p_Email, p_Direccion, p_Sexo, p_Estado, p_ID_Rol);
+
+    -- Obtener el ID del vendedor recién insertado
+    SET v_ID_Vendedor = LAST_INSERT_ID();
+
+    -- Insertar el usuario en la tabla usuarios
+    INSERT INTO usuarios (Nombre_Usuario, Imagen, Password, ID_Vendedor, estado_usuario)
+    VALUES (p_Nombre_Usuario, p_Imagen, p_Password, v_ID_Vendedor, 1);
+    
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -337,7 +359,14 @@ INSERT INTO `usuarios` (`ID_Usuario`, `Nombre_Usuario`, `Imagen`, `Password`, `I
 (2, 'Nestor Aguirre', 'images.PNG', 'Aguire25', NULL, 1, '2025-03-08 19:22:06', NULL),
 (4, 'Maisho', 'images.jpg', 'Maishi10', NULL, 0, '2025-03-08 19:22:06', NULL),
 (5, 'Nestor', NULL, '123456', 2, 1, '2025-03-08 20:08:10', NULL),
-(21, 'Emmanuel Serrano', NULL, '123456', 28, 1, '2025-03-08 22:49:51', NULL);
+(21, 'Emmanuel Serrano', NULL, '123456', 28, 1, '2025-03-08 22:49:51', NULL),
+(22, 'Francisco Perez', NULL, '123456', 29, 1, '2025-03-11 01:08:45', NULL),
+(23, 'Gerson Sanchez', NULL, '123456', 33, 1, '2025-03-11 02:24:37', NULL),
+(24, 'juanperez', NULL, 'miClave123', 34, 1, '2025-03-12 22:14:24', NULL),
+(25, 'Luis Chavez', NULL, '123456', 36, 1, '2025-03-12 22:52:57', NULL),
+(26, 'Marcos Ramos', NULL, '123456', 37, 1, '2025-03-12 23:01:52', NULL),
+(29, 'kenny Solis', NULL, '123456', 44, 1, '2025-03-20 00:24:18', NULL),
+(30, 'Franklin Jiron', NULL, '123456', 45, 1, '2025-03-20 01:57:18', NULL);
 
 -- --------------------------------------------------------
 
@@ -363,9 +392,16 @@ CREATE TABLE `vendedor` (
 --
 
 INSERT INTO `vendedor` (`ID_Vendedor`, `Nombre`, `N_Cedula`, `Telefono`, `Email`, `Direccion`, `Sexo`, `Estado`, `ID_Rol`, `Apellido`) VALUES
-(1, 'Derek', '001-311001-1085U', '86018985', 'Djsomoza@gmail.com', 'Milagro de Dios', 'H', 1, NULL, ''),
-(2, 'Nestor', '001-233525-1211V', '12365487', 'AguirreCanales@gmail.com', 'Villa el carmen ', 'H', 1, 2, ''),
-(28, 'Emmanuel', '001-130901-1010W', '88688476', 'mcdavo1309@gmail.com', 'Vi.Venezuela Colegio Hispano Americano 1/2 C.O Casa #1993-94', 'H', 1, 2, 'Serrano Ramos');
+(1, 'Derek Jameson', '001-311001-1085U', '8601-8985', 'Djsomoza@gmail.com', 'Milagro de Dios', 'H', 1, 1, 'Somoza'),
+(2, 'Nestor Gabriel', '001-233525-1211V', '1236-5487', 'AguirreCanales@gmail.com', 'Villa el carmen ', 'H', 1, 2, 'Aguirre Canales'),
+(28, 'Emmanuel', '001-130901-1010W', '8868-8476', 'mcdavo1309@gmail.com', 'Vi.Venezuela Colegio Hispano Americano 1/2 C.O Casa #1993-94', 'H', 1, 2, 'Serrano Ramos'),
+(29, 'Francisco jose', '001-122410-2541P', '1224-5876', 'franciscoperez@gmail.com', 'Masaya', 'H', 1, 2, 'Perez'),
+(33, 'Gerson Ezequiel', '025-200504-2055X', '7523-6542', 'gersonsanchez@gmail.com', 'Cuidad Sandino', 'H', 1, 2, 'Sanchez Hernadez'),
+(34, 'Juan', '001-220598-0001A', '8888-9999', 'juan@example.com', 'Calle 123, Ciudad X', 'H', 1, 2, 'Pérez'),
+(36, 'Luis Eduardo', '001-563290-2045N', '8623-5412', 'LuisChavez@gmail.com', 'Cuidad Sandino', 'H', 1, 1, 'Chavez Mairena'),
+(37, 'Marcos Orlando', '001-236292-6451S', '8856-2341', 'MarcoRamos21@gmail.com', 'Managua', 'H', 1, 2, 'Ramos Vado'),
+(44, 'kenny Ivania', '001-958612-3526J', '8569-4512', 'kennysolis@gmail.com', 'Cristo Rey', 'M', 1, 2, 'Solis Ampie'),
+(45, 'Franklin Randal', '001-365941-5623F', '5623-5412', 'FranklinJiron@gmail.com', 'managua', 'H', 1, 2, 'Jiron');
 
 -- --------------------------------------------------------
 
@@ -580,13 +616,13 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `ID_Usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `ID_Usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT de la tabla `vendedor`
 --
 ALTER TABLE `vendedor`
-  MODIFY `ID_Vendedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `ID_Vendedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- Restricciones para tablas volcadas

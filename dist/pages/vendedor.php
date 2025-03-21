@@ -233,80 +233,142 @@ $result = $conn->query($query);
 
 
         <!-- Validaciones de los Modales -->
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                let modal = document.getElementById("modalAgregarVendedor");
-                let formulario = modal.querySelector("form");
+<script>
+document.addEventListener("DOMContentLoaded", function() { 
+    let modal = document.getElementById("modalAgregarVendedor"); 
+    let formulario = modal.querySelector("form");
 
-                // Resetear formulario al cerrar el modal con la "X" o el botón Cancelar
-                modal.addEventListener("hidden.bs.modal", function() {
-                    formulario.reset();
-                });
+    // Resetear formulario al cerrar el modal con la "X" o el botón Cancelar
+    modal.addEventListener("hidden.bs.modal", function() { 
+        formulario.reset(); 
+    });
 
-                let btnCancelar = modal.querySelector(".btn-secondary");
-                if (btnCancelar) {
-                    btnCancelar.addEventListener("click", function() {
-                        formulario.reset();
-                    });
-                }
+    let btnCancelar = modal.querySelector(".btn-secundario"); 
+    if (btnCancelar) { 
+        btnCancelar.addEventListener("click", function() { 
+            formulario.reset(); 
+        }); 
+    }
 
-                // Validación del campo teléfono
-                const telefonoInput = document.getElementById("telefonoVendedor");
+    // Validación del campo teléfono
+    const telefonoInput = document.getElementById("telefonoVendedor"); 
+    telefonoInput.value = "(+505) "; 
 
-                // Establecer el valor inicial con el prefijo
-                telefonoInput.value = "(+505) ";
+    telefonoInput.addEventListener("input", function(event) { 
+        let valor = telefonoInput.value;
 
-                telefonoInput.addEventListener("input", function(event) {
-                    let valor = telefonoInput.value;
+        if (!valor.startsWith("(+505) ")) { 
+            telefonoInput.value = "(+505) "; 
+            return; 
+        }
 
-                    // Asegurar que el prefijo siempre esté presente
-                    if (!valor.startsWith("(+505) ")) {
-                        telefonoInput.value = "(+505) ";
-                        return;
-                    }
+        let numeros = valor.replace(/\D/g, "").substring(3); 
 
-                    // Obtener solo los números después del prefijo
-                    let numeros = valor.replace(/\D/g, "").substring(3); // Removemos todo excepto números y evitamos modificar el prefijo (+505)
+        if (numeros.length > 8) { 
+            numeros = numeros.slice(0, 8); 
+        }
 
-                    // Limitar a 8 caracteres después del prefijo
-                    if (numeros.length > 8) {
-                        numeros = numeros.slice(0, 8);
-                    }
+        let telefonoFormateado = "(+505) "; 
+        if (numeros.length > 4) { 
+            telefonoFormateado += numeros.slice(0, 4) + "-" + numeros.slice(4); 
+        } else { 
+            telefonoFormateado += numeros; 
+        }
 
-                    // Formatear el número con guion después de los primeros 4 dígitos
-                    let telefonoFormateado = "(+505) ";
-                    if (numeros.length > 4) {
-                        telefonoFormateado += numeros.slice(0, 4) + "-" + numeros.slice(4);
-                    } else {
-                        telefonoFormateado += numeros;
-                    }
+        telefonoInput.value = telefonoFormateado; 
+    });
 
-                    // Asignar el valor formateado
-                    telefonoInput.value = telefonoFormateado;
-                });
+    telefonoInput.addEventListener("keydown", function(event) { 
+        if (telefonoInput.selectionStart < 7 && (event.key === "Backspace" || event.key === "Delete")) { 
+            event.preventDefault(); 
+        } 
+    });
 
-                // Evitar que el usuario borre el prefijo (+505)
-                telefonoInput.addEventListener("keydown", function(event) {
-                    if (telefonoInput.selectionStart < 7 && (event.key === "Backspace" || event.key === "Delete")) {
-                        event.preventDefault(); // Evita que se borre el prefijo
-                    }
-                });
+    telefonoInput.addEventListener("blur", function() { 
+        if (telefonoInput.value.trim() === "" || telefonoInput.value === "(+505)") { 
+            telefonoInput.value = "(+505) "; 
+        } 
+    });
 
-                // Restaurar el prefijo si el usuario borra todo
-                telefonoInput.addEventListener("blur", function() {
-                    if (telefonoInput.value.trim() === "" || telefonoInput.value === "(+505)") {
-                        telefonoInput.value = "(+505) ";
-                    }
-                });
+    // Validación del campo cédula
+    const cedulaInput = document.getElementById("cedulaVendedor");
 
-                // Verificar si el modal debe abrirse después de un error
-                if (sessionStorage.getItem("modalOpen") === "true") {
-                    var modalBootstrap = new bootstrap.Modal(modal);
-                    modalBootstrap.show();
-                    sessionStorage.removeItem("modalOpen"); // Limpiar el estado para futuros intentos
-                }
-            });
-        </script>
+    cedulaInput.addEventListener("input", function(event) {
+        let valor = cedulaInput.value.toUpperCase(); // Convertir a mayúsculas
+        let numeros = valor.replace(/\D/g, ""); // Extraer solo números
+        let letraFinal = valor.match(/[A-Z]$/) ? valor.match(/[A-Z]$/)[0] : ""; // Extraer la última letra si es mayúscula
+
+        // Evitar que el usuario escriba letras antes de los números
+        if (valor.length > 0 && valor[0].match(/[A-Z]/)) {
+            cedulaInput.value = "";
+            return;
+        }
+
+        // Limitar a los primeros 15 números
+        if (numeros.length > 15) {
+            numeros = numeros.slice(0, 15);
+        }
+
+        // Aplicar el formato ###-######-###X
+        let cedulaFormateada = "";
+        if (numeros.length > 3) {
+            cedulaFormateada += numeros.slice(0, 3) + "-";
+            if (numeros.length > 9) {
+                cedulaFormateada += numeros.slice(3, 9) + "-";
+                cedulaFormateada += numeros.slice(9);
+            } else {
+                cedulaFormateada += numeros.slice(3);
+            }
+        } else {
+            cedulaFormateada += numeros;
+        }
+
+        // Agregar la última letra si ya está presente
+        if (letraFinal) {
+            cedulaFormateada += letraFinal;
+        }
+
+        cedulaInput.value = cedulaFormateada;
+    });
+
+    // Evitar caracteres incorrectos al escribir
+    cedulaInput.addEventListener("keydown", function(event) {
+        let valor = cedulaInput.value;
+
+        // Permitir Backspace, Delete y teclas de navegación
+        if (["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(event.key)) {
+            return;
+        }
+
+        // No permitir más de 16 caracteres
+        if (valor.length >= 16) {
+            event.preventDefault();
+            return;
+        }
+
+        // Evitar letras antes de los números
+        if (valor.length === 0 && event.key.match(/[A-Za-z]/)) {
+            event.preventDefault();
+        }
+
+        // Evitar números en la última posición
+        if (valor.length === 15 && event.key.match(/\d/)) {
+            event.preventDefault();
+        }
+    });
+
+    // Verificar si el modal debe abrirse después de un error
+    if (sessionStorage.getItem("modalOpen") === "true") { 
+        var modalBootstrap = new bootstrap.Modal(modal); 
+        modalBootstrap.show(); 
+        sessionStorage.removeItem("modalOpen"); 
+    }
+});
+</script>
+
+
+
+
 
 
         <!-- Modal para editar vendedor -->

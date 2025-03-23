@@ -7,15 +7,18 @@ include_once "Ctrl/head.php";
 // Incluir el archivo de conexión
 include('../pages/Cnx/conexion.php');
 
-// Verificar si se ha seleccionado un filtro de estado
-$estado = isset($_GET['estado']) ? intval($_GET['estado']) : 1; // Por defecto, mostrar solo usuarios activos
+$sql = "SELECT u.ID_Usuario, u.Nombre_Usuario, u.Email, u.Password, u.Imagen, u.estado_usuario, v.Nombre AS Nombre_Vendedor, r.Nombre_Rol
+        FROM usuarios u
+        JOIN vendedor v ON u.ID_Vendedor = v.ID_Vendedor  // Unimos con la tabla vendedor para obtener el nombre del vendedor
+        JOIN roles r ON u.ID_Rol = r.ID_Rol"; // Unimos con la tabla roles para obtener el nombre del rol
+$resultado = $conn->query($sql);
 
-// Consulta SQL para obtener los usuarios y el nombre del rol
-$sql = "SELECT usuarios.*, roles.Nombre_Rol 
-        FROM usuarios 
-        JOIN roles ON usuarios.IdRol = roles.ID_Rol
-        WHERE usuarios.estado_usuario = $estado";
-$result = $conn->query($sql);
+// Verificar si la consulta se ejecutó correctamente
+if (!$resultado) {
+    echo "Error en la consulta SQL: " . $conn->error;
+    exit;
+}
+
 ?>
 
 
@@ -128,70 +131,85 @@ $result = $conn->query($sql);
         </style>
 
 
-            <!-- TABLA DE USUARIOS -->
-            <div class="container">
-                <div class="card p-3 shadow-sm">
-                    <div class="d-flex justify-content-between mb-3">
-                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarUsuario">
-                            <i class="fas fa-user-plus"></i> Agregar
-                        </button>
-                        <h3 class="text-center flex-grow-1">Lista de usuarios</h3>
-                        <div>
-                            <label for="filtroEstado" class="me-2">Filtrar:</label>
-                            <select id="filtroEstado" class="form-select d-inline-block w-auto">
-                                <option value="1" <?= $estado == 1 ? 'selected' : '' ?>>Activos</option>
-                                <option value="0" <?= $estado == 0 ? 'selected' : '' ?>>Dados de Baja</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <table id="empleadosTable" class="display text-center">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Nombre</th>
-                                <th>Correo</th>
-                                <th>Contraseña</th>
-                                <th>Cargo</th>
-                                <th>Avatar</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($row = $result->fetch_assoc()) { ?>
-                                <tr>
-                                    <td><?= $row['ID_Usuario'] ?></td>
-                                    <td><?= $row['Nombre_Usuario'] ?></td>
-                                    <td><?= $row['Email'] ?></td>
-                                    <td><?= $row['Contraseña'] ?></td>
-                                    <td><?= $row['Nombre_Rol'] ?></td>
-                                    <td class='avatar-column'><img src='uploads/<?= $row['Imagen'] ?>' alt='Avatar'></td>
-                                    <td class='btn-actions'>
-                                        <?php if ($row['estado_usuario'] == 1) { ?>
-                                            <button class='btn btn-success VerUsuarioBtn' data-bs-toggle='modal' data-bs-target='#modalVerUsuario' data-id='<?= $row['ID_Usuario'] ?>'>
-                                                <i class='fas fa-eye'></i>
-                                            </button>
-                                            <a href='' class='btn btn-warning editarUsuarioBtn' data-bs-toggle='modal' data-bs-target='#modalEditarUsuario' data-id='<?= $row['ID_Usuario'] ?>'>
-                                                <i class='fas fa-edit'></i>
-                                            </a>
-                                            <button class='btn btn-danger bajaUsuarioBtn' data-id='<?= $row['ID_Usuario'] ?>'>
-                                                <i class='fas fa-trash-alt'></i>
-                                            </button>
-                                        <?php } else { ?>
-                                            <button class='btn btn-success VerUsuarioBtn' data-bs-toggle='modal' data-bs-target='#modalVerUsuario' data-id='<?= $row['ID_Usuario'] ?>'>
-                                                <i class='fas fa-eye'></i>
-                                            </button>
-                                            <button class='btn btn-primary reactivarUsuarioBtn' data-id='<?= $row['ID_Usuario'] ?>'>
-                                                <i class='fas fa-user-check'></i>
-                                            </button>
-                                        <?php } ?>
-                                    </td>
-                                </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
-                </div>
+        <!-- TABLA DE USUARIOS -->
+<div class="container">
+    <div class="card p-3 shadow-sm">
+        <div class="d-flex justify-content-between mb-3">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarUsuario">
+                <i class="fas fa-user-plus"></i> Agregar
+            </button>
+            <h3 class="text-center flex-grow-1">Lista de usuarios</h3>
+            <div>
+                <label for="filtroEstado" class="me-2">Filtrar:</label>
+                <select id="filtroEstado" class="form-select d-inline-block w-auto">
+                    <option value="1" <?= isset($estado) && $estado == 1 ? 'selected' : '' ?>>Activos</option>
+                    <option value="0" <?= isset($estado) && $estado == 0 ? 'selected' : '' ?>>Dados de Baja</option>
+                </select>
             </div>
+        </div>
+
+        <table id="empleadosTable" class="display text-center">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Contraseña</th>
+                    <th>Cargo</th>
+                    <th>Vendedor</th>
+                    <th>Avatar</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if ($resultado->num_rows > 0) { ?>
+                    <?php while ($row = $resultado->fetch_assoc()) { ?>
+                        <tr>
+                            <td><?= $row['ID_Usuario'] ?></td>
+                            <td><?= $row['Nombre_Usuario'] ?></td>
+                            <td><?= $row['Email'] ?></td>
+                            <td><?= $row['Password'] ?></td>
+                            <td><?= $row['Nombre_Rol'] ?></td>
+                            <td><?= $row['Nombre_Vendedor'] ?></td>
+                            <td class='avatar-column'>
+                                <?php if ($row['Imagen']) { ?>
+                                    <img src='uploads/<?= $row['Imagen'] ?>' alt='Avatar'>
+                                <?php } else { ?>
+                                    <img src='uploads/default-avatar.png' alt='Avatar'>
+                                <?php } ?>
+                            </td>
+                            <td class='btn-actions'>
+                                <?php if ($row['estado_usuario'] == 1) { ?>
+                                    <button class='btn btn-success VerUsuarioBtn' data-bs-toggle='modal' data-bs-target='#modalVerUsuario' data-id='<?= $row['ID_Usuario'] ?>'>
+                                        <i class='fas fa-eye'></i>
+                                    </button>
+                                    <a href='' class='btn btn-warning editarUsuarioBtn' data-bs-toggle='modal' data-bs-target='#modalEditarUsuario' data-id='<?= $row['ID_Usuario'] ?>'>
+                                        <i class='fas fa-edit'></i>
+                                    </a>
+                                    <button class='btn btn-danger bajaUsuarioBtn' data-id='<?= $row['ID_Usuario'] ?>'>
+                                        <i class='fas fa-trash-alt'></i>
+                                    </button>
+                                <?php } else { ?>
+                                    <button class='btn btn-success VerUsuarioBtn' data-bs-toggle='modal' data-bs-target='#modalVerUsuario' data-id='<?= $row['ID_Usuario'] ?>'>
+                                        <i class='fas fa-eye'></i>
+                                    </button>
+                                    <button class='btn btn-primary reactivarUsuarioBtn' data-id='<?= $row['ID_Usuario'] ?>'>
+                                        <i class='fas fa-user-check'></i>
+                                    </button>
+                                <?php } ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                <?php } else { ?>
+                    <tr>
+                        <td colspan="8">No hay usuarios registrados.</td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
 
             <!-- Modal para agregar usuario -->

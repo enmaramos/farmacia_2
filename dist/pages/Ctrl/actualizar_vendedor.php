@@ -5,7 +5,7 @@ header("Content-Type: application/json");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validar si se recibieron todos los datos necesarios
-    $requiredFields = ['idVendedor', 'editarNombreVendedor', 'editarApellidoVendedor', 'editarCedulaVendedor', 'editarTelefonoVendedor', 'editarDireccionVendedor', 'editarSexoVendedor', 'editarCorreoVendedor'];
+    $requiredFields = ['idVendedor', 'editarNombreVendedor', 'editarApellidoVendedor', 'editarCedulaVendedor', 'editarTelefonoVendedor', 'editarDireccionVendedor', 'editarSexoVendedor', 'editarCorreoVendedor', 'editarRolVendedor'];
 
     foreach ($requiredFields as $field) {
         if (!isset($_POST[$field]) || empty(trim($_POST[$field]))) {
@@ -23,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $direccion = trim($_POST['editarDireccionVendedor']);
     $sexo = trim($_POST['editarSexoVendedor']);
     $email = trim($_POST['editarCorreoVendedor']);
+    $rol = intval($_POST['editarRolVendedor']); // Agregado para actualizar el rol
 
     // Verificar si el vendedor existe antes de actualizar
     $checkQuery = "SELECT ID_Vendedor FROM vendedor WHERE ID_Vendedor = ?";
@@ -36,15 +37,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // Actualizar el vendedor
-    $sql = "UPDATE vendedor SET Nombre = ?, Apellido = ?, N_Cedula = ?, Telefono = ?, Direccion = ?, Sexo = ?, Email = ? WHERE ID_Vendedor = ?";
+    // Actualizar el vendedor con todos los datos
+    $sql = "UPDATE vendedor SET Nombre = ?, Apellido = ?, N_Cedula = ?, Telefono = ?, Direccion = ?, Sexo = ?, Email = ?, ID_Rol = ? WHERE ID_Vendedor = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssssi", $nombre, $apellido, $cedula, $telefono, $direccion, $sexo, $email, $idVendedor);
+    $stmt->bind_param("sssssssii", $nombre, $apellido, $cedula, $telefono, $direccion, $sexo, $email, $rol, $idVendedor);
 
     if ($stmt->execute()) {
         echo json_encode(["success" => "Vendedor actualizado correctamente"]);
     } else {
-        echo json_encode(["error" => "Error al actualizar el vendedor"]);
+        echo json_encode(["error" => "Error al actualizar el vendedor: " . $stmt->error]);
     }
 
     $stmt->close();

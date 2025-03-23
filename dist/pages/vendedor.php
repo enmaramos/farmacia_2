@@ -367,11 +367,7 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 
-
-
-
-
-        <!-- Modal para editar vendedor -->
+    <!-- Modal para editar vendedor -->
 <div class="modal fade" id="modalEditarVendedor" tabindex="-1" aria-labelledby="modalLabelEditar" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -447,11 +443,76 @@ document.addEventListener("DOMContentLoaded", function() {
 </div>
 
 
+<!-- Modal para ver vendedor -->
+<div class="modal fade" id="modalVerVendedor" tabindex="-1" aria-labelledby="modalVerVendedorLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalVerVendedorLabel">Ver Vendedor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Nombre -->
+                <div class="mb-3">
+                    <label for="nombreVendedorVer" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombreVendedorVer" disabled>
+                </div>
+
+                <!-- Apellido -->
+                <div class="mb-3">
+                    <label for="apellidoVendedorVer" class="form-label">Apellido</label>
+                    <input type="text" class="form-control" id="apellidoVendedorVer" disabled>
+                </div>
+
+                <!-- Número de Cédula -->
+                <div class="mb-3">
+                    <label for="cedulaVendedorVer" class="form-label">N° Cédula</label>
+                    <input type="text" class="form-control" id="cedulaVendedorVer" disabled>
+                </div>
+
+                <!-- Teléfono -->
+                <div class="mb-3">
+                    <label for="telefonoVendedorVer" class="form-label">Teléfono</label>
+                    <input type="text" class="form-control" id="telefonoVendedorVer" disabled>
+                </div>
+
+                <!-- Dirección -->
+                <div class="mb-3">
+                    <label for="direccionVendedorVer" class="form-label">Dirección</label>
+                    <input type="text" class="form-control" id="direccionVendedorVer" disabled>
+                </div>
+
+                <!-- Sexo -->
+                <div class="mb-3">
+                    <label for="sexoVendedorVer" class="form-label">Sexo</label>
+                    <input type="text" class="form-control" id="sexoVendedorVer" disabled>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="emailVendedorVer" class="form-label">Correo</label>
+                    <input type="email" class="form-control" id="emailVendedorVer" disabled>
+                </div>
+
+                <!-- Rol -->
+                <div class="mb-3">
+                    <label for="rolVendedorVer" class="form-label">Rol</label>
+                    <input type="text" class="form-control" id="rolVendedorVer" disabled>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
 
         <script src="../js/editar_vendedor.js?123456"></script>
+        <script src="../js/baja_vendedor.js?12345"></script>
+        <script src="../js/ver_vendedor.js?12345"></script>
 
         <?php
         $conn->close();

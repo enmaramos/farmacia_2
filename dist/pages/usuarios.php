@@ -2,30 +2,6 @@
 include_once "Ctrl/head.php";
 ?>
 
-
-<?php
-// Incluir el archivo de conexión
-include('../pages/Cnx/conexion.php');
-
-$sql = "SELECT u.ID_Usuario, u.Nombre_Usuario, u.Email, u.Password, u.Imagen, u.estado_usuario, v.Nombre AS Nombre_Vendedor, r.Nombre_Rol
-        FROM usuarios u
-        JOIN vendedor v ON u.ID_Vendedor = v.ID_Vendedor  // Unimos con la tabla vendedor para obtener el nombre del vendedor
-        JOIN roles r ON u.ID_Rol = r.ID_Rol"; // Unimos con la tabla roles para obtener el nombre del rol
-$resultado = $conn->query($sql);
-
-// Verificar si la consulta se ejecutó correctamente
-if (!$resultado) {
-    echo "Error en la consulta SQL: " . $conn->error;
-    exit;
-}
-
-?>
-
-
-
-
-
-
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
     <div class="app-wrapper"> <!--begin::Header-->
         <nav class="app-header navbar navbar-expand bg-body"> <!--begin::Container-->
@@ -105,7 +81,7 @@ if (!$resultado) {
         <!---table JQUERY -->
         <script>
             $(document).ready(function() {
-                $('#empleadosTable').DataTable();
+                $('#usuariosTable').DataTable();
             });
         </script>
 
@@ -130,278 +106,210 @@ if (!$resultado) {
             }
         </style>
 
+       <!-- TABLA USUARIO -->
+<div class="container mt-4">
+    <table id="usuariosTable" class="table table-striped text-center">
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th>Nombre de Usuario</th>
+                <th>Imagen</th>
+                <th>Estado</th>
+                <th>Fecha Creación</th>
+                <th>Último Acceso</th>
+                <th>Ver</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se llenarán los datos de los usuarios con PHP -->
+            <?php
+            include 'Cnx/conexion.php';
+            // Consultar todos los usuarios
+            $sql = "SELECT * FROM usuarios";
+            $result = $conn->query($sql);
 
-        <!-- TABLA DE USUARIOS -->
-<div class="container">
-    <div class="card p-3 shadow-sm">
-        <div class="d-flex justify-content-between mb-3">
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarUsuario">
-                <i class="fas fa-user-plus"></i> Agregar
-            </button>
-            <h3 class="text-center flex-grow-1">Lista de usuarios</h3>
-            <div>
-                <label for="filtroEstado" class="me-2">Filtrar:</label>
-                <select id="filtroEstado" class="form-select d-inline-block w-auto">
-                    <option value="1" <?= isset($estado) && $estado == 1 ? 'selected' : '' ?>>Activos</option>
-                    <option value="0" <?= isset($estado) && $estado == 0 ? 'selected' : '' ?>>Dados de Baja</option>
-                </select>
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . $row['ID_Usuario'] . "</td>";
+                    echo "<td>" . $row['Nombre_Usuario'] . "</td>";
+                    echo "<td><img src='" . $row['Imagen'] . "' class='rounded-circle' width='50' height='50'></td>";
+                    echo "<td>" . ($row['estado_usuario'] == 1 ? "<span class='badge bg-success'>Activo</span>" : "<span class='badge bg-danger'>Inactivo</span>") . "</td>";
+                    echo "<td>" . $row['Fecha_Creacion'] . "</td>";
+                    echo "<td>" . ($row['Ultimo_Acceso'] ? $row['Ultimo_Acceso'] : 'No disponible') . "</td>";
+                    echo "<td>
+                    <button class='btn btn-success btn-sm' data-bs-toggle='modal' data-bs-target='#modalVerUsuario' data-id='" . $row['ID_Usuario'] . "' title='Ver'>
+                        <i class='fas fa-eye'></i>
+                    </button>
+                  </td>";
+                    echo "<td>
+                    <a href='#' class='btn btn-warning btn-sm text-white' data-bs-toggle='modal' data-bs-target='#modalEditarUsuario' data-id='" . $row['ID_Usuario'] . "' title='Editar'>
+                        <i class='fas fa-edit'></i>
+                    </a>
+                  </td>";
+                    echo "<td>
+                    <button class='btn btn-danger btn-sm' title='Eliminar'>
+                        <i class='fas fa-trash-alt'></i>
+                    </button>
+                  </td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='9'>No se encontraron usuarios</td></tr>";
+            }
+
+            $conn->close();
+            ?>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal para ver usuario -->
+<div class="modal fade" id="modalVerUsuario" tabindex="-1" aria-labelledby="modalVerUsuarioLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalVerUsuarioLabel">Ver Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <!-- ID de Usuario -->
+                <div class="mb-3">
+                    <label for="idUsuarioVer" class="form-label">ID de Usuario</label>
+                    <input type="text" class="form-control" id="idUsuarioVer" disabled>
+                </div>
+
+                <!-- Nombre de Usuario -->
+                <div class="mb-3">
+                    <label for="nombreUsuarioVer" class="form-label">Nombre de Usuario</label>
+                    <input type="text" class="form-control" id="nombreUsuarioVer" disabled>
+                </div>
+
+                <!-- Imagen -->
+                <div class="mb-3">
+                    <label for="imagenUsuarioVer" class="form-label">Imagen</label>
+                    <img id="imagenUsuarioVer" src="" alt="Imagen del Usuario" class="rounded-circle" width="50" height="50">
+                </div>
+
+                <!-- Contraseña -->
+                <div class="mb-3">
+                    <label for="passwordUsuarioVer" class="form-label">Contraseña</label>
+                    <input type="text" class="form-control" id="passwordUsuarioVer" disabled>
+                </div>
+
+                <!-- ID de Vendedor -->
+                <div class="mb-3">
+                    <label for="vendedorUsuarioVer" class="form-label">ID Vendedor</label>
+                    <input type="text" class="form-control" id="vendedorUsuarioVer" disabled>
+                </div>
+
+                <!-- Estado del Usuario -->
+                <div class="mb-3">
+                    <label for="estadoUsuarioVer" class="form-label">Estado</label>
+                    <input type="text" class="form-control" id="estadoUsuarioVer" disabled>
+                </div>
+
+                <!-- Fecha de Creación -->
+                <div class="mb-3">
+                    <label for="fechaCreacionUsuarioVer" class="form-label">Fecha de Creación</label>
+                    <input type="text" class="form-control" id="fechaCreacionUsuarioVer" disabled>
+                </div>
+
+                <!-- Último Acceso -->
+                <div class="mb-3">
+                    <label for="ultimoAccesoUsuarioVer" class="form-label">Último Acceso</label>
+                    <input type="text" class="form-control" id="ultimoAccesoUsuarioVer" disabled>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
+    </div>
+</div>
 
-        <table id="empleadosTable" class="display text-center">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Contraseña</th>
-                    <th>Cargo</th>
-                    <th>Vendedor</th>
-                    <th>Avatar</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if ($resultado->num_rows > 0) { ?>
-                    <?php while ($row = $resultado->fetch_assoc()) { ?>
-                        <tr>
-                            <td><?= $row['ID_Usuario'] ?></td>
-                            <td><?= $row['Nombre_Usuario'] ?></td>
-                            <td><?= $row['Email'] ?></td>
-                            <td><?= $row['Password'] ?></td>
-                            <td><?= $row['Nombre_Rol'] ?></td>
-                            <td><?= $row['Nombre_Vendedor'] ?></td>
-                            <td class='avatar-column'>
-                                <?php if ($row['Imagen']) { ?>
-                                    <img src='uploads/<?= $row['Imagen'] ?>' alt='Avatar'>
-                                <?php } else { ?>
-                                    <img src='uploads/default-avatar.png' alt='Avatar'>
-                                <?php } ?>
-                            </td>
-                            <td class='btn-actions'>
-                                <?php if ($row['estado_usuario'] == 1) { ?>
-                                    <button class='btn btn-success VerUsuarioBtn' data-bs-toggle='modal' data-bs-target='#modalVerUsuario' data-id='<?= $row['ID_Usuario'] ?>'>
-                                        <i class='fas fa-eye'></i>
-                                    </button>
-                                    <a href='' class='btn btn-warning editarUsuarioBtn' data-bs-toggle='modal' data-bs-target='#modalEditarUsuario' data-id='<?= $row['ID_Usuario'] ?>'>
-                                        <i class='fas fa-edit'></i>
-                                    </a>
-                                    <button class='btn btn-danger bajaUsuarioBtn' data-id='<?= $row['ID_Usuario'] ?>'>
-                                        <i class='fas fa-trash-alt'></i>
-                                    </button>
-                                <?php } else { ?>
-                                    <button class='btn btn-success VerUsuarioBtn' data-bs-toggle='modal' data-bs-target='#modalVerUsuario' data-id='<?= $row['ID_Usuario'] ?>'>
-                                        <i class='fas fa-eye'></i>
-                                    </button>
-                                    <button class='btn btn-primary reactivarUsuarioBtn' data-id='<?= $row['ID_Usuario'] ?>'>
-                                        <i class='fas fa-user-check'></i>
-                                    </button>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                <?php } else { ?>
-                    <tr>
-                        <td colspan="8">No hay usuarios registrados.</td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+<!-- Modal para Editar usuario -->
+<div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-labelledby="modalVerUsuarioLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalVerUsuarioLabel">Ver Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <!-- ID de Usuario -->
+                <div class="mb-3">
+                    <label for="idUsuarioVer" class="form-label">ID de Usuario</label>
+                    <input type="text" class="form-control" id="idUsuarioVer" disabled>
+                </div>
+
+                <!-- Nombre de Usuario -->
+                <div class="mb-3">
+                    <label for="nombreUsuarioVer" class="form-label">Nombre de Usuario</label>
+                    <input type="text" class="form-control" id="nombreUsuarioVer" disabled>
+                </div>
+
+                <!-- Imagen -->
+                <div class="mb-3">
+                    <label for="imagenUsuarioVer" class="form-label">Imagen</label>
+                    <img id="imagenUsuarioVer" src="" alt="Imagen del Usuario" class="rounded-circle" width="50" height="50">
+                </div>
+
+                <!-- Contraseña -->
+                <div class="mb-3">
+                    <label for="passwordUsuarioVer" class="form-label">Contraseña</label>
+                    <input type="text" class="form-control" id="passwordUsuarioVer" disabled>
+                </div>
+
+                <!-- ID de Vendedor -->
+                <div class="mb-3">
+                    <label for="vendedorUsuarioVer" class="form-label">ID Vendedor</label>
+                    <input type="text" class="form-control" id="vendedorUsuarioVer" disabled>
+                </div>
+
+                <!-- Estado del Usuario -->
+                <div class="mb-3">
+                    <label for="estadoUsuarioVer" class="form-label">Estado</label>
+                    <input type="text" class="form-control" id="estadoUsuarioVer" disabled>
+                </div>
+
+                <!-- Fecha de Creación -->
+                <div class="mb-3">
+                    <label for="fechaCreacionUsuarioVer" class="form-label">Fecha de Creación</label>
+                    <input type="text" class="form-control" id="fechaCreacionUsuarioVer" disabled>
+                </div>
+
+                <!-- Último Acceso -->
+                <div class="mb-3">
+                    <label for="ultimoAccesoUsuarioVer" class="form-label">Último Acceso</label>
+                    <input type="text" class="form-control" id="ultimoAccesoUsuarioVer" disabled>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
     </div>
 </div>
 
 
 
-            <!-- Modal para agregar usuario -->
-            <div class="modal fade" id="modalAgregarUsuario" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalLabel">Agregar Usuario</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form action="../pages/Ctrl/agregar_usuario.php" method="POST" enctype="multipart/form-data">
-                            <div class="modal-body">
-                                <!-- Nombre -->
-                                <div class="mb-3">
-                                    <label for="nombreUsuario" class="form-label">Nombre</label>
-                                    <input type="text" class="form-control" name="nombreUsuario" id="nombreUsuario" required>
-                                </div>
-
-                                <!-- Email -->
-                                <div class="mb-3">
-                                    <label for="emailUsuario" class="form-label">Correo Electrónico</label>
-                                    <input type="email" class="form-control" name="emailUsuario" id="emailUsuario" required>
-                                </div>
-
-                                <!-- Contraseña -->
-                                <div class="mb-3">
-                                    <label for="contraseñaUsuario" class="form-label">Contraseña</label>
-                                    <input type="" class="form-control" name="contraseñaUsuario" id="contraseñaUsuario" required>
-                                </div>
-
-                                <!-- Teléfono -->
-                                <div class="mb-3">
-                                    <label for="telefonoUsuario" class="form-label">Teléfono</label>
-                                    <input type="text" class="form-control" name="telefonoUsuario" id="telefonoUsuario">
-                                </div>
-
-                                <!-- Rol -->
-                                <div class="mb-3">
-                                    <label for="rolUsuario" class="form-label">Rol</label>
-                                    <select class="form-control" name="rolUsuario" id="rolUsuario" required>
-                                        <option value="1">Administrador</option>
-                                        <option value="2">Empleado</option>
-                                    </select>
-                                </div>
-
-                                <!-- Imagen -->
-                                <div class="mb-3">
-                                    <label for="imagenUsuario" class="form-label">Imagen de Perfil</label>
-                                    <input type="file" class="form-control" name="imagenUsuario" id="imagenUsuario" accept="image/*">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-primary">Guardar Usuario</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Modal Editar Usuario -->
-            <div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalLabel">Editar Usuario</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form action="../pages/Ctrl/actualizar_usuario.php" method="POST" enctype="multipart/form-data">
-                            <input type="hidden" name="idUsuario" id="idUsuario"> <!-- Campo oculto -->
-
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <label for="nombreUsuario" class="form-label">Nombre</label>
-                                    <input type="text" class="form-control" name="nombre_Usuario" id="nombre_Usuario" required>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="emailUsuario" class="form-label">Correo Electrónico</label>
-                                    <input type="email" class="form-control" name="email_Usuario" id="email_Usuario" required>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="contraseñaUsuario" class="form-label">Contraseña (Dejar vacío si no desea cambiarla)</label>
-                                    <input type="" class="form-control" name="contraseña_Usuario" id="contraseña_Usuario">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="telefonoUsuario" class="form-label">Teléfono</label>
-                                    <input type="text" class="form-control" name="telefono_Usuario" id="telefono_Usuario">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="rolUsuario" class="form-label">Rol</label>
-                                    <select class="form-control" name="rol_Usuario" id="rol_Usuario" required>
-                                        <option value="1">Administrador</option>
-                                        <option value="2">Empleado</option>
-                                    </select>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="imagenUsuario" class="form-label">Imagen de Perfil</label>
-                                    <input type="file" class="form-control" name="imagenUsuario" id="imagenUsuario" accept="image/*">
-                                    <img id="imagenPreview" src="" alt="Vista previa" style="max-width: 100px; display: none;">
-                                </div>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal Ver Usuario -->
-            <div class="modal fade" id="modalVerUsuario" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-                <div class="modal-dialog  modal-">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalLabel">Datos del Usuario</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form action="#" method="POST" enctype="multipart/form-data">
-                            <input type="hidden" name="idUsuario" id="idUsuario"> <!-- Campo oculto -->
-
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <label for="nombreUsuario" class="form-label">Nombre</label>
-                                    <input type="text" class="form-control" name="nombre_Usuario" id="nombre_Usuario" disabled>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="emailUsuario" class="form-label">Correo Electrónico</label>
-                                    <input type="email" class="form-control" name="email_Usuario" id="email_Usuario" disabled>
-                                </div>disabled
-
-                                <div class="mb-3">
-                                    <label for="contraseñaUsuario" class="form-label">Contraseña</label>
-                                    <input type="" class="form-control" name="contraseña_Usuario" id="contraseña_Usuario" disabled>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="telefonoUsuario" class="form-label">Teléfono</label>
-                                    <input type="text" class="form-control" name="telefono_Usuario" id="telefono_Usuario" disabled>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="rolUsuario" class="form-label">Rol</label>
-                                    <select class="form-control" name="rol_Usuario" id="rol_Usuario" disabled>
-                                        <option value="1">Administrador</option>
-                                        <option value="2">Empleado</option>
-                                    </select>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="imagenUsuario" class="form-label">Imagen de Perfil</label>
-                                    <input type="file" class="form-control" name="imagenUsuario" id="imagenUsuario" accept="image/*" disabled>
-                                    <img id="imagenPreview" src="" alt="Vista previa" style="max-width: 100px; display: block;">
-                                </div>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-
-
-
-            <?php
-            // Cerrar la conexión
-            $conn->close();
-            ?>
-
-            <!-- <div class="contenedor">
+        <!-- <div class="contenedor">
                  <img src="../../dist/assets/img/logologin2.png" alt="Logo">
             </div>-->
 
-            <script src="../js/editar_usuario.js?2345"></script>
-            <script src="../js/Ver_usuario.js?1234"></script>
-            <script src="../js/mostar_filtro.js?1234"></script>
-            <script src="../js/baja_usuario.js?1234"></script>
-            <script src="../js/reactivar_usuario.js?12345"></script>
+        <script src="../js/editar_usuario.js?2345"></script>
+        <script src="../js/ver_usuario.js?12345"></script>
+        <script src="../js/mostar_filtro.js?1234"></script>
+        <script src="../js/baja_usuario.js?1234"></script>
+        <script src="../js/reactivar_usuario.js?12345"></script>
 
 
-            <?php
+        <?php
 
-            include_once "Ctrl/footer.php";
-            ?>
+        include_once "Ctrl/footer.php";
+        ?>

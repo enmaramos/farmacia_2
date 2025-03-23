@@ -135,17 +135,17 @@ $result = $conn->query($query);
                                     ?>
                                 </td>
                                 <td>
-                                    <button class='btn btn-success VerVendedorBtn' data-bs-toggle='modal' data-bs-target='#modalVerVendedor' data-id='<?= $row['ID_Vendedor'] ?>' title="Ver Detalles">
+                                    <button class='btn btn-success VerVendedorBtn btn-sm' data-bs-toggle='modal' data-bs-target='#modalVerVendedor' data-id='<?= $row['ID_Vendedor'] ?>' title="Ver Detalles">
                                         <i class='fas fa-eye'></i>
                                     </button>
                                 </td>
                                 <td>
-                                    <a href='' class='btn btn-warning editarVendedorBtn' data-bs-toggle='modal' data-bs-target='#modalEditarVendedor' data-id='<?= $row['ID_Vendedor'] ?>' title="Editar Vendedor">
+                                    <a href='' class='btn btn-warning editarVendedorBtn btn-sm ' data-bs-toggle='modal' data-bs-target='#modalEditarVendedor' data-id='<?= $row['ID_Vendedor'] ?>' title="Editar Vendedor">
                                         <i class='fas fa-edit'></i>
                                     </a>
                                 </td>
                                 <td>
-                                    <button class='btn btn-danger eliminarVendedorBtn' data-id='<?= $row['ID_Vendedor'] ?>' title="Eliminar Vendedor">
+                                    <button class='btn btn-danger eliminarVendedorBtn btn-sm' data-id='<?= $row['ID_Vendedor'] ?>' title="Eliminar Vendedor">
                                         <i class='fas fa-trash-alt'></i>
                                     </button>
                                 </td>

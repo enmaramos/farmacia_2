@@ -19,7 +19,8 @@ if (isset($_POST['userId'])) {
             'ID_Usuario' => $row['ID_Usuario'],
             'Nombre_Usuario' => $row['Nombre_Usuario'],
             'Imagen' => $row['Imagen'],
-            'Email' => $row['Email'],
+            'Password' => $row['Password'], // Agregado porque se usa en el modal
+            'ID_Vendedor' => $row['ID_Vendedor'],
             'estado_usuario' => $row['estado_usuario'],
             'Fecha_Creacion' => $row['Fecha_Creacion'],
             'Ultimo_Acceso' => $row['Ultimo_Acceso']

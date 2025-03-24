@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caja de Farmacia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .carrito-icono {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+        .carrito-contenedor {
+            position: fixed;
+            top: 20px;
+            right: 80px;
+            background-color: red;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 50%;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Caja de Farmacia</h2>
+
+        <!-- Formulario de pedido -->
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Pedido de Producto</h4>
+                <form id="pedidoForm">
+                    <div class="mb-3">
+                        <label for="producto" class="form-label">Producto</label>
+                        <select class="form-select" id="producto">
+                            <option value="Omnilife">Omnilife</option>
+                            <option value="Medicamento A">Medicamento A</option>
+                            <option value="Medicamento B">Medicamento B</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cantidad" class="form-label">Cantidad</label>
+                        <input type="number" class="form-control" id="cantidad" min="1" value="1">
+                    </div>
+                    <div class="mb-3">
+                        <label for="precio" class="form-label">Precio por Unidad</label>
+                        <input type="number" class="form-control" id="precio" value="20.00" readonly>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="agregarAlCarrito()">Agregar al Carrito</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Icono del carrito -->
+    <div class="carrito-contenedor" id="contadorCarrito">0</div>
+    <div class="carrito-icono" onclick="mostrarCarrito()">🛒</div>
+
+    <!-- Modal de Carrito -->
+    <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="carritoModalLabel">Carrito de Compras</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table" id="carritoTable">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <button class="btn btn-success" onclick="facturar()">Facturar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let carrito = [];
+
+        // Función para agregar productos al carrito
+        function agregarAlCarrito() {
+            const producto = document.getElementById('producto').value;
+            const cantidad = document.getElementById('cantidad').value;
+            const precio = document.getElementById('precio').value;
+            const total = cantidad * precio;
+
+            // Crear un objeto de producto
+            const productoCarrito = {
+                producto: producto,
+                cantidad: cantidad,
+                precio: precio,
+                total: total
+            };
+
+            // Agregar producto al carrito
+            carrito.push(productoCarrito);
+
+            // Actualizar tabla de carrito y contador
+            actualizarCarrito();
+            actualizarContador();
+        }
+
+        // Función para actualizar la tabla del carrito
+        function actualizarCarrito() {
+            const carritoTable = document.getElementById('carritoTable').getElementsByTagName('tbody')[0];
+            carritoTable.innerHTML = ''; // Limpiar la tabla
+
+            let totalGeneral = 0;
+            carrito.forEach((item, index) => {
+                const row = carritoTable.insertRow();
+                row.innerHTML = `
+                    <td>${item.producto}</td>
+                    <td>${item.cantidad}</td>
+                    <td>${item.precio}</td>
+                    <td>${item.total}</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="eliminarDelCarrito(${index})">Eliminar</button></td>
+                `;
+                totalGeneral += item.total;
+            });
+
+            // Mostrar el total general en la parte inferior del carrito
+            const totalRow = carritoTable.insertRow();
+            totalRow.innerHTML = `
+                <td colspan="3"><strong>Total General</strong></td>
+                <td><strong>${totalGeneral.toFixed(2)}</strong></td>
+                <td></td>
+            `;
+        }
+
+        // Función para eliminar un producto del carrito
+        function eliminarDelCarrito(index) {
+            carrito.splice(index, 1); // Eliminar el producto
+            actualizarCarrito(); // Actualizar tabla
+            actualizarContador(); // Actualizar contador
+        }
+
+        // Función para actualizar el contador del carrito
+        function actualizarContador() {
+            const contador = carrito.length;
+            document.getElementById('contadorCarrito').textContent = contador;
+        }
+
+        // Función para mostrar el modal del carrito
+        function mostrarCarrito() {
+            const myModal = new bootstrap.Modal(document.getElementById('carritoModal'), {
+                keyboard: false
+            });
+            myModal.show();
+        }
+
+        // Función para facturar el carrito
+        function facturar() {
+            if (carrito.length === 0) {
+                alert("El carrito está vacío. Agrega productos antes de facturar.");
+                return;
+            }
+
+            let facturacion = 'Productos Facturados:\n\n';
+            let totalFacturacion = 0;
+            carrito.forEach(item => {
+                facturacion += `${item.producto} - Cantidad: ${item.cantidad} - Total: ${item.total}\n`;
+                totalFacturacion += item.total;
+            });
+            facturacion += `\nTotal a Pagar: ${totalFacturacion.toFixed(2)}`;
+
+            alert(facturacion); // Mostrar resumen de facturación
+            carrito = []; // Vaciar el carrito
+            actualizarCarrito(); // Actualizar la tabla
+            actualizarContador(); // Actualizar contador
+        }
+    </script>
+</body>
+</html>

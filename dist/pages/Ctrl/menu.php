@@ -21,6 +21,35 @@
 
                 <li class="nav-item">
                     <a href="#" class="nav-link">
+                <i class="fa-solid fa-file-invoice-dollar"></i><!-- Icono de administración -->
+                        <p>
+                            Ventas<i class="nav-arrow bi bi-chevron-right"></i> <!-- Flecha de submenú -->
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="./usuarios.php" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Caja</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="./proveedores.php" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>-----</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="./vendedor.php" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>--------</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-user-cog"></i> <!-- Icono de administración -->
                         <p>
                             Administración
@@ -44,6 +73,30 @@
                             <a href="./vendedor.php" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Vendedores</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-box-open"></i>
+                        <p>
+                            Inventario
+                            <i class="nav-arrow bi bi-chevron-right"></i> <!-- Flecha de submenú -->
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="./productos.php" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Producto </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="./proveedores.php" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Categorias</p>
                             </a>
                         </li>
                     </ul>

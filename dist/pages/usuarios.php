@@ -166,7 +166,7 @@ include_once "Ctrl/head.php";
     </table>
 </div>
 
-<!-- Modal para ver usuario -->
+<!-- Modal para Ver usuario -->
 <div class="modal fade" id="modalVerUsuario" tabindex="-1" aria-labelledby="modalVerUsuarioLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -207,8 +207,8 @@ include_once "Ctrl/head.php";
 
                 <!-- Estado del Usuario -->
                 <div class="mb-3">
-                    <label for="estadoUsuarioVer" class="form-label">Estado</label>
-                    <input type="text" class="form-control" id="estadoUsuarioVer" disabled>
+                    <label for="estadoUsuarioVerInput" class="form-label">Estado</label>
+                    <input type="text" class="form-control" id="estadoUsuarioVerInput" disabled>
                 </div>
 
                 <!-- Fecha de Creación -->
@@ -222,7 +222,6 @@ include_once "Ctrl/head.php";
                     <label for="ultimoAccesoUsuarioVer" class="form-label">Último Acceso</label>
                     <input type="text" class="form-control" id="ultimoAccesoUsuarioVer" disabled>
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -230,6 +229,8 @@ include_once "Ctrl/head.php";
         </div>
     </div>
 </div>
+
+
 
 <!-- Modal para Editar usuario -->
 <div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-labelledby="modalVerUsuarioLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -303,7 +304,7 @@ include_once "Ctrl/head.php";
             </div>-->
 
         <script src="../js/editar_usuario.js?2345"></script>
-        <script src="../js/ver_usuario.js?12345"></script>
+        <script src="../js/ver_usuario.js?12346"></script>
         <script src="../js/mostar_filtro.js?1234"></script>
         <script src="../js/baja_usuario.js?1234"></script>
         <script src="../js/reactivar_usuario.js?12345"></script>

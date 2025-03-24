@@ -64,11 +64,11 @@ include_once "Ctrl/head.php";
             <div class="container-fluid"> <!--begin::Row-->
                 <div class="row">
                     <div class="col-sm-6">
-                        <h3 class="mb-0">proveedores</h3>
+                        <h3 class="mb-0">PRODUCTOS</h3>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-end">
-                            <li class="breadcrumb-item"><a href="#">Proveedor</a></li>
+                            <li class="breadcrumb-item"><a href="#">Productos</a></li>
                             <li class="breadcrumb-item active" aria-current="page">
                                 Menu
                             </li>
@@ -82,64 +82,65 @@ include_once "Ctrl/head.php";
         <!---table JQUERY -->
         <script>
             $(document).ready(function() {
-                $('#proveedoresTable').DataTable();
+                $('#productosTable').DataTable();
             });
         </script>
 
-<!-- TABLA PROVEEDOR -->
+
+<!-- TABLA PRODUCTOS-->
 <div class="container mt-4">
-    <table id="proveedoresTable" class="table table-striped text-center">
+    <table id="productosTable" class="table table-striped text-center">
         <thead>
             <tr>
                 <th>N°</th>
                 <th>Nombre</th>
-                <th>Laboratorio</th>
-                <th>Teléfono</th>
-                <th>Email</th>
-                <th>RUC</th>
-                <th>Estado</th>
+                <th>Imagen</th>
+                <th>Existencia</th>
+                <th>Dosis</th>
+                <th>Presentación</th>
+                <th>Fecha Vencimiento</th>
                 <th>Ver</th>
                 <th>Editar</th>
                 <th>Eliminar</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Aquí se llenarán los datos de los proveedores con PHP -->
+            <!-- Aquí se llenarán los datos de los productos con PHP -->
             <?php
             include 'Cnx/conexion.php';
-            // Consultar todos los proveedores
-            $sql = "SELECT * FROM proveedor";
+            // Consultar todos los productos (medicamentos)
+            $sql = "SELECT * FROM medicamento";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>";
-                    echo "<td>" . $row['ID_Proveedor'] . "</td>";
-                    echo "<td>" . $row['Nombre'] . "</td>";
-                    echo "<td>" . $row['Laboratorio'] . "</td>";
-                    echo "<td>" . $row['Telefono'] . "</td>";
-                    echo "<td>" . $row['Email'] . "</td>";
-                    echo "<td>" . $row['RUC'] . "</td>";
-                    echo "<td>" . ($row['Estado'] == 1 ? "<span class='badge bg-success'>Activo</span>" : "<span class='badge bg-danger'>Inactivo</span>") . "</td>";
+                    echo "<td>" . $row['ID_Medicamento'] . "</td>";
+                    echo "<td>" . $row['Nombre_Medicamento'] . "</td>";
+                    echo "<td><img src='" . $row['Imagen'] . "' class='img-thumbnail' width='50' height='50'></td>";
+                    echo "<td>" . $row['N_Existencia'] . "</td>";
+                    echo "<td>" . $row['Dosis'] . "</td>"; 
+                    echo "<td>" . $row['Presentacion'] . "</td>";
+                    echo "<td>" . date('d/m/Y', strtotime($row['Fecha_Vencimiento'])) . "</td>";
                     echo "<td>
-                    <button class='btn btn-success btn-sm' data-bs-toggle='modal' data-bs-target='#modalVerProveedor' data-id='" . $row['ID_Proveedor'] . "' title='Ver'>
-                        <i class='fas fa-eye'></i>
-                    </button>
-                  </td>";
+                            <button class='btn btn-success btn-sm' data-bs-toggle='modal' data-bs-target='#modalVerProducto' data-id='" . $row['ID_Medicamento'] . "' title='Ver Detalles'>
+                                <i class='fas fa-eye'></i>
+                            </button>
+                          </td>";
                     echo "<td>
-                    <a href='#' class='btn btn-warning btn-sm text-white' data-bs-toggle='modal' data-bs-target='#modalEditarProveedor' data-id='" . $row['ID_Proveedor'] . "' title='Editar'>
-                        <i class='fas fa-edit'></i>
-                    </a>
-                  </td>";
+                            <a href='#' class='btn btn-warning btn-sm text-white' data-bs-toggle='modal' data-bs-target='#modalEditarProducto' data-id='" . $row['ID_Medicamento'] . "' title='Editar'>
+                                <i class='fas fa-edit'></i>
+                            </a>
+                          </td>";
                     echo "<td>
-                    <button class='btn btn-danger btn-sm' title='Eliminar'>
-                        <i class='fas fa-trash-alt'></i>
-                    </button>
-                  </td>";
+                            <button class='btn btn-danger btn-sm' title='Eliminar'>
+                                <i class='fas fa-trash-alt'></i>
+                            </button>
+                          </td>";
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='10'>No se encontraron proveedores</td></tr>";
+                echo "<tr><td colspan='10'>No se encontraron productos</td></tr>";
             }
 
             $conn->close();
@@ -149,12 +150,6 @@ include_once "Ctrl/head.php";
 </div>
 
 
-
-        <script src="../js/editar_proveedor.js?2345"></script>
-        <script src="../js/ver_proveedor.js?12345"></script>
-        <script src="../js/baja_proveedor.js?12345"></script>
-        <script src="../js/reactivar_proveedor.js?12345"></script>
-        <script src="../js/mostar_filtro.js?12345"></script>
 
         <?php
 

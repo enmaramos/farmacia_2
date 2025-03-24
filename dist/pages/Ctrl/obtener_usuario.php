@@ -5,8 +5,14 @@ include '../Cnx/conexion.php';  // Asegúrate de que esta conexión sea la corre
 if (isset($_POST['userId'])) {
     $userId = $_POST['userId'];
 
-    // Consulta para obtener los datos del usuario por su ID
-    $sql = "SELECT * FROM usuarios WHERE ID_Usuario = ?";
+    // Consulta con JOIN para obtener el nombre y apellido del vendedor
+    $sql = "SELECT u.ID_Usuario, u.Nombre_Usuario, u.Imagen, u.Password, u.estado_usuario, 
+                   u.Fecha_Creacion, u.Ultimo_Acceso, 
+                   CONCAT(v.Nombre, ' ', v.Apellido) AS Nombre_Vendedor 
+            FROM usuarios u 
+            LEFT JOIN vendedor v ON u.ID_Vendedor = v.ID_Vendedor 
+            WHERE u.ID_Usuario = ?";
+
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $userId);
     $stmt->execute();
@@ -19,15 +25,15 @@ if (isset($_POST['userId'])) {
             'ID_Usuario' => $row['ID_Usuario'],
             'Nombre_Usuario' => $row['Nombre_Usuario'],
             'Imagen' => $row['Imagen'],
-            'Password' => $row['Password'], // Agregado porque se usa en el modal
-            'ID_Vendedor' => $row['ID_Vendedor'],
+            'Password' => $row['Password'], 
+            'Nombre_Vendedor' => $row['Nombre_Vendedor'], // Ahora devuelve el nombre completo del vendedor
             'estado_usuario' => $row['estado_usuario'],
             'Fecha_Creacion' => $row['Fecha_Creacion'],
             'Ultimo_Acceso' => $row['Ultimo_Acceso']
         );
         echo json_encode($response);  // Devuelve los datos en formato JSON
     } else {
-        echo json_encode(array('error' => 'Usuario no encontrado'));  // Si no se encuentra, devuelve un error
+        echo json_encode(array('error' => 'Usuario no encontrado'));  
     }
 
     $stmt->close();
@@ -35,4 +41,3 @@ if (isset($_POST['userId'])) {
 } else {
     echo json_encode(array('error' => 'No se recibió el userId.'));
 }
-?>

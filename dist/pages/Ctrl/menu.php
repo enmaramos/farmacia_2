@@ -9,7 +9,7 @@
 
                 <!--------------------------------------------------------LO QUE EST EN USO ---------------------------------------------------->
 
-
+                <!-- INICIO -->
                 <li class="nav-item">
                     <a href="./inicio.php" class="nav-link">
                         <i class="nav-icon fas fa-home"></i>
@@ -18,7 +18,7 @@
                         </p>
                     </a>
                 </li>
-
+                <!-- VENTAS -->
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                 <i class="fa-solid fa-file-invoice-dollar"></i><!-- Icono de administración -->
@@ -34,20 +34,20 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./proveedores.php" class="nav-link">
+                            <a href="./.php" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>-----</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./vendedor.php" class="nav-link">
+                            <a href="./.php" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>--------</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-
+                    <!-- ABMINISTRACION -->
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-user-cog"></i> <!-- Icono de administración -->
@@ -83,7 +83,7 @@
                         </li>
                     </ul>
                 </li>
-
+                    <!-- INVENTARIO -->
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="fas fa-box-open"></i>
@@ -100,7 +100,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./proveedores.php" class="nav-link">
+                            <a href="./.php" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Categorias</p>
                             </a>

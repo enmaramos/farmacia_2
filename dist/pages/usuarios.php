@@ -106,7 +106,7 @@ include_once "Ctrl/head.php";
             }
         </style>
 
-       <!-- TABLA USUARIO -->
+<!-- TABLA USUARIO -->
 <div class="container mt-4">
     <table id="usuariosTable" class="table table-striped text-center">
         <thead>
@@ -132,10 +132,12 @@ include_once "Ctrl/head.php";
 
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
+                    $rutaImagen = !empty($row['Imagen']) ? "../../dist/pages/uploads/" . $row['Imagen'] : "../../dist/pages/uploads/default.jpg";
+                    
                     echo "<tr>";
                     echo "<td>" . $row['ID_Usuario'] . "</td>";
                     echo "<td>" . $row['Nombre_Usuario'] . "</td>";
-                    echo "<td><img src='" . $row['Imagen'] . "' class='rounded-circle' width='50' height='50'></td>";
+                    echo "<td><img src='" . $rutaImagen . "' class='rounded-circle' width='50' height='50'></td>";
                     echo "<td>" . ($row['estado_usuario'] == 1 ? "<span class='badge bg-success'>Activo</span>" : "<span class='badge bg-danger'>Inactivo</span>") . "</td>";
                     echo "<td>" . $row['Fecha_Creacion'] . "</td>";
                     echo "<td>" . ($row['Ultimo_Acceso'] ? $row['Ultimo_Acceso'] : 'No disponible') . "</td>";
@@ -166,6 +168,7 @@ include_once "Ctrl/head.php";
     </table>
 </div>
 
+
 <!-- Modal para Ver usuario -->
 <div class="modal fade" id="modalVerUsuario" tabindex="-1" aria-labelledby="modalVerUsuarioLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
@@ -175,10 +178,10 @@ include_once "Ctrl/head.php";
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
-                <!-- ID de Usuario -->
-                <div class="mb-3">
-                    <label for="idUsuarioVer" class="form-label">ID de Usuario</label>
-                    <input type="text" class="form-control" id="idUsuarioVer" disabled>
+                 <!-- Imagen -->
+                 <div class="mb-3">
+                    <label for="imagenUsuarioVer" class="form-label">Imagen</label>
+                    <img id="imagenUsuarioVer" src="" alt="Imagen del Usuario" class="rounded-circle" width="50" height="50">
                 </div>
 
                 <!-- Nombre de Usuario -->
@@ -187,11 +190,7 @@ include_once "Ctrl/head.php";
                     <input type="text" class="form-control" id="nombreUsuarioVer" disabled>
                 </div>
 
-                <!-- Imagen -->
-                <div class="mb-3">
-                    <label for="imagenUsuarioVer" class="form-label">Imagen</label>
-                    <img id="imagenUsuarioVer" src="" alt="Imagen del Usuario" class="rounded-circle" width="50" height="50">
-                </div>
+               
 
                 <!-- Contraseña -->
                 <div class="mb-3">
@@ -201,7 +200,7 @@ include_once "Ctrl/head.php";
 
                 <!-- ID de Vendedor -->
                 <div class="mb-3">
-                    <label for="vendedorUsuarioVer" class="form-label">ID Vendedor</label>
+                    <label for="vendedorUsuarioVer" class="form-label">Nombre Vendedor</label>
                     <input type="text" class="form-control" id="vendedorUsuarioVer" disabled>
                 </div>
 
@@ -230,68 +229,37 @@ include_once "Ctrl/head.php";
     </div>
 </div>
 
-
-
 <!-- Modal para Editar usuario -->
-<div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-labelledby="modalVerUsuarioLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-labelledby="modalEditarUsuarioLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalVerUsuarioLabel">Ver Usuario</h5>
+                <h5 class="modal-title" id="modalEditarUsuarioLabel">Editar Usuario</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
-                <!-- ID de Usuario -->
+                <!-- Imagen -->
                 <div class="mb-3">
-                    <label for="idUsuarioVer" class="form-label">ID de Usuario</label>
-                    <input type="text" class="form-control" id="idUsuarioVer" disabled>
+                    <label for="imagenUsuarioEditar" class="form-label">Imagen</label>
+                    <img id="imagenUsuarioEditar" src="" alt="Imagen del Usuario" class="rounded-circle" width="50" height="50">
                 </div>
 
                 <!-- Nombre de Usuario -->
                 <div class="mb-3">
-                    <label for="nombreUsuarioVer" class="form-label">Nombre de Usuario</label>
-                    <input type="text" class="form-control" id="nombreUsuarioVer" disabled>
-                </div>
-
-                <!-- Imagen -->
-                <div class="mb-3">
-                    <label for="imagenUsuarioVer" class="form-label">Imagen</label>
-                    <img id="imagenUsuarioVer" src="" alt="Imagen del Usuario" class="rounded-circle" width="50" height="50">
+                    <label for="nombreUsuarioEditar" class="form-label">Nombre de Usuario</label>
+                    <input type="text" class="form-control" id="nombreUsuarioEditar" disabled>
                 </div>
 
                 <!-- Contraseña -->
                 <div class="mb-3">
-                    <label for="passwordUsuarioVer" class="form-label">Contraseña</label>
-                    <input type="text" class="form-control" id="passwordUsuarioVer" disabled>
-                </div>
-
-                <!-- ID de Vendedor -->
-                <div class="mb-3">
-                    <label for="vendedorUsuarioVer" class="form-label">ID Vendedor</label>
-                    <input type="text" class="form-control" id="vendedorUsuarioVer" disabled>
-                </div>
-
-                <!-- Estado del Usuario -->
-                <div class="mb-3">
-                    <label for="estadoUsuarioVer" class="form-label">Estado</label>
-                    <input type="text" class="form-control" id="estadoUsuarioVer" disabled>
-                </div>
-
-                <!-- Fecha de Creación -->
-                <div class="mb-3">
-                    <label for="fechaCreacionUsuarioVer" class="form-label">Fecha de Creación</label>
-                    <input type="text" class="form-control" id="fechaCreacionUsuarioVer" disabled>
-                </div>
-
-                <!-- Último Acceso -->
-                <div class="mb-3">
-                    <label for="ultimoAccesoUsuarioVer" class="form-label">Último Acceso</label>
-                    <input type="text" class="form-control" id="ultimoAccesoUsuarioVer" disabled>
+                    <label for="passwordUsuarioEditar" class="form-label">Contraseña</label>
+                    <input type="text" class="form-control" id="passwordUsuarioEditar" disabled>
                 </div>
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btnActualizarUsuario">Actualizar</button>
             </div>
         </div>
     </div>
@@ -299,15 +267,17 @@ include_once "Ctrl/head.php";
 
 
 
+
+
+
+
         <!-- <div class="contenedor">
                  <img src="../../dist/assets/img/logologin2.png" alt="Logo">
             </div>-->
 
-        <script src="../js/editar_usuario.js?2345"></script>
+        <script src="../js/editar_usuario.js?234"></script>
         <script src="../js/ver_usuario.js?12346"></script>
-        <script src="../js/mostar_filtro.js?1234"></script>
-        <script src="../js/baja_usuario.js?1234"></script>
-        <script src="../js/reactivar_usuario.js?12345"></script>
+        
 
 
         <?php

@@ -36,13 +36,13 @@
                         <li class="nav-item">
                             <a href="./.php" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
-                                <p>-----</p>
+                                <p>Ventas Diaras</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="./.php" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
-                                <p>--------</p>
+                                <p>Cliente</p>
                             </a>
                         </li>
                     </ul>

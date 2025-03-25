@@ -390,7 +390,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <!-- Nombre -->
                     <div class="mb-3">
                         <label for="editarNombreVendedor" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" name="editarNombreVendedor" id="editarNombreVendedor" required>
+                        <input type="text" class="form-control" name="editarNombreVendedor"  id="editarNombreVendedor" required>
                     </div>
 
                     <!-- Apellido -->

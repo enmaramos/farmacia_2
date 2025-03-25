@@ -9,7 +9,7 @@
 
                 <!--------------------------------------------------------LO QUE EST EN USO ---------------------------------------------------->
 
-                <!-- INICIO -->
+                <!--------------------------------- INICIO --------------------------------------->
                 <li class="nav-item">
                     <a href="./inicio.php" class="nav-link">
                         <i class="nav-icon fas fa-home"></i>
@@ -18,7 +18,7 @@
                         </p>
                     </a>
                 </li>
-                <!-- VENTAS -->
+                <!----------------------------------- VENTAS ------------------------------------>
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                 <i class="fa-solid fa-file-invoice-dollar"></i><!-- Icono de administración -->
@@ -47,7 +47,7 @@
                         </li>
                     </ul>
                 </li>
-                    <!-- ABMINISTRACION -->
+                    <!------------------------------ ABMINISTRACION ------------------------------>
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-user-cog"></i> <!-- Icono de administración -->
@@ -81,9 +81,16 @@
                                 <p>Categorias</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="./categoria.php" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Nuevos de Productos</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
-                    <!-- INVENTARIO -->
+
+                    <!--------------------------- INVENTARIO ------------------------------------->
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="fas fa-box-open"></i>
@@ -102,7 +109,13 @@
                         <li class="nav-item">
                             <a href="./.php" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
-                                <p>Categorias</p>
+                                <p>Historial de ventas</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="./.php" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Ingreso de proctos</p>
                             </a>
                         </li>
                     </ul>

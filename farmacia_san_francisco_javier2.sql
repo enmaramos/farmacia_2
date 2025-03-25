@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-03-2025 a las 03:39:19
+-- Tiempo de generación: 25-03-2025 a las 03:28:09
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -200,32 +200,36 @@ CREATE TABLE `lotefact` (
 CREATE TABLE `medicamento` (
   `ID_Medicamento` int(11) NOT NULL,
   `Nombre_Medicamento` varchar(30) DEFAULT NULL,
-  `Imagen` text DEFAULT NULL,
+  `Imagen` varchar(255) DEFAULT NULL,
   `Descripcion_Medicamento` varchar(250) DEFAULT NULL,
   `N_Existencia` int(11) DEFAULT NULL,
   `Presentacion` varchar(100) DEFAULT NULL,
   `Dosis` varchar(100) DEFAULT NULL,
   `Fecha_Fabricacion` datetime DEFAULT NULL,
   `Fecha_Vencimiento` datetime DEFAULT NULL,
-  `Precio_Actual` float DEFAULT NULL,
   `Precio_Unidad` float DEFAULT NULL,
   `Precio_Sobre` decimal(10,2) NOT NULL,
   `Precio_Caja` decimal(10,2) NOT NULL,
   `Precio_Con_Impuesto` float DEFAULT NULL,
   `Prescripcion_Medica` varchar(150) DEFAULT NULL,
-  `IdCategoria` int(11) DEFAULT NULL
+  `IdCategoria` int(11) DEFAULT NULL,
+  `Estado` tinyint(1) DEFAULT 1,
+  `Fecha_Registro` datetime DEFAULT current_timestamp(),
+  `Stock_Minimo` int(11) DEFAULT 0,
+  `Requiere_Receta` tinyint(1) DEFAULT 0,
+  `Stock_Maximo` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `medicamento`
 --
 
-INSERT INTO `medicamento` (`ID_Medicamento`, `Nombre_Medicamento`, `Imagen`, `Descripcion_Medicamento`, `N_Existencia`, `Presentacion`, `Dosis`, `Fecha_Fabricacion`, `Fecha_Vencimiento`, `Precio_Actual`, `Precio_Unidad`, `Precio_Sobre`, `Precio_Caja`, `Precio_Con_Impuesto`, `Prescripcion_Medica`, `IdCategoria`) VALUES
-(1, 'Amoxicilina', '', 'Antibiótico de amplio espectro.', 100, 'Capsulas', '500mg', '2023-06-01 00:00:00', '2025-06-01 00:00:00', 5, 0.2, 15.00, 100.00, 6, 'No requiere receta', 1),
-(21, 'Eritromicina', 'eritromicina.jpg', 'Infeccion', 100, 'Capsula', '20mg', '2024-11-13 20:29:00', '2025-02-07 20:29:00', 10, 10, 100.00, 1000.00, 1000, 'Alergias', 2),
-(24, 'Actimicina Bronquial', 'Actimicina Bronquial.webp', 'Para Gripe', 150, 'tableta', '30mg', '2024-10-09 09:46:00', '2025-03-13 09:46:00', NULL, 6, 30.00, 80.00, NULL, 'Gripe o Calentura', 4),
-(27, 'Ibuprofeno', 'Ibuprofeno.webp', 'Medicamento que se usa para tratar la fiebre, la hinchazón, el dolor y el enrojecimiento', 60, 'tableta', '600mg', '2024-07-11 10:00:00', '2024-12-05 10:00:00', NULL, 4, 20.00, 100.00, NULL, 'En general, los adultos y niños mayores de 12 años pueden tomar el ibuprofeno de venta libre cada 4 a 6 horas', 5),
-(28, 'Acetamenofen ', 'Acetaminofen.webp', 'Analgésico y antipirético, inhibidor de la síntesis de prostaglandinas periférica y central por acción sobre la ciclooxigenasa.', 100, 'tableta', '500mg', '2024-12-01 10:04:00', '2024-12-05 10:04:00', NULL, 4, 40.00, 400.00, NULL, 'El acetaminofeno se usa para aliviar el dolor leve o moderado de las cefaleas, dolores musculares, períodos menstruales, resfriados, y los dolores de ', 5);
+INSERT INTO `medicamento` (`ID_Medicamento`, `Nombre_Medicamento`, `Imagen`, `Descripcion_Medicamento`, `N_Existencia`, `Presentacion`, `Dosis`, `Fecha_Fabricacion`, `Fecha_Vencimiento`, `Precio_Unidad`, `Precio_Sobre`, `Precio_Caja`, `Precio_Con_Impuesto`, `Prescripcion_Medica`, `IdCategoria`, `Estado`, `Fecha_Registro`, `Stock_Minimo`, `Requiere_Receta`, `Stock_Maximo`) VALUES
+(1, 'Amoxicilina', '', 'Antibiótico de amplio espectro.', 100, 'Capsulas', '500mg', '2023-06-01 00:00:00', '2025-06-01 00:00:00', 0.2, 15.00, 100.00, 6, 'No requiere receta', 1, 1, '2025-03-24 20:11:27', 10, 0, 100),
+(21, 'Eritromicina', 'eritromicina.jpg', 'Infeccion', 100, 'Capsula', '20mg', '2024-11-13 20:29:00', '2025-02-07 20:29:00', 10, 100.00, 1000.00, 1000, 'Alergias', 2, 1, '2025-03-24 20:11:27', 10, 0, 100),
+(24, 'Actimicina Bronquial', 'Actimicina Bronquial.webp', 'Para Gripe', 150, 'tableta', '30mg', '2024-10-09 09:46:00', '2025-03-13 09:46:00', 6, 30.00, 80.00, NULL, 'Gripe o Calentura', 4, 1, '2025-03-24 20:11:27', 10, 0, 100),
+(27, 'Ibuprofeno', 'Ibuprofeno.webp', 'Medicamento que se usa para tratar la fiebre, la hinchazón, el dolor y el enrojecimiento', 60, 'tableta', '600mg', '2024-07-11 10:00:00', '2024-12-05 10:00:00', 4, 20.00, 100.00, NULL, 'En general, los adultos y niños mayores de 12 años pueden tomar el ibuprofeno de venta libre cada 4 a 6 horas', 5, 1, '2025-03-24 20:11:27', 10, 0, 100),
+(28, 'Acetamenofen ', 'Acetaminofen.webp', 'Analgésico y antipirético, inhibidor de la síntesis de prostaglandinas periférica y central por acción sobre la ciclooxigenasa.', 100, 'tableta', '500mg', '2024-12-01 10:04:00', '2024-12-05 10:04:00', 4, 40.00, 400.00, NULL, 'El acetaminofeno se usa para aliviar el dolor leve o moderado de las cefaleas, dolores musculares, períodos menstruales, resfriados, y los dolores de ', 5, 1, '2025-03-24 20:11:27', 10, 0, 100);
 
 -- --------------------------------------------------------
 

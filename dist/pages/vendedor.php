@@ -352,14 +352,17 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Evitar números en la última posición
-        if (valor.length === 15 && event.key.match(/\d/)) {
+        if (valor.length === 15 && event.key.match(/\d/)) 
             event.preventDefault();
         }
     });
+  // Configurar ambos modales
+  configurarModal("modalAgregarVendedor", "telefonoVendedor", "cedulaVendedor", "formAgregarVendedor", ".btn-secundario");
+    configurarModal("modalEditarVendedor", "editarTelefonoVendedor", "editarCedulaVendedor", "formEditarVendedor", ".btn-secondary");
 
     // Verificar si el modal debe abrirse después de un error
     if (sessionStorage.getItem("modalOpen") === "true") { 
-        var modalBootstrap = new bootstrap.Modal(modal); 
+        var modalBootstrap = new bootstrap.Modal(document.getElementById("modalEditarVendedor")); 
         modalBootstrap.show(); 
         sessionStorage.removeItem("modalOpen"); 
     }

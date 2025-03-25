@@ -93,7 +93,22 @@ $result = $conn->query($query);
             });
         </script>
 
+<?php
+$error = "";
+$email = "";
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = trim($_POST["email"]); // Elimina espacios en blanco
+
+    if (empty($email)) {
+        $error = "El campo de correo es obligatorio.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "El correo ingresado no es válido.";
+    } else {
+        $error = "Correo válido: " . htmlspecialchars($email);
+    }
+}
+?>
         <!-- TABLA DE VENDEDORES -->
         <div class="container">
             <div class="card p-3 shadow-sm">
@@ -182,7 +197,7 @@ $result = $conn->query($query);
                             <!-- Número de Cédula -->
                             <div class="mb-3">
                                 <label for="cedulaVendedor" class="form-label">N° Cédula</label>
-                                <input type="text" class="form-control" name="cedulaVendedor" placeholder="555-555555-5555X " id="cedulaVendedor" required>
+                                <input type="text" class="form-control" name="cedulaVendedor" placeholder="000-000000-0000X " id="cedulaVendedor" required>
                             </div>
 
                             <!-- Teléfono -->
@@ -194,7 +209,7 @@ $result = $conn->query($query);
                             <!-- Dirección -->
                             <div class="mb-3">
                                 <label for="direccionVendedor" class="form-label">Dirección</label>
-                                <input type="text" class="form-control" name="direccionVendedor" id="direccionVendedor"placeholder="Escribe tu direccion completa ">
+                                <input type="text" class="form-control" name="direccionVendedor" placeholder="Ingrese direccion" id="direccionVendedor" required>
                             </div>
 
                             <!-- Sexo -->
@@ -208,8 +223,8 @@ $result = $conn->query($query);
 
                             <!-- Email -->
                             <div class="mb-3">
-                                <label for="emailVendedor" class="form-label">Correo</label>
-                                <input type="email" class="form-control" name="emailVendedor" placeholder="Escribe tu correo -> Ejemplo1234@gmail.com " id="emailVendedor" required>
+                                <label for="emailVendedor" class="form-label">Correo electronico</label>
+                                <input type="email" class="form-control" name="emailVendedor" value = "<?php echo htmlspecialchars($email); ?>" placeholder="ex: myname@example.com " id="emailVendedor" required>
                             </div>
 
                             <!-- Rol -->
@@ -390,19 +405,19 @@ document.addEventListener("DOMContentLoaded", function() {
                     <!-- Nombre -->
                     <div class="mb-3">
                         <label for="editarNombreVendedor" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" name="editarNombreVendedor"  id="editarNombreVendedor" required>
+                        <input type="text" class="form-control" name="editarNombreVendedor" placeholder="Ingrese el primer y segundo nombre "   id="editarNombreVendedor" required>
                     </div>
 
                     <!-- Apellido -->
                     <div class="mb-3">
                         <label for="editarApellidoVendedor" class="form-label">Apellido</label>
-                        <input type="text" class="form-control" name="editarApellidoVendedor" id="editarApellidoVendedor" required>
+                        <input type="text" class="form-control" name="editarApellidoVendedor" placeholder= "Ingrese el primery segundo apellido" id="editarApellidoVendedor" required>
                     </div>
 
                     <!-- Número de Cédula -->
                     <div class="mb-3">
                         <label for="editarCedulaVendedor" class="form-label">N° Cédula</label>
-                        <input type="text" class="form-control" name="editarCedulaVendedor" id="editarCedulaVendedor" required>
+                        <input type="text" class="form-control" name="editarCedulaVendedor" placeholder="000-000000-0000X"  id="editarCedulaVendedor" required>
                     </div>
 
                     <!-- Teléfono -->
@@ -414,7 +429,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <!-- Dirección -->
                     <div class="mb-3">
                         <label for="editarDireccionVendedor" class="form-label">Dirección</label>
-                        <input type="text" class="form-control" name="editarDireccionVendedor" id="editarDireccionVendedor">
+                        <input type="text" class="form-control" name="editarDireccionVendedor" placeholder="Ingrese su direccion" id="editarDireccionVendedor">
                     </div>
 
                     <!-- Sexo -->
@@ -428,8 +443,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     <!-- Email -->
                     <div class="mb-3">
-                        <label for="editarCorreoVendedor" class="form-label">Correo</label>
-                        <input type="email" class="form-control" name="editarCorreoVendedor" id="editarCorreoVendedor" required>
+                        <label for="editarCorreoVendedor" class="form-label">Correo electronico</label>
+                        <input type="email" class="form-control" name="editarCorreoVendedor" placeholder ="ex: myname@example.com" id="editarCorreoVendedor" required>
                     </div>
 
                     <!-- Rol -->
@@ -498,7 +513,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 <!-- Email -->
                 <div class="mb-3">
-                    <label for="emailVendedorVer" class="form-label">Correo</label>
+                    <label for="emailVendedorVer" class="form-label">Correo electronico</label>
                     <input type="email" class="form-control" id="emailVendedorVer" disabled>
                 </div>
 

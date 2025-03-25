@@ -115,7 +115,7 @@
                         <li class="nav-item">
                             <a href="./.php" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
-                                <p>Ingreso de proctos</p>
+                                <p>Ingreso de productos</p>
                             </a>
                         </li>
                     </ul>

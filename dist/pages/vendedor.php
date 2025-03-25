@@ -170,31 +170,31 @@ $result = $conn->query($query);
                             <!-- Nombre -->
                             <div class="mb-3">
                                 <label for="nombreVendedor" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" name="nombreVendedor" id="nombreVendedor" placeholder="Ingrese el nombre completo" required>
+                                <input type="text" class="form-control" name="nombreVendedor" id="nombreVendedor" placeholder="Ingrese el primer y segundo nombre " required>
                             </div>
 
                             <!-- Apellido -->
                             <div class="mb-3">
                                 <label for="apellidoVendedor" class="form-label">Apellido</label>
-                                <input type="text" class="form-control" name="apellidoVendedor" id="apellidoVendedor" placeholder="Ingrese el apellido completo" required>
+                                <input type="text" class="form-control" name="apellidoVendedor" id="apellidoVendedor" placeholder="Ingrese el primer y segundo apellido" required>
                             </div>
 
                             <!-- Número de Cédula -->
                             <div class="mb-3">
                                 <label for="cedulaVendedor" class="form-label">N° Cédula</label>
-                                <input type="text" class="form-control" name="cedulaVendedor" id="cedulaVendedor" required>
+                                <input type="text" class="form-control" name="cedulaVendedor" placeholder="555-555555-5555X " id="cedulaVendedor" required>
                             </div>
 
                             <!-- Teléfono -->
                             <div class="mb-3">
                                 <label for="telefonoVendedor" class="form-label">Teléfono</label>
-                                <input type="text" class="form-control" name="telefonoVendedor" id="telefonoVendedor" placeholder="(+505) 1234-5678" required>
+                                <input type="text" class="form-control" name="telefonoVendedor" id="telefonoVendedor" required>
                             </div>
 
                             <!-- Dirección -->
                             <div class="mb-3">
                                 <label for="direccionVendedor" class="form-label">Dirección</label>
-                                <input type="text" class="form-control" name="direccionVendedor" id="direccionVendedor">
+                                <input type="text" class="form-control" name="direccionVendedor" id="direccionVendedor"placeholder="Escribe tu direccion completa ">
                             </div>
 
                             <!-- Sexo -->
@@ -209,13 +209,13 @@ $result = $conn->query($query);
                             <!-- Email -->
                             <div class="mb-3">
                                 <label for="emailVendedor" class="form-label">Correo</label>
-                                <input type="email" class="form-control" name="emailVendedor" id="emailVendedor" required>
+                                <input type="email" class="form-control" name="emailVendedor" placeholder="Escribe tu correo -> Ejemplo1234@gmail.com " id="emailVendedor" required>
                             </div>
 
                             <!-- Rol -->
                             <div class="mb-3">
                                 <label for="rolVendedor" class="form-label">Rol</label>
-                                <select class="form-control" name="rolVendedor" id="rolVendedor" required>
+                                <select class="form-control" name="rolVendedor" id="rolVendedor"  required>
                                     <option value="2">Empleado</option>
                                     <option value="1">Administrador</option>
                                 </select>
@@ -253,7 +253,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Validación del campo teléfono
         const telefonoInput = document.getElementById(telefonoId);
-        telefonoInput.value = "(+505) "; 
+        telefonoInput.value = "(+505)  "; 
 
         telefonoInput.addEventListener("input", function() { 
             let valor = telefonoInput.value;

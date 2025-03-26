@@ -64,7 +64,7 @@ include_once "Ctrl/head.php";
             <div class="container-fluid"> <!--begin::Row-->
                 <div class="row">
                     <div class="col-sm-6">
-                        <h3 class="mb-0">Usuarios</h3>
+                        
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-end">
@@ -106,66 +106,70 @@ include_once "Ctrl/head.php";
             }
         </style>
 
-<!-- TABLA USUARIO -->
+<!-- TABLA USUARIOS -->
 <div class="container mt-4">
-    <table id="usuariosTable" class="table table-striped text-center">
-        <thead>
-            <tr>
-                <th>N°</th>
-                <th>Nombre de Usuario</th>
-                <th>Imagen</th>
-                <th>Estado</th>
-                <th>Fecha Creación</th>
-                <th>Último Acceso</th>
-                <th>Ver</th>
-                <th>Editar</th>
-                <th>Eliminar</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Aquí se llenarán los datos de los usuarios con PHP -->
-            <?php
-            include 'Cnx/conexion.php';
-            // Consultar todos los usuarios
-            $sql = "SELECT * FROM usuarios";
-            $result = $conn->query($sql);
+    <div class="card p-3 shadow-sm">
+        <h3 class="text-center mb-3">Lista de Usuarios</h3>
 
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $rutaImagen = !empty($row['Imagen']) ? "../../dist/pages/uploads/" . $row['Imagen'] : "../../dist/pages/uploads/default.jpg";
-                    
-                    echo "<tr>";
-                    echo "<td>" . $row['ID_Usuario'] . "</td>";
-                    echo "<td>" . $row['Nombre_Usuario'] . "</td>";
-                    echo "<td><img src='" . $rutaImagen . "' class='rounded-circle' width='50' height='50'></td>";
-                    echo "<td>" . ($row['estado_usuario'] == 1 ? "<span class='badge bg-success'>Activo</span>" : "<span class='badge bg-danger'>Inactivo</span>") . "</td>";
-                    echo "<td>" . $row['Fecha_Creacion'] . "</td>";
-                    echo "<td>" . ($row['Ultimo_Acceso'] ? $row['Ultimo_Acceso'] : 'No disponible') . "</td>";
-                    echo "<td>
-                    <button class='btn btn-success btn-sm' data-bs-toggle='modal' data-bs-target='#modalVerUsuario' data-id='" . $row['ID_Usuario'] . "' title='Ver'>
-                        <i class='fas fa-eye'></i>
-                    </button>
-                  </td>";
-                    echo "<td>
-                    <a href='#' class='btn btn-warning btn-sm text-white' data-bs-toggle='modal' data-bs-target='#modalEditarUsuario' data-id='" . $row['ID_Usuario'] . "' title='Editar'>
-                        <i class='fas fa-edit'></i>
-                    </a>
-                  </td>";
-                    echo "<td>
-                    <button class='btn btn-danger btn-sm' title='Eliminar'>
-                        <i class='fas fa-trash-alt'></i>
-                    </button>
-                  </td>";
-                    echo "</tr>";
+        <table id="usuariosTable" class="table table-striped text-center">
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Imagen</th>
+                    <th>Estado</th>
+                    <th>Fecha Creación</th>
+                    <th>Último Acceso</th>
+                    <th>Ver</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se llenarán los datos de los usuarios con PHP -->
+                <?php
+                include 'Cnx/conexion.php';
+                // Consultar todos los usuarios
+                $sql = "SELECT * FROM usuarios";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $rutaImagen = !empty($row['Imagen']) ? "../../dist/pages/uploads/" . $row['Imagen'] : "../../dist/pages/uploads/default.jpg";
+                        
+                        echo "<tr>";
+                        echo "<td>" . $row['ID_Usuario'] . "</td>";
+                        echo "<td>" . $row['Nombre_Usuario'] . "</td>";
+                        echo "<td><img src='" . $rutaImagen . "' class='rounded-circle' width='50' height='50'></td>";
+                        echo "<td>" . ($row['estado_usuario'] == 1 ? "<span class='badge bg-success'>Activo</span>" : "<span class='badge bg-danger'>Inactivo</span>") . "</td>";
+                        echo "<td>" . $row['Fecha_Creacion'] . "</td>";
+                        echo "<td>" . ($row['Ultimo_Acceso'] ? $row['Ultimo_Acceso'] : 'No disponible') . "</td>";
+                        echo "<td>
+                        <button class='btn btn-success btn-sm' data-bs-toggle='modal' data-bs-target='#modalVerUsuario' data-id='" . $row['ID_Usuario'] . "' title='Ver'>
+                            <i class='fas fa-eye'></i>
+                        </button>
+                        </td>";
+                        echo "<td>
+                        <a href='#' class='btn btn-warning btn-sm text-white' data-bs-toggle='modal' data-bs-target='#modalEditarUsuario' data-id='" . $row['ID_Usuario'] . "' title='Editar'>
+                            <i class='fas fa-edit'></i>
+                        </a>
+                        </td>";
+                        echo "<td>
+                        <button class='btn btn-danger btn-sm' title='Eliminar'>
+                            <i class='fas fa-trash-alt'></i>
+                        </button>
+                        </td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='9'>No se encontraron usuarios</td></tr>";
                 }
-            } else {
-                echo "<tr><td colspan='9'>No se encontraron usuarios</td></tr>";
-            }
 
-            $conn->close();
-            ?>
-        </tbody>
-    </table>
+                $conn->close();
+                ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 

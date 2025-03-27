@@ -1,50 +1,28 @@
 <?php
-include '../Cnx/conexion.php'; // Incluir la conexión a la base de datos
+include('../Cnx/conexion.php'); // Asegúrate de incluir tu conexión a la base de datos
 
-header('Content-Type: application/json'); // Establecer el encabezado de respuesta JSON
+if (isset($_POST['id_vendedor'])) {
+    $id_vendedor = $_POST['id_vendedor'];
 
-$response = array(); // Crear un array para la respuesta
+    // Desactivar el usuario asociado
+    $sqlDesactivarUsuarios = "UPDATE usuarios SET estado_usuario = 0 WHERE ID_Vendedor = ?";
+    $stmtUsuarios = $conn->prepare($sqlDesactivarUsuarios);
+    $stmtUsuarios->bind_param("i", $id_vendedor);
+    $stmtUsuarios->execute();
+    $stmtUsuarios->close();
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (!isset($_POST['id_vendedor'])) {
-        $response['success'] = false;
-        $response['message'] = "No se recibió el ID del vendedor.";
-        echo json_encode($response);
-        exit;
-    }
+    // Desactivar el vendedor
+    $sqlDesactivarVendedor = "UPDATE vendedor SET Estado = 0 WHERE ID_Vendedor = ?";
+    $stmtVendedor = $conn->prepare($sqlDesactivarVendedor);
+    $stmtVendedor->bind_param("i", $id_vendedor);
 
-    $id_vendedor = intval($_POST['id_vendedor']); // Convertir a entero
-
-    if ($id_vendedor > 0) {
-        $sql = "UPDATE vendedores SET Estado = 0 WHERE ID_Vendedor = ?";
-        $stmt = $conn->prepare($sql);
-
-        if (!$stmt) {
-            $response['success'] = false;
-            $response['message'] = "Error en la preparación de la consulta: " . $conn->error;
-        } else {
-            $stmt->bind_param("i", $id_vendedor);
-
-            if ($stmt->execute()) {
-                $response['success'] = true;
-                $response['message'] = "Vendedor dado de baja correctamente.";
-            } else {
-                $response['success'] = false;
-                $response['message'] = "Error al ejecutar la consulta: " . $stmt->error; // Más detalle del error
-            }
-
-            $stmt->close();
-        }
+    if ($stmtVendedor->execute()) {
+        echo "Vendedor dado de baja correctamente";
     } else {
-        $response['success'] = false;
-        $response['message'] = "ID de vendedor no válido.";
+        echo "Error al dar de baja al vendedor: " . $conn->error;
     }
-} else {
-    $response['success'] = false;
-    $response['message'] = "Método de solicitud no válido.";
+
+    $stmtVendedor->close();
+    $conn->close();
 }
-
-$conn->close();
-echo json_encode($response); // Devolver respuesta JSON
 ?>
-

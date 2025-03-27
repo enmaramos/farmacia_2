@@ -5,9 +5,22 @@ include_once "Ctrl/head.php";
 <?php
 include('../pages/Cnx/conexion.php');
 
-$query = "SELECT * FROM vendedor";
-$result = $conn->query($query);
+// Definir el estado por defecto (vacío significa mostrar todos)
+$estadoFiltro = isset($_GET['estado']) ? $_GET['estado'] : '1'; // Por defecto, mostrar solo activos
 
+// Consulta dependiendo del estado seleccionado
+if ($estadoFiltro == '1') {
+    // Vendedores activos
+    $query = "SELECT * FROM vendedor WHERE Estado = 1";
+} elseif ($estadoFiltro == '0') {
+    // Mostrar todos los vendedores inactivos
+    $query = "SELECT * FROM vendedor WHERE Estado = 0";
+} else {
+    // Vendedores activos e inactivos (por si alguien introduce algo inesperado)
+    $query = "SELECT * FROM vendedor";
+}
+
+$result = $conn->query($query);
 ?>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
@@ -109,67 +122,110 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-        <!-- TABLA DE VENDEDORES -->
-        <div class="container">
-            <div class="card p-3 shadow-sm">
-                <div class="d-flex justify-content-between mb-3">
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarVendedor">
-                        <i class="fas fa-user-plus"></i> Agregar
-                    </button>
-                    <h3 class="text-center flex-grow-1">Lista de Vendedores</h3>
-                </div>
-
-                <table id="vendedoresTable" class="display text-center">
-                    <thead>
-                        <tr>
-                            <th>N°</th>
-                            <th>Nombre</th>
-                            <th>Teléfono</th>
-                            <th>Correo Electrónico</th>
-                            <th>Rol</th>
-                            <th>Ver</th>
-                            <th>Editar</th>
-                            <th>Eliminar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while ($row = $result->fetch_assoc()) { ?>
-                            <tr>
-                                <td> <?= $row['ID_Vendedor'] ?></td>
-                                <td><?= explode(' ', $row['Nombre'])[0] . ' ' . explode(' ', $row['Apellido'])[0] ?></td>
-                                <td>(+505) <?= $row['Telefono'] ?></td>
-                                <td><?= $row['Email'] ?></td>
-                                <td>
-
-                                    <?php
-                                    if ($row['ID_Rol'] == 1) {
-                                        echo "Administrador";
-                                    } else {
-                                        echo "Vendedor";
-                                    }
-                                    ?>
-                                </td>
-                                <td>
-                                    <button class='btn btn-success VerVendedorBtn btn-sm' data-bs-toggle='modal' data-bs-target='#modalVerVendedor' data-id='<?= $row['ID_Vendedor'] ?>' title="Ver Detalles">
-                                        <i class='fas fa-eye'></i>
-                                    </button>
-                                </td>
-                                <td>
-                                    <a href='' class='btn btn-warning editarVendedorBtn btn-sm ' data-bs-toggle='modal' data-bs-target='#modalEditarVendedor' data-id='<?= $row['ID_Vendedor'] ?>' title="Editar Vendedor">
-                                        <i class='fas fa-edit'></i>
-                                    </a>
-                                </td>
-                                <td>
-                                    <button class='btn btn-danger eliminarVendedorBtn btn-sm' data-id='<?= $row['ID_Vendedor'] ?>' title="Eliminar Vendedor">
-                                        <i class='fas fa-trash-alt'></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-            </div>
+<!-- TABLA DE VENDEDORES --> 
+<div class="container">
+    <div class="card p-3 shadow-sm">
+        <div class="d-flex justify-content-between mb-3">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarVendedor">
+                <i class="fas fa-user-plus"></i> Agregar
+            </button>
+            <h3 class="text-center flex-grow-1">Lista de Vendedores</h3>
         </div>
+
+        <!-- Filtro de Estado -->
+        <div class="mb-3">
+            <select id="filtroEstado" class="form-select w-auto" onchange="filtrarEstado()">
+                <option value="1" <?php if ($estadoFiltro == '1') echo 'selected'; ?>>Activos</option>
+                <option value="0" <?php if ($estadoFiltro == '0') echo 'selected'; ?>>Inactivos</option>
+            </select>
+        </div>
+
+        <table id="vendedoresTable" class="display text-center">
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>Correo Electrónico</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                    <th>Ver</th>
+                    <?php if ($estadoFiltro == 1) { ?>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    <?php } ?>
+                    <?php if ($estadoFiltro == 0) { ?>
+                        <th>Activar</th>
+                    <?php } ?>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = $result->fetch_assoc()) { ?>
+                    <tr class="vendedor" data-estado="<?= $row['Estado'] ?>">
+                        <td><?= $row['ID_Vendedor'] ?></td>
+                        <td><?= explode(' ', $row['Nombre'])[0] . ' ' . explode(' ', $row['Apellido'])[0] ?></td>
+                        <td>(+505) <?= $row['Telefono'] ?></td>
+                        <td><?= $row['Email'] ?></td>
+                        <td>
+                            <?php
+                            if ($row['ID_Rol'] == 1) {
+                                echo "Administrador";
+                            } else {
+                                echo "Vendedor";
+                            }
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                            if ($row['Estado'] == 1) {
+                                echo "<span class='badge bg-success'>Activo</span>";
+                            } else {
+                                echo "<span class='badge bg-danger'>Inactivo</span>";
+                            }
+                            ?>
+                        </td>
+                        <!-- Botón Ver -->
+                        <td>
+                            <button class='btn btn-success VerVendedorBtn btn-sm' data-bs-toggle='modal' data-bs-target='#modalVerVendedor' data-id='<?= $row['ID_Vendedor'] ?>' title="Ver Detalles">
+                                <i class='fas fa-eye'></i>
+                            </button>
+                        </td>
+                        <?php if ($estadoFiltro == 1) { ?>
+                            <!-- Botón Editar (solo para activos) -->
+                            <td>
+                                <a href='' class='btn btn-warning editarVendedorBtn btn-sm ' data-bs-toggle='modal' data-bs-target='#modalEditarVendedor' data-id='<?= $row['ID_Vendedor'] ?>' title="Editar Vendedor">
+                                    <i class='fas fa-edit'></i>
+                                </a>
+                            </td>
+                            <!-- Botón Eliminar (solo para activos) -->
+                            <td>
+                                <button class='btn btn-danger eliminarVendedorBtn btn-sm' data-id='<?= $row['ID_Vendedor'] ?>' title="Eliminar Vendedor">
+                                    <i class='fas fa-trash-alt'></i>
+                                </button>
+                            </td>
+                        <?php } ?>
+                        <?php if ($estadoFiltro == 0) { ?>
+                            <!-- Botón Activar (solo para inactivos) -->
+                            <td>
+                                <button class='btn btn-primary activarVendedorBtn btn-sm' data-id='<?= $row['ID_Vendedor'] ?>' title="Reactivar Vendedor">
+                                <i class="fas fa-user-check"></i>
+                                </button>
+                            </td>
+                        <?php } ?>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Función para recargar la página con el filtro aplicado
+    function filtrarEstado() {
+        var estado = document.getElementById('filtroEstado').value;
+        window.location.href = 'vendedor.php?estado=' + estado; // Recargar la página con el filtro en la URL
+    }
+</script>
 
 
         <!-- Modal para agregar vendedor -->
@@ -534,8 +590,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
         <script src="../js/editar_vendedor.js?123456"></script>
-        <script src="../js/baja_vendedor.js?12345"></script>
+        <script src="../js/baja_vendedor.js?1234"></script>
         <script src="../js/ver_vendedor.js?12345"></script>
+        <script src="../js/reactivar_vendedor.js?12345"></script>
 
         <?php
         $conn->close();

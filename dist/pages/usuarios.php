@@ -122,7 +122,6 @@ include_once "Ctrl/head.php";
                     <th>Último Acceso</th>
                     <th>Ver</th>
                     <th>Editar</th>
-                    <th>Eliminar</th>
                 </tr>
             </thead>
             <tbody>
@@ -153,11 +152,6 @@ include_once "Ctrl/head.php";
                         <a href='#' class='btn btn-warning btn-sm text-white' data-bs-toggle='modal' data-bs-target='#modalEditarUsuario' data-id='" . $row['ID_Usuario'] . "' title='Editar'>
                             <i class='fas fa-edit'></i>
                         </a>
-                        </td>";
-                        echo "<td>
-                        <button class='btn btn-danger btn-sm' title='Eliminar'>
-                            <i class='fas fa-trash-alt'></i>
-                        </button>
                         </td>";
                         echo "</tr>";
                     }

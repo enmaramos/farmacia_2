@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $vendedorId = intval($_POST['vendedorId']);
 
         // Consulta para obtener los datos del vendedor
-        $sql = "SELECT v.ID_Vendedor, v.Nombre, v.Apellido, v.N_Cedula, v.Telefono, v.Direccion, v.Sexo, v.Email, v.ID_Rol, r.Nombre_Rol
+        $sql = "SELECT v.ID_Vendedor, v.Nombre, v.Apellido, v.N_Cedula, v.Telefono, v.Direccion, v.Sexo, v.Email, v.ID_Rol, r.Nombre_Rol, v.Estado
                 FROM vendedor v
                 LEFT JOIN roles r ON v.ID_Rol = r.ID_Rol
                 WHERE v.ID_Vendedor = ?";

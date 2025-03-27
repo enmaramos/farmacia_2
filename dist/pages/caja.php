@@ -87,99 +87,132 @@ include_once "Ctrl/head.php";
         </script>
 
 <style>
-        .contenedor {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #f0f0f0;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-        .carrito-container {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-        }
-        .carrito-icono {
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.5rem;
-            margin-left: 10px;
-        }
-        .carrito-contenedor {
-            background-color: red;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 50%;
-            font-size: 1rem;
-            font-weight: bold;
-        }
+    .contenedor {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 40px;
+        background: #f0f0f0;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        position: relative; /* Necesario para que el botón se posicione dentro */
+        min-height: 700px; /* Ajusta la altura mínima para que el botón no se sobreponga */
+    }
+
+    .row {
+    margin: 0 -10px; /* Evita que las columnas estén demasiado pegadas */
+}
+
+.col-md-5, .col-md-2 {
+    padding: 0 55px; /* Agrega separación entre columnas */
+}
+
+.form-control, .form-select {
+    margin-bottom: 55px; /* Aumenta la separación entre inputs */
+}
+
+
+    .carrito-container {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .carrito-icono {
+        background-color: #007bff;
+        color: white;
+        padding: 10px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.5rem;
+        margin-left: 10px;
+    }
+
+    .carrito-contenedor {
+        background-color: red;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 50%;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    .btn-container {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%; /* Para mantener el centrado */
+        text-align: center;
+    }
+    #btnAgregar {
+    position: absolute;
+    bottom: 20px;
+    left: 50%; /* Ajusta el porcentaje para moverlo más al centro */
+    transform: translateX(-35%); /* Ajusta la traslación para mantener la posición relativa */
+    width: auto;
+}
+   
 </style>
 
 
-    <div class="contenedor">
-        <div class="d-flex justify-content-between align-items-center">
-            
-            <div class="carrito-container">
-                <div class="carrito-contenedor" id="contadorCarrito">0</div>
-                <div class="carrito-icono" onclick="mostrarCarrito()">🛒</div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-5">
-                <h4>Buscar Producto</h4>
-                <label>Producto</label>
-                <input type="text" class="form-control mb-2" placeholder="Nombre del producto">
-                <label>Dosis</label>
-                <select class="form-select mb-2">
-                    <option>Seleccione Dosis</option>
-                </select>
-                <label>Presentación</label>
-                <select class="form-select mb-2">
-                    <option>Seleccione Presentación</option>
-                </select>
-                <label>Unidad</label>
-                <select class="form-select mb-2">
-                    <option>Seleccione Unidad</option>
-                </select>
-                <label>Precio</label>
-                <input type="text" class="form-control mb-2">
-                <label>Cantidad</label>
-                <input type="number" class="form-control mb-2">
-                <label>Descuento</label>
-                <input type="text" class="form-control mb-2">
-            </div>
-
-            <div class="col-md-2 d-flex flex-column align-items-center">
-                <img src="" alt="Imagen del producto" class="img-fluid mb-2" style="max-width: 150px;">
-                <label>Requiere Receta</label>
-                <input type="text" class="form-control mb-2">
-                <label>Vencimiento</label>
-                <input type="date" class="form-control mb-2">
-            </div>
-
-            <div class="col-md-5">
-                <h4>Buscar Cliente</h4>
-                <label>Cliente</label>
-                <input type="text" class="form-control mb-2" placeholder="Nombre del cliente">
-                <label>Teléfono</label>
-                <input type="text" class="form-control mb-2">
-                <label>Dirección</label>
-                <textarea class="form-control mb-2"></textarea>
-            </div>
-        </div>
-
-        <div class="text-center mt-3">
-            <button class="btn btn-primary">Agregar al Carrito</button>
+<div class="contenedor">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="carrito-container">
+            <div class="carrito-contenedor" id="contadorCarrito">0</div>
+            <div class="carrito-icono" onclick="mostrarCarrito()">🛒</div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-5">
+            <h4>Buscar Producto</h4>
+            <label>Producto</label>
+            <input type="text" class="form-control mb-2" placeholder="Nombre del producto">
+            <label>Dosis</label>
+            <select class="form-select mb-2">
+                <option>Seleccione Dosis</option>
+            </select>
+            <label>Presentación</label>
+            <select class="form-select mb-2">
+                <option>Seleccione Presentación</option>
+            </select>
+            <label>Unidad</label>
+            <select class="form-select mb-2">
+                <option>Seleccione Unidad</option>
+            </select>
+            <label>Precio</label>
+            <input type="text" class="form-control mb-2">
+            <label>Cantidad</label>
+            <input type="number" class="form-control mb-2">
+            <label>Descuento</label>
+            <input type="text" class="form-control mb-2">
+        </div>
+
+        <div class="col-md-2 d-flex flex-column align-items-center">
+            <img src="" alt="Imagen del producto" class="img-fluid mb-2" style="max-width: 150px;">
+            <label>Requiere Receta</label>
+            <input type="text" class="form-control mb-2">
+            <label>Vencimiento</label>
+            <input type="date" class="form-control mb-2">
+        </div>
+
+        <div class="col-md-5">
+            <h4>Buscar Cliente</h4>
+            <label>Cliente</label>
+            <input type="text" class="form-control mb-2" placeholder="Nombre del cliente">
+            <label>Teléfono</label>
+            <input type="text" class="form-control mb-2">
+            <label>Dirección</label>
+            <textarea class="form-control mb-2"></textarea>
+        </div>
+    </div>
+
+    <!-- Botón sin contenedor extra -->
+    <button class="btn btn-primary d-block mx-auto mt-4" id="btnAgregar">Agregar al Carrito</button>
+</div>
+
 
 
 

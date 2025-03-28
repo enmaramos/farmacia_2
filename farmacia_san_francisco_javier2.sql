@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-03-2025 a las 03:28:09
+-- Tiempo de generación: 28-03-2025 a las 19:38:51
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -106,17 +106,18 @@ CREATE TABLE `clientes` (
   `Apellido` varchar(25) DEFAULT NULL,
   `Genero` enum('Masculino','Femenino') DEFAULT 'Masculino',
   `Direccion` varchar(50) DEFAULT NULL,
-  `Telefono` varchar(9) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL
+  `Telefono` varchar(9) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `Estado` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `clientes`
 --
 
-INSERT INTO `clientes` (`ID_Cliente`, `Nombre`, `Apellido`, `Genero`, `Direccion`, `Telefono`) VALUES
-(53, 'Derek', 'Somoza', 'Masculino', 'Milagro', '561561156'),
-(56, 'Enmanuel', 'Serrano', 'Masculino', 'Villa Venezuela\r\n', '561561561'),
-(57, 'Brizayda', 'Somoza', 'Femenino', 'Villa flor', '56651561');
+INSERT INTO `clientes` (`ID_Cliente`, `Nombre`, `Apellido`, `Genero`, `Direccion`, `Telefono`, `Estado`) VALUES
+(53, 'Derek', 'Somoza', 'Masculino', 'Milagro', '561561156', 1),
+(56, 'Enmanuel', 'Serrano', 'Masculino', 'Villa Venezuela\r\n', '561561561', 1),
+(57, 'Brizayda', 'Somoza', 'Femenino', 'Villa flor', '56651561', 1);
 
 -- --------------------------------------------------------
 
@@ -572,7 +573,7 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `ID_Cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `ID_Cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT de la tabla `factura_compra`

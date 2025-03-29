@@ -79,6 +79,9 @@ include_once "Ctrl/head.php";
         </div> <!--end::App Content Header--> <!--begin::App Content-->
 
 
+
+
+
         <!--ESTILOS DE CAJA-->
         <style>
             .contenedor {
@@ -161,6 +164,13 @@ include_once "Ctrl/head.php";
                 object-fit: contain;
             }
 
+
+            .modal-dialog {
+                max-width: 80%;
+                /* Limita el tamaño máximo del modal */
+            }
+
+            
             /* Ajustar el tamaño de los inputs "Requiere Receta" y "Vencimiento" */
             .extra-inputs {
                 width: 200px;
@@ -168,96 +178,135 @@ include_once "Ctrl/head.php";
             }
         </style>
 
-   <!-- CONTENEDOR DE CAJA -->
-<div class="contenedor">
-    <div class="d-flex justify-content-between align-items-center">
-        <div class="carrito-container">
-            <div class="carrito-contenedor" id="contadorCarrito">0</div>
-            <div class="carrito-icono" onclick="mostrarCarrito()">🛒</div>
-        </div>
-    </div>
-
-    <div class="row">
-        <!-- Sección de productos -->
-        <div class="col-md-5">
-            <h4>Buscar Producto</h4>
-            <label>Producto</label>
-            <input type="text" id="buscarProducto" class="form-control" placeholder="Nombre del producto" list="listaProductos">
-            <datalist id="listaProductos"></datalist>
-
-            <label>Laboratorio o Marca</label>
-            <input type="text" id="laboratorio" class="form-control" placeholder="Nombre del laboratorio">
-
-            <label>Dosis</label>
-            <select id="dosis" class="form-select">
-                <option>Seleccione Dosis</option>
-            </select>
-
-            <label>Presentación</label>
-            <select id="presentacion" class="form-select">
-                <option>Seleccione Presentación</option>
-            </select>
-
-            <label>Unidad</label>
-            <select id="unidad" class="form-select">
-                <option>Seleccione Unidad</option>
-            </select>
-
-            <label>Precio</label>
-            <input type="text" id="precio" class="form-control">
-
-            <label>Cantidad</label>
-            <input type="number" id="cantidad" class="form-control">
-
-            <label>Descuento</label>
-            <input type="text" id="descuento" class="form-control">
-        </div>
-
-        <!-- Sección de imagen y detalles adicionales -->
-        <div class="col-md-2 d-flex flex-column align-items-center">
-            <div class="img-container">
-                <img id="imagenProducto" src="default.jpg" alt="Imagen del producto">
+        <!-- CONTENEDOR DE CAJA -->
+        <div class="contenedor">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="carrito-container">
+                    <div class="carrito-contenedor" id="contadorCarrito">0</div>
+                    <div class="carrito-icono" onclick="mostrarCarrito()">🛒</div>
+                </div>
             </div>
-            <label>Requiere Receta</label>
-            <input type="text" id="requiereReceta" class="form-control extra-inputs">
 
-            <label>Vencimiento</label>
-            <input type="date" id="vencimiento" class="form-control extra-inputs">
+            <div class="row">
+                <!-- Sección de productos -->
+                <div class="col-md-5">
+                    <h4>Buscar Producto</h4>
 
-            <label>Descripcion</label>
-            <textarea id="descripcion" class="form-control extra-inputs"></textarea>
+                    <!-- Botón con ícono de búsqueda para abrir el cuadro de búsqueda de producto -->
+                    <button type="button" id="btnBuscarProducto" class="btn btn-info form-control">
+                        <i class="fas fa-search"></i> Buscar Producto
+                    </button>
+
+                    <label>Laboratorio o Marca</label>
+                    <input type="text" id="laboratorio" class="form-control" placeholder="Nombre del laboratorio">
+
+                    <label>Dosis</label>
+                    <select id="dosis" class="form-select">
+                        <option>Seleccione Dosis</option>
+                    </select>
+
+                    <label>Presentación</label>
+                    <select id="presentacion" class="form-select">
+                        <option>Seleccione Presentación</option>
+                    </select>
+
+                    <label>Unidad</label>
+                    <select id="unidad" class="form-select">
+                        <option>Seleccione Unidad</option>
+                    </select>
+
+                    <label>Precio</label>
+                    <input type="text" id="precio" class="form-control">
+
+                    <label>Cantidad</label>
+                    <input type="number" id="cantidad" class="form-control">
+
+                    <label>Descuento</label>
+                    <input type="text" id="descuento" class="form-control">
+                </div>
+
+                <!-- Sección de imagen y detalles adicionales -->
+                <div class="col-md-2 d-flex flex-column align-items-center">
+                    <div class="img-container">
+                        <img id="imagenProducto" src="default.jpg" alt="Imagen del producto">
+                    </div>
+                    <label>Requiere Receta</label>
+                    <input type="text" id="requiereReceta" class="form-control extra-inputs">
+
+                    <label>Vencimiento</label>
+                    <input type="date" id="vencimiento" class="form-control extra-inputs">
+
+                    <label>Descripcion</label>
+                    <textarea id="descripcion" class="form-control extra-inputs"></textarea>
+                </div>
+
+                <!-- Sección de clientes -->
+                <div class="col-md-5">
+                    <h4>Buscar Cliente</h4>
+
+                    <!-- Botón con ícono de búsqueda para abrir el cuadro de búsqueda de cliente -->
+                    <button type="button" id="btnBuscarCliente" class="btn btn-info form-control" onclick="abrirBusquedaCliente()">
+                        <i class="fas fa-search"></i> Buscar Cliente
+                    </button>
+
+                    <label>Teléfono</label>
+                    <input type="text" id="telefonoCliente" class="form-control">
+
+                    <label>Dirección</label>
+                    <textarea id="direccionCliente" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <!-- Botón de agregar al carrito -->
+            <button class="btn btn-primary d-block mx-auto mt-4" id="btnAgregar">Agregar al Carrito</button>
         </div>
 
-        <!-- Sección de clientes -->
-        <div class="col-md-5">
-            <h4>Buscar Cliente</h4>
-            <label>Cliente</label>
-            <input type="text" id="buscarCliente" class="form-control" placeholder="Nombre del cliente" list="listaClientes">
-            <datalist id="listaClientes"></datalist>
 
-            <label>Teléfono</label>
-            <input type="text" id="telefonoCliente" class="form-control">
+        <script>
+            $(document).ready(function() {
+                // Inicializar DataTable en la tabla con el id "tablaProducto"
+                $('#tablaProducto').DataTable();
+            });
+        </script>
 
-            <label>Dirección</label>
-            <textarea id="direccionCliente" class="form-control"></textarea>
+
+        <!-- Modal para buscar productos -->
+        <div class="modal fade" id="modalBusquedaProducto" tabindex="-1" aria-labelledby="modalBusquedaProductoLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalBusquedaProductoLabel">Buscar Producto</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table id="tablaProducto" class="table table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Imagen</th>
+                                    <th>Nombre</th>
+                                    <th>Laboratorio o Marca</th>
+                                    <th>Dosis</th>
+                                    <th>Presentaciones</th>
+                                    <th>Formato del producto</th> <!-- Nueva columna -->
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Los productos se llenarán aquí dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- Botón de agregar al carrito -->
-    <button class="btn btn-primary d-block mx-auto mt-4" id="btnAgregar">Agregar al Carrito</button>
-</div>
-
-
-
-
-
 
 
 
 
         <script src="../js/carrito_caja.js?2345"></script>
-        <script src="../js/caja.js?2345"></script>
-
+        <script src="../js/medicamento.js?12345"></script>
+        <script src="../js/seleccionar_medicamento.js?12345"></script>
+        
         <?php
 
         include_once "Ctrl/footer.php";

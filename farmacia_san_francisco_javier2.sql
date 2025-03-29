@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-03-2025 a las 15:18:37
+-- Tiempo de generación: 29-03-2025 a las 23:49:38
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -206,9 +206,6 @@ CREATE TABLE `medicamento` (
   `LAB_o_MARCA` varchar(100) NOT NULL,
   `Imagen` varchar(255) DEFAULT NULL,
   `Descripcion_Medicamento` varchar(250) DEFAULT NULL,
-  `N_Existencia` int(11) DEFAULT NULL,
-  `Presentacion` varchar(100) DEFAULT NULL,
-  `Dosis` varchar(100) DEFAULT NULL,
   `Fecha_Fabricacion` datetime DEFAULT NULL,
   `Fecha_Vencimiento` datetime DEFAULT NULL,
   `Precio_Con_Impuesto` float DEFAULT NULL,
@@ -225,13 +222,64 @@ CREATE TABLE `medicamento` (
 -- Volcado de datos para la tabla `medicamento`
 --
 
-INSERT INTO `medicamento` (`ID_Medicamento`, `Nombre_Medicamento`, `LAB_o_MARCA`, `Imagen`, `Descripcion_Medicamento`, `N_Existencia`, `Presentacion`, `Dosis`, `Fecha_Fabricacion`, `Fecha_Vencimiento`, `Precio_Con_Impuesto`, `Prescripcion_Medica`, `IdCategoria`, `Estado`, `Fecha_Registro`, `Stock_Minimo`, `Requiere_Receta`, `Stock_Maximo`) VALUES
-(1, 'Amoxicilina', '', '', 'Antibiótico de amplio espectro.', 100, 'Capsulas', '500mg', '2023-06-01 00:00:00', '2025-06-01 00:00:00', 6, 'No requiere receta', 1, 1, '2025-03-24 20:11:27', 10, 0, 100),
-(21, 'Eritromicina', '', 'eritromicina.jpg', 'Infeccion', 100, 'Capsula', '20mg', '2024-11-13 20:29:00', '2025-02-07 20:29:00', 1000, 'Alergias', 2, 1, '2025-03-24 20:11:27', 10, 0, 100),
-(24, 'Actimicina Bronquial', '', 'Actimicina Bronquial.webp', 'Para Gripe', 150, 'tableta', '30mg', '2024-10-09 09:46:00', '2025-03-13 09:46:00', NULL, 'Gripe o Calentura', 4, 1, '2025-03-24 20:11:27', 10, 0, 100),
-(27, 'Ibuprofeno', '', 'Ibuprofeno.webp', 'Medicamento que se usa para tratar la fiebre, la hinchazón, el dolor y el enrojecimiento', 60, 'tableta', '600mg', '2024-07-11 10:00:00', '2024-12-05 10:00:00', NULL, 'En general, los adultos y niños mayores de 12 años pueden tomar el ibuprofeno de venta libre cada 4 a 6 horas', 5, 1, '2025-03-24 20:11:27', 10, 0, 100),
-(28, 'Acetamenofen ', '', 'Acetaminofen.webp', 'Analgésico y antipirético, inhibidor de la síntesis de prostaglandinas periférica y central por acción sobre la ciclooxigenasa.', 100, 'tableta', '500mg', '2024-12-01 10:04:00', '2024-12-05 10:04:00', NULL, 'El acetaminofeno se usa para aliviar el dolor leve o moderado de las cefaleas, dolores musculares, períodos menstruales, resfriados, y los dolores de ', 5, 1, '2025-03-24 20:11:27', 10, 0, 100),
-(30, 'Pampers', '', NULL, 'Pañales para abulto', 50, 'Bolsa', NULL, '2024-12-01 10:04:00', '2024-12-05 10:04:00', NULL, NULL, NULL, 1, '2025-03-24 20:11:27', 10, 0, 100);
+INSERT INTO `medicamento` (`ID_Medicamento`, `Nombre_Medicamento`, `LAB_o_MARCA`, `Imagen`, `Descripcion_Medicamento`, `Fecha_Fabricacion`, `Fecha_Vencimiento`, `Precio_Con_Impuesto`, `Prescripcion_Medica`, `IdCategoria`, `Estado`, `Fecha_Registro`, `Stock_Minimo`, `Requiere_Receta`, `Stock_Maximo`) VALUES
+(1, 'Amoxicilina', 'Lab-Ramos', '', 'Antibiótico de amplio espectro.', '2023-06-01 00:00:00', '2025-06-01 00:00:00', 6, 'No requiere receta', 1, 1, '2025-03-24 20:11:27', 10, 0, 100),
+(21, 'Eritromicina', 'Lab-Ramos', 'eritromicina.jpg', 'Infeccion', '2024-11-13 20:29:00', '2025-02-07 20:29:00', 1000, 'Alergias', 2, 1, '2025-03-24 20:11:27', 10, 0, 100),
+(24, 'Actimicina Bronquial', 'Bayer', 'Actimicina Bronquial.webp', 'Para Gripe', '2024-10-09 09:46:00', '2025-03-13 09:46:00', NULL, 'Gripe o Calentura', 4, 1, '2025-03-24 20:11:27', 10, 0, 100),
+(27, 'Ibuprofeno', 'Bayer', 'Ibuprofeno.webp', 'Medicamento que se usa para tratar la fiebre, la hinchazón, el dolor y el enrojecimiento', '2024-07-11 10:00:00', '2024-12-05 10:00:00', NULL, 'En general, los adultos y niños mayores de 12 años pueden tomar el ibuprofeno de venta libre cada 4 a 6 horas', 5, 1, '2025-03-24 20:11:27', 10, 0, 100),
+(28, 'Acetamenofen ', 'Lab-Ramos', 'Acetaminofen.webp', 'Analgésico y antipirético, inhibidor de la síntesis de prostaglandinas periférica y central por acción sobre la ciclooxigenasa.', '2024-12-01 10:04:00', '2024-12-05 10:04:00', NULL, 'El acetaminofeno se usa para aliviar el dolor leve o moderado de las cefaleas, dolores musculares, períodos menstruales, resfriados, y los dolores de ', 5, 1, '2025-03-24 20:11:27', 10, 0, 100),
+(30, 'Pampers', 'Previal', NULL, 'Pañales para abulto', '2024-12-01 10:04:00', '2024-12-05 10:04:00', NULL, NULL, 8, 1, '2025-03-24 20:11:27', 10, 0, 100);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `medicamento_dosis`
+--
+
+CREATE TABLE `medicamento_dosis` (
+  `ID_Dosis` int(11) NOT NULL,
+  `ID_Medicamento` int(11) NOT NULL,
+  `Dosis` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `medicamento_dosis`
+--
+
+INSERT INTO `medicamento_dosis` (`ID_Dosis`, `ID_Medicamento`, `Dosis`) VALUES
+(1, 1, '20gm'),
+(2, 1, '50gm'),
+(3, 1, '80gm'),
+(4, 21, '30gm'),
+(5, 21, '80gm'),
+(6, 27, '200mg'),
+(7, 27, '600mg');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `medicamento_forma_farmaceutica`
+--
+
+CREATE TABLE `medicamento_forma_farmaceutica` (
+  `ID_Forma_Farmaceutica` int(11) NOT NULL,
+  `ID_Medicamento` int(11) NOT NULL,
+  `Forma_Farmaceutica` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `medicamento_forma_farmaceutica`
+--
+
+INSERT INTO `medicamento_forma_farmaceutica` (`ID_Forma_Farmaceutica`, `ID_Medicamento`, `Forma_Farmaceutica`) VALUES
+(1, 1, 'tableta'),
+(2, 1, 'capsula'),
+(3, 30, 'Talla M'),
+(5, 30, 'Talla S'),
+(6, 21, 'Capsula'),
+(7, 27, 'tableta'),
+(8, 28, 'tableta'),
+(9, 24, 'tableta');
 
 -- --------------------------------------------------------
 
@@ -254,7 +302,21 @@ CREATE TABLE `medicamento_presentacion` (
 INSERT INTO `medicamento_presentacion` (`ID_Presentacion`, `ID_Medicamento`, `Tipo_Presentacion`, `Cantidad_Contenido`, `Precio`) VALUES
 (1, 1, 'Sobre', 10, 70.00),
 (2, 1, 'Unida', 1, 7.00),
-(3, 1, 'Caja', 15, 1050.00);
+(3, 1, 'Caja', 15, 1050.00),
+(4, 30, 'Bolsa', 15, 500.00),
+(5, 30, 'Unidad', 1, 40.00),
+(6, 21, 'sobre', 12, 48.00),
+(7, 21, 'caja', 18, 864.00),
+(8, 21, 'unidad', 1, 8.00),
+(9, 24, 'Unidad', 1, 10.00),
+(10, 24, 'Sobre', 10, 90.00),
+(11, 24, 'Caja', 100, 850.00),
+(12, 27, 'Unidad', 1, 12.50),
+(13, 27, 'Sobre', 10, 115.00),
+(14, 27, 'Caja', 100, 1050.00),
+(15, 28, 'Unidad', 1, 15.00),
+(16, 28, 'Sobre', 10, 135.00),
+(17, 28, 'Caja', 100, 1250.00);
 
 -- --------------------------------------------------------
 
@@ -511,6 +573,20 @@ ALTER TABLE `medicamento`
   ADD KEY `IdCategoria` (`IdCategoria`);
 
 --
+-- Indices de la tabla `medicamento_dosis`
+--
+ALTER TABLE `medicamento_dosis`
+  ADD PRIMARY KEY (`ID_Dosis`),
+  ADD KEY `ID_Medicamento` (`ID_Medicamento`);
+
+--
+-- Indices de la tabla `medicamento_forma_farmaceutica`
+--
+ALTER TABLE `medicamento_forma_farmaceutica`
+  ADD PRIMARY KEY (`ID_Forma_Farmaceutica`),
+  ADD KEY `ID_Medicamento` (`ID_Medicamento`);
+
+--
 -- Indices de la tabla `medicamento_presentacion`
 --
 ALTER TABLE `medicamento_presentacion`
@@ -631,10 +707,22 @@ ALTER TABLE `medicamento`
   MODIFY `ID_Medicamento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
+-- AUTO_INCREMENT de la tabla `medicamento_dosis`
+--
+ALTER TABLE `medicamento_dosis`
+  MODIFY `ID_Dosis` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT de la tabla `medicamento_forma_farmaceutica`
+--
+ALTER TABLE `medicamento_forma_farmaceutica`
+  MODIFY `ID_Forma_Farmaceutica` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
 -- AUTO_INCREMENT de la tabla `medicamento_presentacion`
 --
 ALTER TABLE `medicamento_presentacion`
-  MODIFY `ID_Presentacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `ID_Presentacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `pedido`
@@ -711,6 +799,18 @@ ALTER TABLE `lotefact`
 --
 ALTER TABLE `medicamento`
   ADD CONSTRAINT `medicamento_ibfk_1` FOREIGN KEY (`IdCategoria`) REFERENCES `categoria` (`ID_Categoria`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `medicamento_dosis`
+--
+ALTER TABLE `medicamento_dosis`
+  ADD CONSTRAINT `medicamento_dosis_ibfk_1` FOREIGN KEY (`ID_Medicamento`) REFERENCES `medicamento` (`ID_Medicamento`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `medicamento_forma_farmaceutica`
+--
+ALTER TABLE `medicamento_forma_farmaceutica`
+  ADD CONSTRAINT `medicamento_forma_farmaceutica_ibfk_1` FOREIGN KEY (`ID_Medicamento`) REFERENCES `medicamento` (`ID_Medicamento`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `medicamento_presentacion`

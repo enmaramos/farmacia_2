@@ -18,10 +18,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../dist/css/Inicio.css">
-    <link rel="stylesheet" href="../../dist/css/boton.css">
-    <link rel="stylesheet" href="../../dist/css/estilosProveedor.css">
-    <link rel="stylesheet" href="../css/Estilosmedicamentos.css">
-    <link rel="stylesheet" href="../css/Estilosclientes.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" /> <!---LINK PARA LOS ICONOS-->
     <link rel="icon" href="../../dist/assets/img/logoredondo.ico"> <!---LOGO DEL ENCABEZADO DE LA PAGINA -->
      <!-- SweetAlert2 -->

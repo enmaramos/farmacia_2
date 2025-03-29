@@ -79,139 +79,161 @@ include_once "Ctrl/head.php";
         </div> <!--end::App Content Header--> <!--begin::App Content-->
 
 
-        <!---table JQUERY -->
-        <script>
-            $(document).ready(function() {
-                $('#proveedoresTable').DataTable();
-            });
-        </script>
+        <!--ESTILOS DE CAJA-->
+        <style>
+            .contenedor {
+                max-width: 1200px;
+                margin: 20px auto;
+                padding: 40px;
+                background: #ffff;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                position: relative;
+                min-height: 700px;
+            }
 
-<style>
-    .contenedor {
-        max-width: 1200px;
-        margin: 20px auto;
-        padding: 40px;
-        background: #f0f0f0;
-        border-radius: 10px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        position: relative; /* Necesario para que el botón se posicione dentro */
-        min-height: 700px; /* Ajusta la altura mínima para que el botón no se sobreponga */
-    }
+            .row {
+                margin: 0 -10px;
+            }
 
-    .row {
-    margin: 0 -10px; /* Evita que las columnas estén demasiado pegadas */
-}
+            .col-md-5,
+            .col-md-2 {
+                padding: 0 55px;
+            }
 
-.col-md-5, .col-md-2 {
-    padding: 0 55px; /* Agrega separación entre columnas */
-}
+            .form-control,
+            .form-select {
+                margin-bottom: 15px;
+            }
 
-.form-control, .form-select {
-    margin-bottom: 55px; /* Aumenta la separación entre inputs */
-}
+            .carrito-container {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                display: flex;
+                align-items: center;
+            }
 
+            .carrito-icono {
+                background-color: #007bff;
+                color: white;
+                padding: 10px;
+                border-radius: 50%;
+                cursor: pointer;
+                font-size: 1.5rem;
+                margin-left: 10px;
+            }
 
-    .carrito-container {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        display: flex;
-        align-items: center;
-    }
+            .carrito-contenedor {
+                background-color: red;
+                color: white;
+                padding: 5px 10px;
+                border-radius: 50%;
+                font-size: 1rem;
+                font-weight: bold;
+            }
 
-    .carrito-icono {
-        background-color: #007bff;
-        color: white;
-        padding: 10px;
-        border-radius: 50%;
-        cursor: pointer;
-        font-size: 1.5rem;
-        margin-left: 10px;
-    }
+            #btnAgregar {
+                position: absolute;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-35%);
+                width: auto;
+            }
 
-    .carrito-contenedor {
-        background-color: red;
-        color: white;
-        padding: 5px 10px;
-        border-radius: 50%;
-        font-size: 1rem;
-        font-weight: bold;
-    }
+            /* Cuadro para la imagen del producto */
+            .img-container {
+                width: 200px;
+                /* Ajusta el tamaño del cuadro */
+                height: 200px;
+                border: 2px dashed #ccc;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                text-align: center;
+                padding: 10px;
+            }
 
-    .btn-container {
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%; /* Para mantener el centrado */
-        text-align: center;
-    }
-    #btnAgregar {
-    position: absolute;
-    bottom: 20px;
-    left: 50%; /* Ajusta el porcentaje para moverlo más al centro */
-    transform: translateX(-35%); /* Ajusta la traslación para mantener la posición relativa */
-    width: auto;
-}
-   
-</style>
+            .img-container img {
+                max-width: 100%;
+                max-height: 80%;
+                object-fit: contain;
+            }
 
+            /* Ajustar el tamaño de los inputs "Requiere Receta" y "Vencimiento" */
+            .extra-inputs {
+                width: 200px;
+                /* Mismo ancho que el cuadro de la imagen */
+            }
+        </style>
 
-<div class="contenedor">
-    <div class="d-flex justify-content-between align-items-center">
-        <div class="carrito-container">
-            <div class="carrito-contenedor" id="contadorCarrito">0</div>
-            <div class="carrito-icono" onclick="mostrarCarrito()">🛒</div>
+        <!--CONTENEDOR DE CAJA-->
+        <div class="contenedor">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="carrito-container">
+                    <div class="carrito-contenedor" id="contadorCarrito">0</div>
+                    <div class="carrito-icono" onclick="mostrarCarrito()">🛒</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Sección de productos -->
+                <div class="col-md-5">
+                    <h4>Buscar Producto</h4>
+                    <label>Producto</label>
+                    <input type="text" class="form-control" placeholder="Nombre del producto">
+                    <label>Laboratorio o Marca</label>
+                    <input type="text" class="form-control" placeholder="Nombre del laboratorio">
+                    <label>Dosis</label>
+                    <select class="form-select">
+                        <option>Seleccione Dosis</option>
+                    </select>
+                    <label>Presentación</label>
+                    <select class="form-select">
+                        <option>Seleccione Presentación</option>
+                    </select>
+                    <label>Unidad</label>
+                    <select class="form-select">
+                        <option>Seleccione Unidad</option>
+                    </select>
+                    <label>Precio</label>
+                    <input type="text" class="form-control">
+                    <label>Cantidad</label>
+                    <input type="number" class="form-control">
+                    <label>Descuento</label>
+                    <input type="text" class="form-control">
+                </div>
+
+                <!-- Sección de imagen y detalles adicionales -->
+                <div class="col-md-2 d-flex flex-column align-items-center">
+                    <div class="img-container">
+                        <img id="imagenProducto" src="" alt="Imagen del producto">
+                    </div>
+                    <label>Requiere Receta</label>
+                    <input type="text" class="form-control extra-inputs">
+                    <label>Vencimiento</label>
+                    <input type="date" class="form-control extra-inputs">
+                    <label>Descripcion</label>
+                    <textarea class="form-control extra-inputs"></textarea>
+                </div>
+
+                <!-- Sección de clientes -->
+                <div class="col-md-5">
+                    <h4>Buscar Cliente</h4>
+                    <label>Cliente</label>
+                    <input type="text" class="form-control" placeholder="Nombre del cliente">
+                    <label>Teléfono</label>
+                    <input type="text" class="form-control">
+                    <label>Dirección</label>
+                    <textarea class="form-control"></textarea>
+                </div>
+            </div>
+
+            <!-- Botón de agregar al carrito -->
+            <button class="btn btn-primary d-block mx-auto mt-4" id="btnAgregar">Agregar al Carrito</button>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-5">
-            <h4>Buscar Producto</h4>
-            <label>Producto</label>
-            <input type="text" class="form-control mb-2" placeholder="Nombre del producto">
-            <label>Dosis</label>
-            <select class="form-select mb-2">
-                <option>Seleccione Dosis</option>
-            </select>
-            <label>Presentación</label>
-            <select class="form-select mb-2">
-                <option>Seleccione Presentación</option>
-            </select>
-            <label>Unidad</label>
-            <select class="form-select mb-2">
-                <option>Seleccione Unidad</option>
-            </select>
-            <label>Precio</label>
-            <input type="text" class="form-control mb-2">
-            <label>Cantidad</label>
-            <input type="number" class="form-control mb-2">
-            <label>Descuento</label>
-            <input type="text" class="form-control mb-2">
-        </div>
-
-        <div class="col-md-2 d-flex flex-column align-items-center">
-            <img src="" alt="Imagen del producto" class="img-fluid mb-2" style="max-width: 150px;">
-            <label>Requiere Receta</label>
-            <input type="text" class="form-control mb-2">
-            <label>Vencimiento</label>
-            <input type="date" class="form-control mb-2">
-        </div>
-
-        <div class="col-md-5">
-            <h4>Buscar Cliente</h4>
-            <label>Cliente</label>
-            <input type="text" class="form-control mb-2" placeholder="Nombre del cliente">
-            <label>Teléfono</label>
-            <input type="text" class="form-control mb-2">
-            <label>Dirección</label>
-            <textarea class="form-control mb-2"></textarea>
-        </div>
-    </div>
-
-    <!-- Botón sin contenedor extra -->
-    <button class="btn btn-primary d-block mx-auto mt-4" id="btnAgregar">Agregar al Carrito</button>
-</div>
 
 
 
@@ -221,7 +243,7 @@ include_once "Ctrl/head.php";
 
 
         <script src="../js/carrito_caja.js?2345"></script>
-        
+
 
         <?php
 

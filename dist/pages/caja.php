@@ -168,71 +168,84 @@ include_once "Ctrl/head.php";
             }
         </style>
 
-        <!--CONTENEDOR DE CAJA-->
-        <div class="contenedor">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="carrito-container">
-                    <div class="carrito-contenedor" id="contadorCarrito">0</div>
-                    <div class="carrito-icono" onclick="mostrarCarrito()">🛒</div>
-                </div>
-            </div>
-
-            <div class="row">
-                <!-- Sección de productos -->
-                <div class="col-md-5">
-                    <h4>Buscar Producto</h4>
-                    <label>Producto</label>
-                    <input type="text" class="form-control" placeholder="Nombre del producto">
-                    <label>Laboratorio o Marca</label>
-                    <input type="text" class="form-control" placeholder="Nombre del laboratorio">
-                    <label>Dosis</label>
-                    <select class="form-select">
-                        <option>Seleccione Dosis</option>
-                    </select>
-                    <label>Presentación</label>
-                    <select class="form-select">
-                        <option>Seleccione Presentación</option>
-                    </select>
-                    <label>Unidad</label>
-                    <select class="form-select">
-                        <option>Seleccione Unidad</option>
-                    </select>
-                    <label>Precio</label>
-                    <input type="text" class="form-control">
-                    <label>Cantidad</label>
-                    <input type="number" class="form-control">
-                    <label>Descuento</label>
-                    <input type="text" class="form-control">
-                </div>
-
-                <!-- Sección de imagen y detalles adicionales -->
-                <div class="col-md-2 d-flex flex-column align-items-center">
-                    <div class="img-container">
-                        <img id="imagenProducto" src="" alt="Imagen del producto">
-                    </div>
-                    <label>Requiere Receta</label>
-                    <input type="text" class="form-control extra-inputs">
-                    <label>Vencimiento</label>
-                    <input type="date" class="form-control extra-inputs">
-                    <label>Descripcion</label>
-                    <textarea class="form-control extra-inputs"></textarea>
-                </div>
-
-                <!-- Sección de clientes -->
-                <div class="col-md-5">
-                    <h4>Buscar Cliente</h4>
-                    <label>Cliente</label>
-                    <input type="text" class="form-control" placeholder="Nombre del cliente">
-                    <label>Teléfono</label>
-                    <input type="text" class="form-control">
-                    <label>Dirección</label>
-                    <textarea class="form-control"></textarea>
-                </div>
-            </div>
-
-            <!-- Botón de agregar al carrito -->
-            <button class="btn btn-primary d-block mx-auto mt-4" id="btnAgregar">Agregar al Carrito</button>
+   <!-- CONTENEDOR DE CAJA -->
+<div class="contenedor">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="carrito-container">
+            <div class="carrito-contenedor" id="contadorCarrito">0</div>
+            <div class="carrito-icono" onclick="mostrarCarrito()">🛒</div>
         </div>
+    </div>
+
+    <div class="row">
+        <!-- Sección de productos -->
+        <div class="col-md-5">
+            <h4>Buscar Producto</h4>
+            <label>Producto</label>
+            <input type="text" id="buscarProducto" class="form-control" placeholder="Nombre del producto" list="listaProductos">
+            <datalist id="listaProductos"></datalist>
+
+            <label>Laboratorio o Marca</label>
+            <input type="text" id="laboratorio" class="form-control" placeholder="Nombre del laboratorio">
+
+            <label>Dosis</label>
+            <select id="dosis" class="form-select">
+                <option>Seleccione Dosis</option>
+            </select>
+
+            <label>Presentación</label>
+            <select id="presentacion" class="form-select">
+                <option>Seleccione Presentación</option>
+            </select>
+
+            <label>Unidad</label>
+            <select id="unidad" class="form-select">
+                <option>Seleccione Unidad</option>
+            </select>
+
+            <label>Precio</label>
+            <input type="text" id="precio" class="form-control">
+
+            <label>Cantidad</label>
+            <input type="number" id="cantidad" class="form-control">
+
+            <label>Descuento</label>
+            <input type="text" id="descuento" class="form-control">
+        </div>
+
+        <!-- Sección de imagen y detalles adicionales -->
+        <div class="col-md-2 d-flex flex-column align-items-center">
+            <div class="img-container">
+                <img id="imagenProducto" src="default.jpg" alt="Imagen del producto">
+            </div>
+            <label>Requiere Receta</label>
+            <input type="text" id="requiereReceta" class="form-control extra-inputs">
+
+            <label>Vencimiento</label>
+            <input type="date" id="vencimiento" class="form-control extra-inputs">
+
+            <label>Descripcion</label>
+            <textarea id="descripcion" class="form-control extra-inputs"></textarea>
+        </div>
+
+        <!-- Sección de clientes -->
+        <div class="col-md-5">
+            <h4>Buscar Cliente</h4>
+            <label>Cliente</label>
+            <input type="text" id="buscarCliente" class="form-control" placeholder="Nombre del cliente" list="listaClientes">
+            <datalist id="listaClientes"></datalist>
+
+            <label>Teléfono</label>
+            <input type="text" id="telefonoCliente" class="form-control">
+
+            <label>Dirección</label>
+            <textarea id="direccionCliente" class="form-control"></textarea>
+        </div>
+    </div>
+
+    <!-- Botón de agregar al carrito -->
+    <button class="btn btn-primary d-block mx-auto mt-4" id="btnAgregar">Agregar al Carrito</button>
+</div>
 
 
 
@@ -243,7 +256,7 @@ include_once "Ctrl/head.php";
 
 
         <script src="../js/carrito_caja.js?2345"></script>
-
+        <script src="../js/caja.js?2345"></script>
 
         <?php
 

@@ -1,71 +1,88 @@
 $(document).ready(function() {
     $('#tablaProducto tbody').on('click', '.seleccionarProducto', function() {
-        let fila = $(this).closest('tr');
+        let idMedicamento = $(this).data('id');
 
-        // Obtener los datos de la fila seleccionada
-        let imagen = fila.find('td:eq(0) img').attr('src');
-        let nombre = fila.find('td:eq(1)').text();
-        let laboratorio = fila.find('td:eq(2)').text();
-        let dosisTexto = fila.find('td:eq(3)').text();
-        let presentacionTexto = fila.find('td:eq(4)').text();
-        let unidadTexto = fila.find('td:eq(5)').text();
+        $.ajax({
+            url: '../pages/Ctrl/obtener_detalles_medicamento.php',
+            type: 'GET',
+            data: { id: idMedicamento },
+            dataType: 'json',
+            success: function(data) {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
 
-        // Obtener precios desde los atributos de la fila
-        let precioUnidad = fila.data('precio-unidad'); 
-        let precioSobre = fila.data('precio-sobre');
-        let precioCaja = fila.data('precio-caja');
+                // Asignar valores a los campos del formulario
+                $('#nombreProducto').val(data.Nombre_Medicamento); // Mostrar el nombre del producto
+                $('#laboratorio').val(data.LAB_o_MARCA); // Laboratorio no editable
+                $('#imagenProducto').attr('src', '../../dist/assets/img/' + data.Imagen); // Mostrar la imagen del producto
+                $('#vencimiento').val(formatFecha(data.Fecha_Vencimiento)); // Mostrar fecha en formato DD/MM/YYYY
+                $('#descripcion').val(data.Descripcion_Medicamento); // Descripción no editable
+                $('#requiereReceta').val(data.Requiere_Receta ? 'Sí' : 'No'); // Requiere receta no editable
 
-        let vencimiento = ''; // Si está disponible en la BD
-        let descripcion = ''; // Si está disponible en la BD
-        let receta = 'No'; // Ajustar si este dato está disponible en la BD
+                // Verificar si requiere receta y aplicar estilo de advertencia
+                if (data.Requiere_Receta) {
+                    $('#requiereReceta').addClass('requiere-receta-advertencia');
+                } else {
+                    $('#requiereReceta').removeClass('requiere-receta-advertencia');
+                }
 
-        // Asignar valores a los campos de texto
-        $('#laboratorio').val(laboratorio);
-        $('#imagenProducto').attr('src', imagen);
-        $('#vencimiento').val(vencimiento);
-        $('#descripcion').val(descripcion);
-        $('#requiereReceta').val(receta);
+                // Llenar el select de Dosis
+                llenarSelect('#dosis', data.Dosis);
 
-        // Función para llenar un select con múltiples opciones separadas correctamente
-        function llenarSelect(selectId, valores, esPrecio = false) {
-            let select = $(selectId);
-            select.empty().append('<option selected>Seleccione una opción</option>');
+                // Llenar el select de Forma Farmacéutica en "Unidad"
+                llenarSelect('#unidad', data.Forma_Farmaceutica);
 
-            if (valores) {
-                let opciones = valores.split(/[,\/]/); // Separar valores por comas o barras si existen
-                opciones.forEach(function(opcion) {
-                    opcion = opcion.trim();
+                // Llenar el select de Presentación con Tipo_Presentacion
+                let presentaciones = data.Presentaciones.split(', ');
+                let presentacionSelect = $('#presentacion');
+                presentacionSelect.empty().append('<option selected>Seleccione Presentación</option>');
 
-                    // Si es el select de presentación, agregamos precios en cada opción
-                    if (esPrecio) {
-                        if (opcion.includes("Caja")) {
-                            select.append(`<option value="Caja" data-precio="${precioCaja}">Caja (C$ ${precioCaja})</option>`);
-                        } else if (opcion.includes("Sobre")) {
-                            select.append(`<option value="Sobre" data-precio="${precioSobre}">Sobre (C$ ${precioSobre})</option>`);
-                        } else if (opcion.includes("Unidad")) {
-                            select.append(`<option value="Unidad" data-precio="${precioUnidad}">Unidad (C$ ${precioUnidad})</option>`);
-                        }
-                    } else {
-                        select.append(`<option value="${opcion}">${opcion}</option>`);
+                presentaciones.forEach(function(presentacion) {
+                    let partes = presentacion.split('|');
+                    if (partes.length === 2) {
+                        let tipo = partes[0].trim();
+                        let precio = partes[1].trim();
+                        presentacionSelect.append(`<option value="${tipo}" data-precio="${precio}">${tipo}</option>`);
                     }
                 });
+
+                // Evento para actualizar el precio según la presentación seleccionada
+                $('#presentacion').off('change').on('change', function() {
+                    let precioSeleccionado = $(this).find(':selected').data('precio');
+                    $('#precio').val(precioSeleccionado || ''); // Precio no editable
+                });
+
+                // Cerrar el modal
+                $('#modalBusquedaProducto').modal('hide');
+            },
+            error: function(xhr, status, error) {
+                console.log("Error en la solicitud AJAX:", status, error);
+                console.log("Respuesta del servidor:", xhr.responseText);
+                alert('Error al obtener los detalles del medicamento.');
             }
-        }
-
-        // Llenar los selects con opciones separadas
-        llenarSelect('#dosis', dosisTexto);
-        llenarSelect('#presentacion', presentacionTexto, true); // Pasamos `true` para manejar precios
-        llenarSelect('#unidad', unidadTexto);
-
-        // Evento para cambiar el precio según la presentación seleccionada
-        $('#presentacion').off('change').on('change', function() {
-            let precioSeleccionado = $(this).find(':selected').data('precio');
-            $('#precio').val(precioSeleccionado || '');
         });
-
-        // Cerrar el modal
-        $('#modalBusquedaProducto').modal('hide');
     });
+
+    // Función para llenar un select con múltiples opciones separadas
+    function llenarSelect(selectId, valores) {
+        let select = $(selectId);
+        select.empty().append('<option selected>Seleccione una opción</option>');
+
+        if (valores) {
+            valores.split(/[,\/]/).forEach(function(opcion) {
+                select.append(`<option value="${opcion.trim()}">${opcion.trim()}</option>`);
+            });
+        }
+    }
+
+    // Función para formatear la fecha en formato DD/MM/YYYY
+    function formatFecha(fecha) {
+        let fechaObj = new Date(fecha);
+        let dia = String(fechaObj.getDate()).padStart(2, '0');
+        let mes = String(fechaObj.getMonth() + 1).padStart(2, '0');
+        let año = fechaObj.getFullYear();
+        return dia + '/' + mes + '/' + año;
+    }
 });
-
-

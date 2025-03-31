@@ -164,17 +164,38 @@ include_once "Ctrl/head.php";
                 object-fit: contain;
             }
 
+            #imagenProducto {
+                width: 95%;
+                height: auto;
+                /* Mantiene la proporción de la imagen */
+                object-fit: cover;
+                /* Asegura que la imagen cubra el espacio sin distorsionarse */
+                display: block;
+                /* Elimina los márgenes y paddings que puedan haber */
+                margin: 0 auto;
+                /* Centra la imagen dentro de su contenedor */
+            }
+
 
             .modal-dialog {
                 max-width: 80%;
                 /* Limita el tamaño máximo del modal */
             }
 
-            
+
             /* Ajustar el tamaño de los inputs "Requiere Receta" y "Vencimiento" */
             .extra-inputs {
                 width: 200px;
                 /* Mismo ancho que el cuadro de la imagen */
+            }
+
+            .requiere-receta-advertencia {
+                background-color: #ffcccc;
+                /* Fondo rojo claro para advertencia */
+                color: #a94442;
+                /* Color del texto en rojo oscuro */
+                border: 1px solid #a94442;
+                /* Borde rojo oscuro */
             }
         </style>
 
@@ -197,8 +218,11 @@ include_once "Ctrl/head.php";
                         <i class="fas fa-search"></i> Buscar Producto
                     </button>
 
+                    <label>Nombre del Producto</label>
+                    <input type="text" id="nombreProducto" class="form-control" readonly> <!-- Campo para mostrar el nombre del producto -->
+
                     <label>Laboratorio o Marca</label>
-                    <input type="text" id="laboratorio" class="form-control" placeholder="Nombre del laboratorio">
+                    <input type="text" id="laboratorio" class="form-control" readonly> <!-- Campo no editable -->
 
                     <label>Dosis</label>
                     <select id="dosis" class="form-select">
@@ -210,19 +234,16 @@ include_once "Ctrl/head.php";
                         <option>Seleccione Presentación</option>
                     </select>
 
-                    <label>Unidad</label>
+                    <label>Formato del producto</label>
                     <select id="unidad" class="form-select">
                         <option>Seleccione Unidad</option>
                     </select>
 
                     <label>Precio</label>
-                    <input type="text" id="precio" class="form-control">
+                    <input type="text" id="precio" class="form-control" readonly> <!-- Campo no editable -->
 
                     <label>Cantidad</label>
                     <input type="number" id="cantidad" class="form-control">
-
-                    <label>Descuento</label>
-                    <input type="text" id="descuento" class="form-control">
                 </div>
 
                 <!-- Sección de imagen y detalles adicionales -->
@@ -231,13 +252,16 @@ include_once "Ctrl/head.php";
                         <img id="imagenProducto" src="default.jpg" alt="Imagen del producto">
                     </div>
                     <label>Requiere Receta</label>
-                    <input type="text" id="requiereReceta" class="form-control extra-inputs">
+                    <input type="text" id="requiereReceta" class="form-control extra-inputs" readonly> <!-- Campo no editable -->
 
                     <label>Vencimiento</label>
-                    <input type="date" id="vencimiento" class="form-control extra-inputs">
+                    <input type="text" id="vencimiento" class="form-control extra-inputs" readonly> <!-- Campo solo para mostrar la fecha -->
 
                     <label>Descripcion</label>
-                    <textarea id="descripcion" class="form-control extra-inputs"></textarea>
+                    <textarea id="descripcion" class="form-control extra-inputs" readonly></textarea> <!-- Campo no editable -->
+
+                    <label>Descuento</label>
+                    <input type="text" id="descuento" class="form-control extra-inputs">
                 </div>
 
                 <!-- Sección de clientes -->
@@ -260,6 +284,7 @@ include_once "Ctrl/head.php";
             <!-- Botón de agregar al carrito -->
             <button class="btn btn-primary d-block mx-auto mt-4" id="btnAgregar">Agregar al Carrito</button>
         </div>
+
 
 
         <script>
@@ -306,7 +331,7 @@ include_once "Ctrl/head.php";
         <script src="../js/carrito_caja.js?2345"></script>
         <script src="../js/medicamento.js?12345"></script>
         <script src="../js/seleccionar_medicamento.js?12345"></script>
-        
+
         <?php
 
         include_once "Ctrl/footer.php";

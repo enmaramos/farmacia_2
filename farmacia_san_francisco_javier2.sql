@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-03-2025 a las 23:49:38
+-- Tiempo de generación: 31-03-2025 a las 04:43:21
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -108,18 +108,28 @@ CREATE TABLE `clientes` (
   `Genero` enum('Masculino','Femenino') DEFAULT 'Masculino',
   `Direccion` varchar(50) DEFAULT NULL,
   `Telefono` varchar(9) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `Estado` tinyint(1) DEFAULT 1
+  `Estado` tinyint(1) DEFAULT 1,
+  `Email` varchar(100) DEFAULT NULL,
+  `Fecha_Nacimiento` date DEFAULT NULL,
+  `Cedula` varchar(20) DEFAULT NULL,
+  `Fecha_Registro` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `clientes`
 --
 
-INSERT INTO `clientes` (`ID_Cliente`, `Nombre`, `Apellido`, `Genero`, `Direccion`, `Telefono`, `Estado`) VALUES
-(53, 'Derek', 'Somoza', 'Masculino', 'Milagro', '561561156', 1),
-(56, 'Enmanuel', 'Serrano', 'Masculino', 'Villa Venezuela\r\n', '561561561', 1),
-(57, 'Brizayda', 'Somoza', 'Femenino', 'Villa flor', '56651561', 0),
-(61, 'Jonan Joas', 'Jimenez ', '', 'Villa for sur', '88688476', 0);
+INSERT INTO `clientes` (`ID_Cliente`, `Nombre`, `Apellido`, `Genero`, `Direccion`, `Telefono`, `Estado`, `Email`, `Fecha_Nacimiento`, `Cedula`, `Fecha_Registro`) VALUES
+(62, 'Juan', 'Pérez', 'Masculino', 'Calle 10, Managua', '123456789', 1, 'juan.perez@example.com', '1990-05-15', '123456789', '2025-03-30 19:22:16'),
+(63, 'Ana', 'González', 'Femenino', 'Avenida Central, León', '987654321', 1, 'ana.gonzalez@example.com', '1985-08-20', '987654321', '2025-03-30 19:22:16'),
+(64, 'Carlos', 'Ramírez', 'Masculino', 'Calle El Carmen, Masaya', '456789123', 1, 'carlos.ramirez@example.com', '1992-12-30', '456789123', '2025-03-30 19:22:16'),
+(65, 'Luisa', 'Martínez', 'Femenino', 'Boulevard del Norte, Chinandega', '321654987', 1, 'luisa.martinez@example.com', '1980-02-10', '321654987', '2025-03-30 19:22:16'),
+(66, 'Pedro', 'López', 'Masculino', 'Callejón de la Paz, Rivas', '654321987', 1, 'pedro.lopez@example.com', '1995-11-11', '654321987', '2025-03-30 19:22:16'),
+(67, 'Sofía', 'Hernández', 'Femenino', 'Zona 1, Ciudad Sandino', '123789456', 1, 'sofia.hernandez@example.com', '1998-06-25', '123789456', '2025-03-30 19:22:16'),
+(68, 'María', 'Vargas', 'Femenino', 'Calle 5, Granada', '987123654', 1, 'maria.vargas@example.com', '1991-03-18', '987123654', '2025-03-30 19:22:16'),
+(69, 'José', 'Díaz', 'Masculino', 'Callejón 2, Estelí', '456123789', 1, 'jose.diaz@example.com', '1988-07-05', '456123789', '2025-03-30 19:22:16'),
+(70, 'Laura', 'Fernández', 'Femenino', 'Calle 4, Bluefields', '789456123', 1, 'laura.fernandez@example.com', '1993-01-22', '789456123', '2025-03-30 19:22:16'),
+(71, 'Ricardo', 'Gutiérrez', 'Masculino', 'Calle de los Molinos, Jinotepe', '159753486', 1, 'ricardo.gutierrez@example.com', '1986-09-14', '159753486', '2025-03-30 19:22:16');
 
 -- --------------------------------------------------------
 
@@ -223,12 +233,12 @@ CREATE TABLE `medicamento` (
 --
 
 INSERT INTO `medicamento` (`ID_Medicamento`, `Nombre_Medicamento`, `LAB_o_MARCA`, `Imagen`, `Descripcion_Medicamento`, `Fecha_Fabricacion`, `Fecha_Vencimiento`, `Precio_Con_Impuesto`, `Prescripcion_Medica`, `IdCategoria`, `Estado`, `Fecha_Registro`, `Stock_Minimo`, `Requiere_Receta`, `Stock_Maximo`) VALUES
-(1, 'Amoxicilina', 'Lab-Ramos', '', 'Antibiótico de amplio espectro.', '2023-06-01 00:00:00', '2025-06-01 00:00:00', 6, 'No requiere receta', 1, 1, '2025-03-24 20:11:27', 10, 0, 100),
+(1, 'Amoxicilina', 'Lab-Ramos', 'amoxicilina.jpg', 'Antibiótico de amplio espectro.', '2023-06-01 00:00:00', '2025-06-01 00:00:00', 6, 'No requiere receta', 1, 1, '2025-03-24 20:11:27', 10, 0, 100),
 (21, 'Eritromicina', 'Lab-Ramos', 'eritromicina.jpg', 'Infeccion', '2024-11-13 20:29:00', '2025-02-07 20:29:00', 1000, 'Alergias', 2, 1, '2025-03-24 20:11:27', 10, 0, 100),
-(24, 'Actimicina Bronquial', 'Bayer', 'Actimicina Bronquial.webp', 'Para Gripe', '2024-10-09 09:46:00', '2025-03-13 09:46:00', NULL, 'Gripe o Calentura', 4, 1, '2025-03-24 20:11:27', 10, 0, 100),
-(27, 'Ibuprofeno', 'Bayer', 'Ibuprofeno.webp', 'Medicamento que se usa para tratar la fiebre, la hinchazón, el dolor y el enrojecimiento', '2024-07-11 10:00:00', '2024-12-05 10:00:00', NULL, 'En general, los adultos y niños mayores de 12 años pueden tomar el ibuprofeno de venta libre cada 4 a 6 horas', 5, 1, '2025-03-24 20:11:27', 10, 0, 100),
-(28, 'Acetamenofen ', 'Lab-Ramos', 'Acetaminofen.webp', 'Analgésico y antipirético, inhibidor de la síntesis de prostaglandinas periférica y central por acción sobre la ciclooxigenasa.', '2024-12-01 10:04:00', '2024-12-05 10:04:00', NULL, 'El acetaminofeno se usa para aliviar el dolor leve o moderado de las cefaleas, dolores musculares, períodos menstruales, resfriados, y los dolores de ', 5, 1, '2025-03-24 20:11:27', 10, 0, 100),
-(30, 'Pampers', 'Previal', NULL, 'Pañales para abulto', '2024-12-01 10:04:00', '2024-12-05 10:04:00', NULL, NULL, 8, 1, '2025-03-24 20:11:27', 10, 0, 100);
+(24, 'Actimicina Bronquial', 'Bayer', 'ActimicinaBronquial.jpg', 'Para Gripe', '2024-10-09 09:46:00', '2025-03-13 09:46:00', NULL, 'Gripe o Calentura', 4, 1, '2025-03-24 20:11:27', 10, 0, 100),
+(27, 'Ibuprofeno', 'Bayer', 'Ibuprofeno.jpg', 'Medicamento que se usa para tratar la fiebre, la hinchazón, el dolor y el enrojecimiento', '2024-07-11 10:00:00', '2024-12-05 10:00:00', NULL, 'En general, los adultos y niños mayores de 12 años pueden tomar el ibuprofeno de venta libre cada 4 a 6 horas', 5, 1, '2025-03-24 20:11:27', 10, 0, 100),
+(28, 'Acetamenofen ', 'Lab-Ramos', 'acetamenofen.jpg', 'Analgésico y antipirético, inhibidor de la síntesis de prostaglandinas periférica y central por acción sobre la ciclooxigenasa.', '2024-12-01 10:04:00', '2024-12-05 10:04:00', NULL, 'El acetaminofeno se usa para aliviar el dolor leve o moderado de las cefaleas, dolores musculares, períodos menstruales, resfriados, y los dolores de ', 5, 1, '2025-03-24 20:11:27', 10, 0, 100),
+(30, 'Pampers', 'Previal', 'pampers previal.jpg', 'Pañales para adulto', '2024-12-01 10:04:00', '2024-12-05 10:04:00', NULL, NULL, 8, 1, '2025-03-24 20:11:27', 10, 0, 100);
 
 -- --------------------------------------------------------
 
@@ -680,7 +690,7 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `ID_Cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `ID_Cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT de la tabla `factura_compra`

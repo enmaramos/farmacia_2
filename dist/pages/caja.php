@@ -273,6 +273,15 @@ include_once "Ctrl/head.php";
                         <i class="fas fa-search"></i> Buscar Cliente
                     </button>
 
+                    <label>Nombre del Cliente</label>
+                    <input type="text" id="nombreCliente" class="form-control" readonly>
+
+                    <label>Cédula</label>
+                    <input type="text" id="cedulaCliente" class="form-control" readonly>
+
+                    <label>Sexo</label>
+                    <input type="text" id="generoCliente" class="form-control" readonly>
+
                     <label>Teléfono</label>
                     <input type="text" id="telefonoCliente" class="form-control">
 
@@ -290,7 +299,7 @@ include_once "Ctrl/head.php";
         <script>
             $(document).ready(function() {
                 // Inicializar DataTable en la tabla con el id "tablaProducto"
-                $('#tablaProducto').DataTable();
+                $('#tablaProducto, #clientesTable').DataTable();
             });
         </script>
 
@@ -325,12 +334,45 @@ include_once "Ctrl/head.php";
             </div>
         </div>
 
+        <!-- Modal para buscar cliente -->
+        <div class="modal fade" id="clientesModal" tabindex="-1" aria-labelledby="clientesModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="clientesModalLabel">Seleccionar Cliente</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table id="clientesTable" class="table table-striped table-dark">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre Completo</th>
+                                    <th>Cédula</th>
+                                    <th>Género</th>
+                                    <th>Teléfono</th>
+                                    <th>Seleccionar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clientesTableBody">
+                                <!-- Los datos de los clientes se cargarán aquí -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
 
 
         <script src="../js/carrito_caja.js?2345"></script>
         <script src="../js/medicamento.js?12345"></script>
         <script src="../js/seleccionar_medicamento.js?12345"></script>
+        <script src="../js/buscar_cliente.js?12345"></script>
 
         <?php
 

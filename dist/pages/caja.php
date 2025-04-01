@@ -2,6 +2,8 @@
 include_once "Ctrl/head.php";
 ?>
 
+
+
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
     <div class="app-wrapper"> <!--begin::Header-->
         <nav class="app-header navbar navbar-expand bg-body"> <!--begin::Container-->
@@ -267,11 +269,18 @@ include_once "Ctrl/head.php";
                 <!-- Sección de clientes -->
                 <div class="col-md-5">
                     <h4>Buscar Cliente</h4>
+                    <div class="d-flex align-items-center">
+                        <!-- Checkbox para seleccionar cliente aleatorio -->
+                        <div class="form-check ms-2">
+                            <input class="form-check-input" type="checkbox" id="clienteAleatorio">
+                            <label class="form-check-label" for="clienteAleatorio">Cliente Aleatorio</label>
+                        </div>
 
-                    <!-- Botón con ícono de búsqueda para abrir el cuadro de búsqueda de cliente -->
-                    <button type="button" id="btnBuscarCliente" class="btn btn-info form-control" onclick="abrirBusquedaCliente()">
-                        <i class="fas fa-search"></i> Buscar Cliente
-                    </button>
+                        <!-- Botón con ícono de búsqueda para abrir el cuadro de búsqueda de cliente -->
+                        <button type="button" id="btnBuscarCliente" class="btn btn-info form-control me-2" onclick="abrirBusquedaCliente()">
+                            <i class="fas fa-search"></i> Buscar Cliente
+                        </button>
+                    </div>
 
                     <label>Nombre del Cliente</label>
                     <input type="text" id="nombreCliente" class="form-control" readonly>
@@ -334,19 +343,28 @@ include_once "Ctrl/head.php";
             </div>
         </div>
 
+
+        <?php
+        include 'Cnx/conexion.php';
+
+        // Ahora usa la variable $conn en lugar de $conexion
+        $query = "SELECT * FROM clientes WHERE Estado = 1";
+        $stmt = $conn->prepare($query);
+        $stmt->execute();
+        $clientes = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        ?>
         <!-- Modal para buscar cliente -->
         <div class="modal fade" id="clientesModal" tabindex="-1" aria-labelledby="clientesModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="clientesModalLabel">Seleccionar Cliente</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <table id="clientesTable" class="table table-striped table-dark">
-                            <thead>
+                        <table id="clientesTable" class=" table table-striped ">
+                            <thead class="table-dark">
                                 <tr>
-                                    <th>ID</th>
                                     <th>Nombre Completo</th>
                                     <th>Cédula</th>
                                     <th>Género</th>
@@ -355,7 +373,21 @@ include_once "Ctrl/head.php";
                                 </tr>
                             </thead>
                             <tbody id="clientesTableBody">
-                                <!-- Los datos de los clientes se cargarán aquí -->
+                                <?php if (count($clientes) > 0): ?>
+                                    <?php foreach ($clientes as $cliente): ?>
+                                        <tr>
+                                            <td><?php echo $cliente['Nombre'] . ' ' . $cliente['Apellido']; ?></td>
+                                            <td><?php echo $cliente['Cedula']; ?></td>
+                                            <td><?php echo $cliente['Genero']; ?></td>
+                                            <td><?php echo $cliente['Telefono']; ?></td>
+                                            <td><button class="btn btn-primary select-client" data-id="<?php echo $cliente['ID_Cliente']; ?>">Seleccionar</button></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="6">No hay clientes disponibles</td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -369,8 +401,9 @@ include_once "Ctrl/head.php";
 
 
 
+
         <script src="../js/carrito_caja.js?2345"></script>
-        <script src="../js/medicamento.js?12345"></script>
+        <script src="../js/modal_medicamento.js?12345"></script>
         <script src="../js/seleccionar_medicamento.js?12345"></script>
         <script src="../js/buscar_cliente.js?12345"></script>
 

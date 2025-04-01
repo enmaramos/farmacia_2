@@ -1,53 +1,32 @@
-// Función para abrir el modal y cargar los clientes
+// Función para abrir el modal de búsqueda de cliente
 function abrirBusquedaCliente() {
-    // Mostrar el modal
+    // Abrir el modal
     $('#clientesModal').modal('show');
-
-    // Hacer la solicitud AJAX para obtener los clientes
-    fetch('../pages/Ctrl/obtener_clientes.php')
-        .then(response => response.json()) // Convertir la respuesta a JSON
-        .then(data => {
-            // Verificar si la respuesta es un array
-            if (Array.isArray(data)) {
-                // Limpiar el cuerpo de la tabla antes de agregar nuevos datos
-                const clientesTableBody = document.getElementById('clientesTableBody');
-                clientesTableBody.innerHTML = '';
-
-                // Llenar la tabla con los datos de los clientes
-                data.forEach(cliente => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${cliente.ID_Cliente}</td>
-                        <td>${cliente.Nombre} ${cliente.Apellido}</td>
-                        <td>${cliente.Cedula}</td>
-                        <td>${cliente.Genero}</td>
-                        <td>${cliente.Telefono}</td>
-                        <td><button class="btn btn-primary" onclick="seleccionarCliente(${cliente.ID_Cliente})">Seleccionar</button></td>
-                    `;
-                    clientesTableBody.appendChild(row);
-                });
-            } else {
-                console.error("La respuesta no es un array:", data);
-            }
-        })
-        .catch(error => console.error('Error al obtener los clientes:', error));
 }
 
-// Función para seleccionar un cliente y rellenar el formulario
-function seleccionarCliente(idCliente) {
-    // Hacer la solicitud AJAX para obtener los datos del cliente seleccionado
-    fetch(`../pages/Ctrl/obtener_clientes.php?idCliente=${idCliente}`)
-        .then(response => response.json())
-        .then(cliente => {
-            // Rellenar los campos del formulario con los datos del cliente
-            document.getElementById('nombreCliente').value = cliente.Nombre + ' ' + cliente.Apellido;
-            document.getElementById('cedulaCliente').value = cliente.Cedula;
-            document.getElementById('generoCliente').value = cliente.Genero;
-            document.getElementById('telefonoCliente').value = cliente.Telefono;
-            document.getElementById('direccionCliente').value = cliente.Direccion;
+document.addEventListener('DOMContentLoaded', () => {
+    // Obtener todos los botones "Seleccionar" dentro del modal
+    const botonesSeleccionar = document.querySelectorAll('.select-client');
+    
+    botonesSeleccionar.forEach(boton => {
+        boton.addEventListener('click', () => {
+            const idCliente = boton.getAttribute('data-id');
+            const fila = boton.closest('tr'); // Obtener la fila correspondiente al cliente
+
+            // Obtener los valores de la fila
+            const nombreCompleto = fila.children[1].innerText;
+            const cedula = fila.children[2].innerText;
+            const genero = fila.children[3].innerText;
+            const telefono = fila.children[4].innerText;
+
+            // Asignar los valores a los campos del formulario
+            document.getElementById('nombreCliente').value = nombreCompleto;
+            document.getElementById('cedulaCliente').value = cedula;
+            document.getElementById('generoCliente').value = genero;
+            document.getElementById('telefonoCliente').value = telefono;
 
             // Cerrar el modal
             $('#clientesModal').modal('hide');
-        })
-        .catch(error => console.error('Error al obtener el cliente:', error));
-}
+        });
+    });
+});

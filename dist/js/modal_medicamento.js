@@ -21,13 +21,16 @@ $(document).ready(function() {
                 }
 
                 $.each(data, function(index, producto) {
+                    // Ajustar la ruta de la imagen
+                    var rutaImagen = '../../dist/assets/img/' + producto.Imagen;
+
                     var row = '<tr>' +
-                        '<td><img src="' + producto.Imagen + '" alt="' + producto.Nombre_Medicamento + '" class="img-fluid" style="width: 50px;"></td>' +
+                        '<td><img src="' + rutaImagen + '" alt="' + producto.Nombre_Medicamento + '" class="img-fluid" style="width: 50px; height: auto;"></td>' +
                         '<td>' + producto.Nombre_Medicamento + '</td>' +
                         '<td>' + producto.LAB_o_MARCA + '</td>' +
                         '<td>' + producto.Dosis + '</td>' +
                         '<td>' + producto.Presentaciones + '</td>' +
-                        '<td>' + producto.Forma_Farmaceutica + '</td>' + // Nueva columna
+                        '<td>' + producto.Forma_Farmaceutica + '</td>' + 
                         '<td><button class="btn btn-success seleccionarProducto" data-id="' + producto.ID_Medicamento + '">Seleccionar</button></td>' +
                         '</tr>';
 

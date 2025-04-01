@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-03-2025 a las 04:43:21
+-- Tiempo de generación: 01-04-2025 a las 02:44:38
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -108,28 +108,28 @@ CREATE TABLE `clientes` (
   `Genero` enum('Masculino','Femenino') DEFAULT 'Masculino',
   `Direccion` varchar(50) DEFAULT NULL,
   `Telefono` varchar(9) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `Estado` tinyint(1) DEFAULT 1,
   `Email` varchar(100) DEFAULT NULL,
   `Fecha_Nacimiento` date DEFAULT NULL,
+  `Fecha_Registro` datetime DEFAULT current_timestamp(),
   `Cedula` varchar(20) DEFAULT NULL,
-  `Fecha_Registro` datetime DEFAULT current_timestamp()
+  `Estado` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `clientes`
 --
 
-INSERT INTO `clientes` (`ID_Cliente`, `Nombre`, `Apellido`, `Genero`, `Direccion`, `Telefono`, `Estado`, `Email`, `Fecha_Nacimiento`, `Cedula`, `Fecha_Registro`) VALUES
-(62, 'Juan', 'Pérez', 'Masculino', 'Calle 10, Managua', '123456789', 1, 'juan.perez@example.com', '1990-05-15', '123456789', '2025-03-30 19:22:16'),
-(63, 'Ana', 'González', 'Femenino', 'Avenida Central, León', '987654321', 1, 'ana.gonzalez@example.com', '1985-08-20', '987654321', '2025-03-30 19:22:16'),
-(64, 'Carlos', 'Ramírez', 'Masculino', 'Calle El Carmen, Masaya', '456789123', 1, 'carlos.ramirez@example.com', '1992-12-30', '456789123', '2025-03-30 19:22:16'),
-(65, 'Luisa', 'Martínez', 'Femenino', 'Boulevard del Norte, Chinandega', '321654987', 1, 'luisa.martinez@example.com', '1980-02-10', '321654987', '2025-03-30 19:22:16'),
-(66, 'Pedro', 'López', 'Masculino', 'Callejón de la Paz, Rivas', '654321987', 1, 'pedro.lopez@example.com', '1995-11-11', '654321987', '2025-03-30 19:22:16'),
-(67, 'Sofía', 'Hernández', 'Femenino', 'Zona 1, Ciudad Sandino', '123789456', 1, 'sofia.hernandez@example.com', '1998-06-25', '123789456', '2025-03-30 19:22:16'),
-(68, 'María', 'Vargas', 'Femenino', 'Calle 5, Granada', '987123654', 1, 'maria.vargas@example.com', '1991-03-18', '987123654', '2025-03-30 19:22:16'),
-(69, 'José', 'Díaz', 'Masculino', 'Callejón 2, Estelí', '456123789', 1, 'jose.diaz@example.com', '1988-07-05', '456123789', '2025-03-30 19:22:16'),
-(70, 'Laura', 'Fernández', 'Femenino', 'Calle 4, Bluefields', '789456123', 1, 'laura.fernandez@example.com', '1993-01-22', '789456123', '2025-03-30 19:22:16'),
-(71, 'Ricardo', 'Gutiérrez', 'Masculino', 'Calle de los Molinos, Jinotepe', '159753486', 1, 'ricardo.gutierrez@example.com', '1986-09-14', '159753486', '2025-03-30 19:22:16');
+INSERT INTO `clientes` (`ID_Cliente`, `Nombre`, `Apellido`, `Genero`, `Direccion`, `Telefono`, `Email`, `Fecha_Nacimiento`, `Fecha_Registro`, `Cedula`, `Estado`) VALUES
+(62, 'Juan', 'Perez', 'Masculino', 'Calle 1, No. 23', '12345678', 'juan.perez@email.com', '1985-07-15', '2025-03-31 18:36:54', '001-123625-1010W', 1),
+(63, 'Maria', 'Lopez', 'Femenino', 'Calle 2, No. 10', '23456789', 'maria.lopez@email.com', '1990-03-22', '2025-03-31 18:36:54', '001-234567-1020X', 1),
+(64, 'Carlos', 'Martinez', 'Masculino', 'Calle 3, No. 34', '34567890', 'carlos.martinez@email.com', '1982-11-10', '2025-03-31 18:36:54', '001-345678-1030Y', 1),
+(65, 'Ana', 'Gonzalez', 'Femenino', 'Calle 4, No. 45', '45678901', 'ana.gonzalez@email.com', '1995-05-30', '2025-03-31 18:36:54', '001-456789-1040Z', 1),
+(66, 'Luis', 'Rodriguez', 'Masculino', 'Calle 5, No. 50', '56789012', 'luis.rodriguez@email.com', '1988-02-19', '2025-03-31 18:36:54', '001-567890-1050W', 1),
+(67, 'Sofia', 'Perez', 'Femenino', 'Calle 6, No. 60', '67890123', 'sofia.perez@email.com', '1993-09-09', '2025-03-31 18:36:54', '001-678901-1060X', 1),
+(68, 'Andres', 'Martinez', 'Masculino', 'Calle 7, No. 70', '78901234', 'andres.martinez@email.com', '1980-12-05', '2025-03-31 18:36:54', '001-789012-1070Y', 1),
+(69, 'Lucia', 'Hernandez', 'Femenino', 'Calle 8, No. 80', '89012345', 'lucia.hernandez@email.com', '1992-06-18', '2025-03-31 18:36:54', '001-890123-1080Z', 1),
+(70, 'Ricardo', 'Lopez', 'Masculino', 'Calle 9, No. 90', '90123456', 'ricardo.lopez@email.com', '1987-01-30', '2025-03-31 18:36:54', '001-901234-1090W', 1),
+(71, 'Valentina', 'Garcia', 'Femenino', 'Calle 10, No. 100', '11223344', 'valentina.garcia@email.com', '2000-04-25', '2025-03-31 18:36:54', '001-112233-1100X', 1);
 
 -- --------------------------------------------------------
 
@@ -140,12 +140,10 @@ INSERT INTO `clientes` (`ID_Cliente`, `Nombre`, `Apellido`, `Genero`, `Direccion
 CREATE TABLE `factura_compra` (
   `ID_FacturaC` int(11) NOT NULL,
   `Descripcion_Compra` varchar(300) DEFAULT NULL,
-  `Nombre_Proveedor` varchar(60) DEFAULT NULL,
   `Fecha_Emision` datetime DEFAULT NULL,
   `Estado_Pedido` varchar(100) DEFAULT NULL,
   `Subtotal_Fact_Comp` float DEFAULT NULL,
   `Iva_Fact_Comp` float DEFAULT NULL,
-  `Precio_Lote` float DEFAULT NULL,
   `Total_Fact_Comp` float DEFAULT NULL,
   `ID_Proveedor` int(11) DEFAULT NULL,
   `ID_Medicamento` int(11) DEFAULT NULL
@@ -216,29 +214,27 @@ CREATE TABLE `medicamento` (
   `LAB_o_MARCA` varchar(100) NOT NULL,
   `Imagen` varchar(255) DEFAULT NULL,
   `Descripcion_Medicamento` varchar(250) DEFAULT NULL,
-  `Fecha_Fabricacion` datetime DEFAULT NULL,
-  `Fecha_Vencimiento` datetime DEFAULT NULL,
-  `Precio_Con_Impuesto` float DEFAULT NULL,
   `Prescripcion_Medica` varchar(150) DEFAULT NULL,
   `IdCategoria` int(11) DEFAULT NULL,
   `Estado` tinyint(1) DEFAULT 1,
-  `Fecha_Registro` datetime DEFAULT current_timestamp(),
   `Stock_Minimo` int(11) DEFAULT 0,
   `Requiere_Receta` tinyint(1) DEFAULT 0,
-  `Stock_Maximo` int(11) DEFAULT NULL
+  `Stock_Maximo` int(11) DEFAULT NULL,
+  `Id_Proveedor` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `medicamento`
 --
 
-INSERT INTO `medicamento` (`ID_Medicamento`, `Nombre_Medicamento`, `LAB_o_MARCA`, `Imagen`, `Descripcion_Medicamento`, `Fecha_Fabricacion`, `Fecha_Vencimiento`, `Precio_Con_Impuesto`, `Prescripcion_Medica`, `IdCategoria`, `Estado`, `Fecha_Registro`, `Stock_Minimo`, `Requiere_Receta`, `Stock_Maximo`) VALUES
-(1, 'Amoxicilina', 'Lab-Ramos', 'amoxicilina.jpg', 'Antibiótico de amplio espectro.', '2023-06-01 00:00:00', '2025-06-01 00:00:00', 6, 'No requiere receta', 1, 1, '2025-03-24 20:11:27', 10, 0, 100),
-(21, 'Eritromicina', 'Lab-Ramos', 'eritromicina.jpg', 'Infeccion', '2024-11-13 20:29:00', '2025-02-07 20:29:00', 1000, 'Alergias', 2, 1, '2025-03-24 20:11:27', 10, 0, 100),
-(24, 'Actimicina Bronquial', 'Bayer', 'ActimicinaBronquial.jpg', 'Para Gripe', '2024-10-09 09:46:00', '2025-03-13 09:46:00', NULL, 'Gripe o Calentura', 4, 1, '2025-03-24 20:11:27', 10, 0, 100),
-(27, 'Ibuprofeno', 'Bayer', 'Ibuprofeno.jpg', 'Medicamento que se usa para tratar la fiebre, la hinchazón, el dolor y el enrojecimiento', '2024-07-11 10:00:00', '2024-12-05 10:00:00', NULL, 'En general, los adultos y niños mayores de 12 años pueden tomar el ibuprofeno de venta libre cada 4 a 6 horas', 5, 1, '2025-03-24 20:11:27', 10, 0, 100),
-(28, 'Acetamenofen ', 'Lab-Ramos', 'acetamenofen.jpg', 'Analgésico y antipirético, inhibidor de la síntesis de prostaglandinas periférica y central por acción sobre la ciclooxigenasa.', '2024-12-01 10:04:00', '2024-12-05 10:04:00', NULL, 'El acetaminofeno se usa para aliviar el dolor leve o moderado de las cefaleas, dolores musculares, períodos menstruales, resfriados, y los dolores de ', 5, 1, '2025-03-24 20:11:27', 10, 0, 100),
-(30, 'Pampers', 'Previal', 'pampers previal.jpg', 'Pañales para adulto', '2024-12-01 10:04:00', '2024-12-05 10:04:00', NULL, NULL, 8, 1, '2025-03-24 20:11:27', 10, 0, 100);
+INSERT INTO `medicamento` (`ID_Medicamento`, `Nombre_Medicamento`, `LAB_o_MARCA`, `Imagen`, `Descripcion_Medicamento`, `Prescripcion_Medica`, `IdCategoria`, `Estado`, `Stock_Minimo`, `Requiere_Receta`, `Stock_Maximo`, `Id_Proveedor`) VALUES
+(1, 'Amoxicilina', 'Lab-Ramos', '', 'Antibiótico de amplio espectro.', 'No requiere receta', 1, 1, 10, 0, 100, NULL),
+(21, 'Eritromicina', 'Lab-Ramos', 'eritromicina.jpg', 'Infeccion', 'Alergias', 2, 1, 10, 0, 100, NULL),
+(24, 'Actimicina Bronquial', 'Bayer', 'Actimicina Bronquial.webp', 'Para Gripe', 'Gripe o Calentura', 4, 1, 10, 0, 100, NULL),
+(27, 'Ibuprofeno', 'Bayer', 'Ibuprofeno.webp', 'Medicamento que se usa para tratar la fiebre, la hinchazón, el dolor y el enrojecimiento', 'En general, los adultos y niños mayores de 12 años pueden tomar el ibuprofeno de venta libre cada 4 a 6 horas', 5, 1, 10, 0, 100, NULL),
+(28, 'Acetamenofen ', 'Lab-Ramos', 'Acetaminofen.webp', 'Analgésico y antipirético, inhibidor de la síntesis de prostaglandinas periférica y central por acción sobre la ciclooxigenasa.', 'El acetaminofeno se usa para aliviar el dolor leve o moderado de las cefaleas, dolores musculares, períodos menstruales, resfriados, y los dolores de ', 5, 1, 10, 0, 100, NULL),
+(30, 'Pampers', 'Previal', NULL, 'Pañales para abulto', NULL, 8, 1, 10, 0, 100, NULL),
+(33, 'Diclofenac Sodico', 'COFARCA', '67ea364e58bb0_diclofenac.png', 'para aliviar el dolor y la inflamación en diversos procesos', 'Tratamiento del dolor agudo moderado a severo', 3, 1, 10, 1, 100, 1);
 
 -- --------------------------------------------------------
 
@@ -580,7 +576,8 @@ ALTER TABLE `lotefact`
 --
 ALTER TABLE `medicamento`
   ADD PRIMARY KEY (`ID_Medicamento`),
-  ADD KEY `IdCategoria` (`IdCategoria`);
+  ADD KEY `IdCategoria` (`IdCategoria`),
+  ADD KEY `fk_proveedor` (`Id_Proveedor`);
 
 --
 -- Indices de la tabla `medicamento_dosis`
@@ -714,7 +711,7 @@ ALTER TABLE `lote`
 -- AUTO_INCREMENT de la tabla `medicamento`
 --
 ALTER TABLE `medicamento`
-  MODIFY `ID_Medicamento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `ID_Medicamento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de la tabla `medicamento_dosis`
@@ -808,6 +805,7 @@ ALTER TABLE `lotefact`
 -- Filtros para la tabla `medicamento`
 --
 ALTER TABLE `medicamento`
+  ADD CONSTRAINT `fk_proveedor` FOREIGN KEY (`Id_Proveedor`) REFERENCES `proveedor` (`ID_Proveedor`),
   ADD CONSTRAINT `medicamento_ibfk_1` FOREIGN KEY (`IdCategoria`) REFERENCES `categoria` (`ID_Categoria`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --

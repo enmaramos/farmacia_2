@@ -17,7 +17,6 @@ $(document).ready(function() {
                 $('#nombreProducto').val(data.Nombre_Medicamento); // Mostrar el nombre del producto
                 $('#laboratorio').val(data.LAB_o_MARCA); // Laboratorio no editable
                 $('#imagenProducto').attr('src', '../../dist/assets/img/' + data.Imagen); // Mostrar la imagen del producto
-                $('#vencimiento').val(formatFecha(data.Fecha_Vencimiento)); // Mostrar fecha en formato DD/MM/YYYY
                 $('#descripcion').val(data.Descripcion_Medicamento); // Descripción no editable
                 $('#requiereReceta').val(data.Requiere_Receta ? 'Sí' : 'No'); // Requiere receta no editable
 
@@ -26,6 +25,14 @@ $(document).ready(function() {
                     $('#requiereReceta').addClass('requiere-receta-advertencia');
                 } else {
                     $('#requiereReceta').removeClass('requiere-receta-advertencia');
+                }
+
+                // Mostrar la fecha de vencimiento (tomando la primera fecha de caducidad)
+                if (data.Fecha_Caducidad_Lote) {
+                    let fechaVencimiento = data.Fecha_Caducidad_Lote.split(',')[0].trim(); // Tomar la primera fecha
+                    $('#vencimiento').val(formatFecha(fechaVencimiento)); // Formatear y mostrar la fecha
+                } else {
+                    $('#vencimiento').val(''); // No mostrar fecha si no existe
                 }
 
                 // Llenar el select de Dosis

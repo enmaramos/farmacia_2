@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-04-2025 a las 02:44:38
+-- Tiempo de generación: 03-04-2025 a las 22:50:03
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,28 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `farmacia_san_francisco_javier2`
 --
-
-DELIMITER $$
---
--- Procedimientos
---
-CREATE DEFINER=`root`@`localhost` PROCEDURE `AgregarVendedorConUsuario` (IN `p_Nombre` VARCHAR(70), IN `p_Apellido` VARCHAR(50), IN `p_N_Cedula` VARCHAR(30), IN `p_Telefono` VARCHAR(10), IN `p_Email` VARCHAR(100), IN `p_Direccion` VARCHAR(200), IN `p_Sexo` CHAR(1), IN `p_Estado` TINYINT, IN `p_ID_Rol` INT, IN `p_Nombre_Usuario` VARCHAR(50), IN `p_Password` VARCHAR(100), IN `p_Imagen` TEXT)   BEGIN
-    DECLARE v_ID_Vendedor INT;
-
-    -- Insertar el vendedor en la tabla vendedor
-    INSERT INTO vendedor (Nombre, Apellido, N_Cedula, Telefono, Email, Direccion, Sexo, Estado, ID_Rol)
-    VALUES (p_Nombre, p_Apellido, p_N_Cedula, p_Telefono, p_Email, p_Direccion, p_Sexo, p_Estado, p_ID_Rol);
-
-    -- Obtener el ID del vendedor recién insertado
-    SET v_ID_Vendedor = LAST_INSERT_ID();
-
-    -- Insertar el usuario en la tabla usuarios
-    INSERT INTO usuarios (Nombre_Usuario, Imagen, Password, ID_Vendedor, estado_usuario)
-    VALUES (p_Nombre_Usuario, p_Imagen, p_Password, v_ID_Vendedor, 1);
-    
-END$$
-
-DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -188,8 +166,22 @@ CREATE TABLE `lote` (
   `Fecha_Recibido_Lote` datetime DEFAULT NULL,
   `Prec_Unidad_Lote` float DEFAULT NULL,
   `Precio_Total_Lote` float DEFAULT NULL,
-  `ID_Medicamento` int(11) DEFAULT NULL
+  `ID_Medicamento` int(11) DEFAULT NULL,
+  `Stock_Minimo_Lote` int(11) NOT NULL DEFAULT 0,
+  `Stock_Maximo_Lote` int(11) NOT NULL DEFAULT 0,
+  `ID_Presentacion` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `lote`
+--
+
+INSERT INTO `lote` (`ID_Lote`, `Descripcion_Lote`, `Estado_Lote`, `Cantidad_Lote`, `Fecha_Fabricacion_Lote`, `Fecha_Caducidad_Lote`, `Fecha_Emision_Lote`, `Fecha_Recibido_Lote`, `Prec_Unidad_Lote`, `Precio_Total_Lote`, `ID_Medicamento`, `Stock_Minimo_Lote`, `Stock_Maximo_Lote`, `ID_Presentacion`) VALUES
+(1, '	Amoxicilina Caja', 'Activo', 50, '2024-01-12 00:00:00', '2026-02-01 00:00:00', NULL, NULL, NULL, NULL, 1, 10, 100, 1),
+(2, '	Amoxicilina Sobre', 'Activo', 100, '2024-01-12 00:00:00', '2026-02-01 00:00:00', NULL, NULL, NULL, NULL, 1, 20, 200, 2),
+(3, 'Amoxicilina Unidad', 'Activo', 500, '2024-01-12 00:00:00', '2026-02-01 00:00:00', NULL, NULL, NULL, NULL, 1, 50, 1000, 3),
+(4, 'Pampers Bolsa', 'Activo', 200, '2024-05-15 00:00:00', '2027-03-06 00:00:00', NULL, NULL, NULL, NULL, 30, 5, 200, 4),
+(5, 'Pampers Unidad', 'Activo', 3000, '2024-05-15 00:00:00', '2027-03-06 00:00:00', NULL, NULL, NULL, NULL, 30, 75, 3000, 5);
 
 -- --------------------------------------------------------
 
@@ -201,6 +193,30 @@ CREATE TABLE `lotefact` (
   `IdLote` int(11) DEFAULT NULL,
   `IdFacturaC` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `lote_presentacion`
+--
+
+CREATE TABLE `lote_presentacion` (
+  `ID_Lote_Presentacion` int(11) NOT NULL,
+  `ID_Lote` int(11) NOT NULL,
+  `ID_Presentacion` int(11) NOT NULL,
+  `Cantidad_Presentacion` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `lote_presentacion`
+--
+
+INSERT INTO `lote_presentacion` (`ID_Lote_Presentacion`, `ID_Lote`, `ID_Presentacion`, `Cantidad_Presentacion`) VALUES
+(1, 1, 1, 0),
+(2, 2, 2, 0),
+(3, 3, 3, 0),
+(6, 4, 4, 0),
+(7, 5, 5, 0);
 
 -- --------------------------------------------------------
 
@@ -217,9 +233,7 @@ CREATE TABLE `medicamento` (
   `Prescripcion_Medica` varchar(150) DEFAULT NULL,
   `IdCategoria` int(11) DEFAULT NULL,
   `Estado` tinyint(1) DEFAULT 1,
-  `Stock_Minimo` int(11) DEFAULT 0,
   `Requiere_Receta` tinyint(1) DEFAULT 0,
-  `Stock_Maximo` int(11) DEFAULT NULL,
   `Id_Proveedor` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -227,14 +241,14 @@ CREATE TABLE `medicamento` (
 -- Volcado de datos para la tabla `medicamento`
 --
 
-INSERT INTO `medicamento` (`ID_Medicamento`, `Nombre_Medicamento`, `LAB_o_MARCA`, `Imagen`, `Descripcion_Medicamento`, `Prescripcion_Medica`, `IdCategoria`, `Estado`, `Stock_Minimo`, `Requiere_Receta`, `Stock_Maximo`, `Id_Proveedor`) VALUES
-(1, 'Amoxicilina', 'Lab-Ramos', '', 'Antibiótico de amplio espectro.', 'No requiere receta', 1, 1, 10, 0, 100, NULL),
-(21, 'Eritromicina', 'Lab-Ramos', 'eritromicina.jpg', 'Infeccion', 'Alergias', 2, 1, 10, 0, 100, NULL),
-(24, 'Actimicina Bronquial', 'Bayer', 'Actimicina Bronquial.webp', 'Para Gripe', 'Gripe o Calentura', 4, 1, 10, 0, 100, NULL),
-(27, 'Ibuprofeno', 'Bayer', 'Ibuprofeno.webp', 'Medicamento que se usa para tratar la fiebre, la hinchazón, el dolor y el enrojecimiento', 'En general, los adultos y niños mayores de 12 años pueden tomar el ibuprofeno de venta libre cada 4 a 6 horas', 5, 1, 10, 0, 100, NULL),
-(28, 'Acetamenofen ', 'Lab-Ramos', 'Acetaminofen.webp', 'Analgésico y antipirético, inhibidor de la síntesis de prostaglandinas periférica y central por acción sobre la ciclooxigenasa.', 'El acetaminofeno se usa para aliviar el dolor leve o moderado de las cefaleas, dolores musculares, períodos menstruales, resfriados, y los dolores de ', 5, 1, 10, 0, 100, NULL),
-(30, 'Pampers', 'Previal', NULL, 'Pañales para abulto', NULL, 8, 1, 10, 0, 100, NULL),
-(33, 'Diclofenac Sodico', 'COFARCA', '67ea364e58bb0_diclofenac.png', 'para aliviar el dolor y la inflamación en diversos procesos', 'Tratamiento del dolor agudo moderado a severo', 3, 1, 10, 1, 100, 1);
+INSERT INTO `medicamento` (`ID_Medicamento`, `Nombre_Medicamento`, `LAB_o_MARCA`, `Imagen`, `Descripcion_Medicamento`, `Prescripcion_Medica`, `IdCategoria`, `Estado`, `Requiere_Receta`, `Id_Proveedor`) VALUES
+(1, 'Amoxicilina', 'Lab-Ramos', 'amoxicilina.jpg', 'Antibiótico de amplio espectro.', 'No requiere receta', 1, 1, 0, 1),
+(21, 'Eritromicina', 'Lab-Ramos', 'eritromicina.jpg', 'Infeccion', 'Alergias', 2, 1, 0, 1),
+(24, 'Actimicina Bronquial', 'Bayer', 'ActimicinaBronquial.jpg', 'Para Gripe', 'Gripe o Calentura', 4, 1, 0, 1),
+(27, 'Ibuprofeno', 'Bayer', 'Ibuprofeno.jpg', 'Medicamento que se usa para tratar la fiebre, la hinchazón, el dolor y el enrojecimiento', 'En general, los adultos y niños mayores de 12 años pueden tomar el ibuprofeno de venta libre cada 4 a 6 horas', 5, 1, 0, 1),
+(28, 'Acetamenofen ', 'Lab-Ramos', 'acetamenofen.jpg', 'Analgésico y antipirético, inhibidor de la síntesis de prostaglandinas periférica y central por acción sobre la ciclooxigenasa.', 'El acetaminofeno se usa para aliviar el dolor leve o moderado de las cefaleas, dolores musculares, períodos menstruales, resfriados, y los dolores de ', 5, 1, 0, 1),
+(30, 'Pampers', 'Previal', 'pampers previal.jpg', 'Pañales para abulto', NULL, 8, 1, 0, 1),
+(33, 'Diclofenac Sodico', 'COFARCA', 'Diclofenac Sodico.jpg', 'para aliviar el dolor y la inflamación en diversos procesos', 'Tratamiento del dolor agudo moderado a severo', 3, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -297,32 +311,33 @@ CREATE TABLE `medicamento_presentacion` (
   `ID_Presentacion` int(11) NOT NULL,
   `ID_Medicamento` int(11) NOT NULL,
   `Tipo_Presentacion` varchar(50) NOT NULL,
-  `Cantidad_Contenido` int(11) DEFAULT NULL,
-  `Precio` decimal(10,2) NOT NULL
+  `Total_Presentacion` int(11) NOT NULL,
+  `Precio` decimal(10,2) NOT NULL,
+  `Total_Unidades` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `medicamento_presentacion`
 --
 
-INSERT INTO `medicamento_presentacion` (`ID_Presentacion`, `ID_Medicamento`, `Tipo_Presentacion`, `Cantidad_Contenido`, `Precio`) VALUES
-(1, 1, 'Sobre', 10, 70.00),
-(2, 1, 'Unida', 1, 7.00),
-(3, 1, 'Caja', 15, 1050.00),
-(4, 30, 'Bolsa', 15, 500.00),
-(5, 30, 'Unidad', 1, 40.00),
-(6, 21, 'sobre', 12, 48.00),
-(7, 21, 'caja', 18, 864.00),
-(8, 21, 'unidad', 1, 8.00),
-(9, 24, 'Unidad', 1, 10.00),
-(10, 24, 'Sobre', 10, 90.00),
-(11, 24, 'Caja', 100, 850.00),
-(12, 27, 'Unidad', 1, 12.50),
-(13, 27, 'Sobre', 10, 115.00),
-(14, 27, 'Caja', 100, 1050.00),
-(15, 28, 'Unidad', 1, 15.00),
-(16, 28, 'Sobre', 10, 135.00),
-(17, 28, 'Caja', 100, 1250.00);
+INSERT INTO `medicamento_presentacion` (`ID_Presentacion`, `ID_Medicamento`, `Tipo_Presentacion`, `Total_Presentacion`, `Precio`, `Total_Unidades`) VALUES
+(1, 1, 'Sobre', 10, 70.00, 0),
+(2, 1, 'Unida', 1, 7.00, 0),
+(3, 1, 'Caja', 15, 1050.00, 0),
+(4, 30, 'Bolsa', 15, 500.00, 0),
+(5, 30, 'Unidad', 1, 40.00, 0),
+(6, 21, 'sobre', 12, 48.00, 0),
+(7, 21, 'caja', 18, 864.00, 0),
+(8, 21, 'unidad', 1, 8.00, 0),
+(9, 24, 'Unidad', 1, 10.00, 0),
+(10, 24, 'Sobre', 10, 90.00, 0),
+(11, 24, 'Caja', 100, 850.00, 0),
+(12, 27, 'Unidad', 1, 12.50, 0),
+(13, 27, 'Sobre', 10, 115.00, 0),
+(14, 27, 'Caja', 100, 1050.00, 0),
+(15, 28, 'Unidad', 1, 15.00, 0),
+(16, 28, 'Sobre', 10, 135.00, 0),
+(17, 28, 'Caja', 100, 1250.00, 0);
 
 -- --------------------------------------------------------
 
@@ -562,7 +577,8 @@ ALTER TABLE `factura_venta`
 --
 ALTER TABLE `lote`
   ADD PRIMARY KEY (`ID_Lote`),
-  ADD KEY `fk_lote_medicamento` (`ID_Medicamento`);
+  ADD KEY `fk_lote_medicamento` (`ID_Medicamento`),
+  ADD KEY `fk_lote_presentacion` (`ID_Presentacion`);
 
 --
 -- Indices de la tabla `lotefact`
@@ -570,6 +586,14 @@ ALTER TABLE `lote`
 ALTER TABLE `lotefact`
   ADD KEY `IdLote` (`IdLote`),
   ADD KEY `IdFacturaC` (`IdFacturaC`);
+
+--
+-- Indices de la tabla `lote_presentacion`
+--
+ALTER TABLE `lote_presentacion`
+  ADD PRIMARY KEY (`ID_Lote_Presentacion`),
+  ADD KEY `ID_Lote` (`ID_Lote`),
+  ADD KEY `ID_Presentacion` (`ID_Presentacion`);
 
 --
 -- Indices de la tabla `medicamento`
@@ -705,7 +729,13 @@ ALTER TABLE `factura_venta`
 -- AUTO_INCREMENT de la tabla `lote`
 --
 ALTER TABLE `lote`
-  MODIFY `ID_Lote` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID_Lote` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `lote_presentacion`
+--
+ALTER TABLE `lote_presentacion`
+  MODIFY `ID_Lote_Presentacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `medicamento`
@@ -792,7 +822,8 @@ ALTER TABLE `factura_venta`
 -- Filtros para la tabla `lote`
 --
 ALTER TABLE `lote`
-  ADD CONSTRAINT `fk_lote_medicamento` FOREIGN KEY (`ID_Medicamento`) REFERENCES `medicamento` (`ID_Medicamento`);
+  ADD CONSTRAINT `fk_lote_medicamento` FOREIGN KEY (`ID_Medicamento`) REFERENCES `medicamento` (`ID_Medicamento`),
+  ADD CONSTRAINT `fk_lote_presentacion` FOREIGN KEY (`ID_Presentacion`) REFERENCES `medicamento_presentacion` (`ID_Presentacion`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `lotefact`
@@ -800,6 +831,13 @@ ALTER TABLE `lote`
 ALTER TABLE `lotefact`
   ADD CONSTRAINT `lotefact_ibfk_1` FOREIGN KEY (`IdLote`) REFERENCES `lote` (`ID_Lote`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `lotefact_ibfk_2` FOREIGN KEY (`IdFacturaC`) REFERENCES `factura_compra` (`ID_FacturaC`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `lote_presentacion`
+--
+ALTER TABLE `lote_presentacion`
+  ADD CONSTRAINT `lote_presentacion_ibfk_1` FOREIGN KEY (`ID_Lote`) REFERENCES `lote` (`ID_Lote`) ON DELETE CASCADE,
+  ADD CONSTRAINT `lote_presentacion_ibfk_2` FOREIGN KEY (`ID_Presentacion`) REFERENCES `medicamento_presentacion` (`ID_Presentacion`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `medicamento`

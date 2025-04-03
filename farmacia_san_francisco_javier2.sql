@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-04-2025 a las 22:50:03
+-- Tiempo de generación: 04-04-2025 a las 01:23:26
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -168,20 +168,21 @@ CREATE TABLE `lote` (
   `Precio_Total_Lote` float DEFAULT NULL,
   `ID_Medicamento` int(11) DEFAULT NULL,
   `Stock_Minimo_Lote` int(11) NOT NULL DEFAULT 0,
-  `Stock_Maximo_Lote` int(11) NOT NULL DEFAULT 0,
-  `ID_Presentacion` int(11) NOT NULL
+  `Stock_Maximo_Lote` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `lote`
 --
 
-INSERT INTO `lote` (`ID_Lote`, `Descripcion_Lote`, `Estado_Lote`, `Cantidad_Lote`, `Fecha_Fabricacion_Lote`, `Fecha_Caducidad_Lote`, `Fecha_Emision_Lote`, `Fecha_Recibido_Lote`, `Prec_Unidad_Lote`, `Precio_Total_Lote`, `ID_Medicamento`, `Stock_Minimo_Lote`, `Stock_Maximo_Lote`, `ID_Presentacion`) VALUES
-(1, '	Amoxicilina Caja', 'Activo', 50, '2024-01-12 00:00:00', '2026-02-01 00:00:00', NULL, NULL, NULL, NULL, 1, 10, 100, 1),
-(2, '	Amoxicilina Sobre', 'Activo', 100, '2024-01-12 00:00:00', '2026-02-01 00:00:00', NULL, NULL, NULL, NULL, 1, 20, 200, 2),
-(3, 'Amoxicilina Unidad', 'Activo', 500, '2024-01-12 00:00:00', '2026-02-01 00:00:00', NULL, NULL, NULL, NULL, 1, 50, 1000, 3),
-(4, 'Pampers Bolsa', 'Activo', 200, '2024-05-15 00:00:00', '2027-03-06 00:00:00', NULL, NULL, NULL, NULL, 30, 5, 200, 4),
-(5, 'Pampers Unidad', 'Activo', 3000, '2024-05-15 00:00:00', '2027-03-06 00:00:00', NULL, NULL, NULL, NULL, 30, 75, 3000, 5);
+INSERT INTO `lote` (`ID_Lote`, `Descripcion_Lote`, `Estado_Lote`, `Cantidad_Lote`, `Fecha_Fabricacion_Lote`, `Fecha_Caducidad_Lote`, `Fecha_Emision_Lote`, `Fecha_Recibido_Lote`, `Prec_Unidad_Lote`, `Precio_Total_Lote`, `ID_Medicamento`, `Stock_Minimo_Lote`, `Stock_Maximo_Lote`) VALUES
+(6, 'Lote A Amoxicilina', 'Activo', 1000, '2025-01-10 00:00:00', '2027-01-10 00:00:00', '2025-01-12 00:00:00', '2025-01-14 00:00:00', 5, 5000, 1, 20, 100),
+(7, 'Lote A Eritromicina', 'Activo', 1200, '2025-02-10 00:00:00', '2027-02-10 00:00:00', '2025-02-12 00:00:00', '2025-02-14 00:00:00', 6, 7200, 21, 15, 120),
+(8, 'Lote A Actimicina Bronquial', 'Activo', 800, '2025-03-10 00:00:00', '2027-03-10 00:00:00', '2025-03-12 00:00:00', '2025-03-14 00:00:00', 12, 9600, 24, 10, 80),
+(9, 'Lote A Ibuprofeno', 'Activo', 900, '2025-04-10 00:00:00', '2027-04-10 00:00:00', '2025-04-12 00:00:00', '2025-04-14 00:00:00', 7, 6300, 27, 20, 150),
+(10, 'Lote A Acetamenofen', 'Activo', 1000, '2025-05-10 00:00:00', '2027-05-10 00:00:00', '2025-05-12 00:00:00', '2025-05-14 00:00:00', 4, 4000, 28, 10, 100),
+(11, 'Lote A Pampers', 'Activo', 500, '2025-01-10 00:00:00', '2027-01-10 00:00:00', '2025-01-12 00:00:00', '2025-01-14 00:00:00', 15, 7500, 30, 10, 20),
+(12, 'Lote A Diclofenac Sodico', 'Activo', 700, '2025-06-10 00:00:00', '2027-06-10 00:00:00', '2025-06-12 00:00:00', '2025-06-14 00:00:00', 8, 5600, 33, 10, 100);
 
 -- --------------------------------------------------------
 
@@ -212,11 +213,24 @@ CREATE TABLE `lote_presentacion` (
 --
 
 INSERT INTO `lote_presentacion` (`ID_Lote_Presentacion`, `ID_Lote`, `ID_Presentacion`, `Cantidad_Presentacion`) VALUES
-(1, 1, 1, 0),
-(2, 2, 2, 0),
-(3, 3, 3, 0),
-(6, 4, 4, 0),
-(7, 5, 5, 0);
+(23, 6, 18, 10),
+(24, 6, 19, 50),
+(25, 6, 20, 100),
+(26, 7, 21, 10),
+(27, 7, 22, 50),
+(28, 7, 23, 100),
+(29, 8, 24, 10),
+(30, 8, 25, 50),
+(31, 8, 26, 100),
+(32, 9, 27, 10),
+(33, 9, 28, 50),
+(34, 9, 29, 100),
+(35, 10, 30, 10),
+(36, 10, 31, 50),
+(37, 10, 32, 100),
+(38, 11, 33, 10),
+(39, 11, 34, 50),
+(40, 11, 35, 100);
 
 -- --------------------------------------------------------
 
@@ -267,13 +281,8 @@ CREATE TABLE `medicamento_dosis` (
 --
 
 INSERT INTO `medicamento_dosis` (`ID_Dosis`, `ID_Medicamento`, `Dosis`) VALUES
-(1, 1, '20gm'),
-(2, 1, '50gm'),
-(3, 1, '80gm'),
-(4, 21, '30gm'),
-(5, 21, '80gm'),
-(6, 27, '200mg'),
-(7, 27, '600mg');
+(8, 1, '250mg'),
+(9, 1, '500mg');
 
 -- --------------------------------------------------------
 
@@ -312,32 +321,34 @@ CREATE TABLE `medicamento_presentacion` (
   `ID_Medicamento` int(11) NOT NULL,
   `Tipo_Presentacion` varchar(50) NOT NULL,
   `Total_Presentacion` int(11) NOT NULL,
-  `Precio` decimal(10,2) NOT NULL,
-  `Total_Unidades` int(11) NOT NULL
+  `Precio` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `medicamento_presentacion`
 --
 
-INSERT INTO `medicamento_presentacion` (`ID_Presentacion`, `ID_Medicamento`, `Tipo_Presentacion`, `Total_Presentacion`, `Precio`, `Total_Unidades`) VALUES
-(1, 1, 'Sobre', 10, 70.00, 0),
-(2, 1, 'Unida', 1, 7.00, 0),
-(3, 1, 'Caja', 15, 1050.00, 0),
-(4, 30, 'Bolsa', 15, 500.00, 0),
-(5, 30, 'Unidad', 1, 40.00, 0),
-(6, 21, 'sobre', 12, 48.00, 0),
-(7, 21, 'caja', 18, 864.00, 0),
-(8, 21, 'unidad', 1, 8.00, 0),
-(9, 24, 'Unidad', 1, 10.00, 0),
-(10, 24, 'Sobre', 10, 90.00, 0),
-(11, 24, 'Caja', 100, 850.00, 0),
-(12, 27, 'Unidad', 1, 12.50, 0),
-(13, 27, 'Sobre', 10, 115.00, 0),
-(14, 27, 'Caja', 100, 1050.00, 0),
-(15, 28, 'Unidad', 1, 15.00, 0),
-(16, 28, 'Sobre', 10, 135.00, 0),
-(17, 28, 'Caja', 100, 1250.00, 0);
+INSERT INTO `medicamento_presentacion` (`ID_Presentacion`, `ID_Medicamento`, `Tipo_Presentacion`, `Total_Presentacion`, `Precio`) VALUES
+(18, 1, 'Caja', 10, 50.00),
+(19, 1, 'Sobre', 1, 5.00),
+(20, 1, 'Unidad', 1, 0.50),
+(21, 21, 'Caja', 10, 60.00),
+(22, 21, 'Sobre', 1, 6.00),
+(23, 21, 'Unidad', 1, 0.60),
+(24, 24, 'Caja', 10, 100.00),
+(25, 24, 'Sobre', 1, 12.00),
+(26, 24, 'Unidad', 1, 2.00),
+(27, 27, 'Caja', 10, 70.00),
+(28, 27, 'Sobre', 1, 7.00),
+(29, 27, 'Unidad', 1, 0.70),
+(30, 28, 'Caja', 10, 40.00),
+(31, 28, 'Sobre', 1, 4.00),
+(32, 28, 'Unidad', 1, 0.40),
+(33, 30, 'Bolsa', 5, 20.00),
+(34, 30, 'Unidad', 1, 4.00),
+(35, 33, 'Caja', 10, 80.00),
+(36, 33, 'Sobre', 1, 8.00),
+(37, 33, 'Unidad', 1, 0.80);
 
 -- --------------------------------------------------------
 
@@ -577,8 +588,7 @@ ALTER TABLE `factura_venta`
 --
 ALTER TABLE `lote`
   ADD PRIMARY KEY (`ID_Lote`),
-  ADD KEY `fk_lote_medicamento` (`ID_Medicamento`),
-  ADD KEY `fk_lote_presentacion` (`ID_Presentacion`);
+  ADD KEY `fk_lote_medicamento` (`ID_Medicamento`);
 
 --
 -- Indices de la tabla `lotefact`
@@ -729,13 +739,13 @@ ALTER TABLE `factura_venta`
 -- AUTO_INCREMENT de la tabla `lote`
 --
 ALTER TABLE `lote`
-  MODIFY `ID_Lote` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `ID_Lote` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `lote_presentacion`
 --
 ALTER TABLE `lote_presentacion`
-  MODIFY `ID_Lote_Presentacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `ID_Lote_Presentacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT de la tabla `medicamento`
@@ -747,7 +757,7 @@ ALTER TABLE `medicamento`
 -- AUTO_INCREMENT de la tabla `medicamento_dosis`
 --
 ALTER TABLE `medicamento_dosis`
-  MODIFY `ID_Dosis` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `ID_Dosis` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `medicamento_forma_farmaceutica`
@@ -759,7 +769,7 @@ ALTER TABLE `medicamento_forma_farmaceutica`
 -- AUTO_INCREMENT de la tabla `medicamento_presentacion`
 --
 ALTER TABLE `medicamento_presentacion`
-  MODIFY `ID_Presentacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `ID_Presentacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT de la tabla `pedido`
@@ -822,8 +832,7 @@ ALTER TABLE `factura_venta`
 -- Filtros para la tabla `lote`
 --
 ALTER TABLE `lote`
-  ADD CONSTRAINT `fk_lote_medicamento` FOREIGN KEY (`ID_Medicamento`) REFERENCES `medicamento` (`ID_Medicamento`),
-  ADD CONSTRAINT `fk_lote_presentacion` FOREIGN KEY (`ID_Presentacion`) REFERENCES `medicamento_presentacion` (`ID_Presentacion`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_lote_medicamento` FOREIGN KEY (`ID_Medicamento`) REFERENCES `medicamento` (`ID_Medicamento`);
 
 --
 -- Filtros para la tabla `lotefact`

@@ -215,20 +215,20 @@ include_once "Ctrl/head.php";
                 <div class="col-md-5">
                     <h4>Buscar Producto</h4>
 
-                    <!-- Botón con ícono de búsqueda para abrir el cuadro de búsqueda de producto -->
+                    <!-- Botón para abrir cuadro de búsqueda -->
                     <button type="button" id="btnBuscarProducto" class="btn btn-info form-control">
-                        <i class="fas fa-search"></i> Buscar Producto
+                        <i class="fas fa-search"></i> Buscar
                     </button>
 
                     <label>Nombre del Producto</label>
-                    <input type="text" id="nombreProducto" class="form-control" readonly> <!-- Campo para mostrar el nombre del producto -->
+                    <input type="text" id="nombreProducto" class="form-control" readonly>
 
                     <label>Laboratorio o Marca</label>
-                    <input type="text" id="laboratorio" class="form-control" readonly> <!-- Campo no editable -->
+                    <input type="text" id="laboratorio" class="form-control" readonly>
 
-                    <label>Dosis</label>
-                    <select id="dosis" class="form-select">
-                        <option>Seleccione Dosis</option>
+                    <label>Formato del producto</label>
+                    <select id="unidad" class="form-select">
+                        <option>Seleccione Unidad</option>
                     </select>
 
                     <label>Presentación</label>
@@ -236,13 +236,13 @@ include_once "Ctrl/head.php";
                         <option>Seleccione Presentación</option>
                     </select>
 
-                    <label>Formato del producto</label>
-                    <select id="unidad" class="form-select">
-                        <option>Seleccione Unidad</option>
+                    <label>Dosis</label>
+                    <select id="dosis" class="form-select">
+                        <option>Seleccione Dosis</option>
                     </select>
 
                     <label>Precio</label>
-                    <input type="text" id="precio" class="form-control" readonly> <!-- Campo no editable -->
+                    <input type="text" id="precio" class="form-control" readonly>
 
                     <label>Cantidad</label>
                     <input type="number" id="cantidad" class="form-control">
@@ -253,14 +253,15 @@ include_once "Ctrl/head.php";
                     <div class="img-container">
                         <img id="imagenProducto" src="default.jpg" alt="Imagen del producto">
                     </div>
+
                     <label>Requiere Receta</label>
-                    <input type="text" id="requiereReceta" class="form-control extra-inputs" readonly> <!-- Campo no editable -->
+                    <input type="text" id="requiereReceta" class="form-control extra-inputs" readonly>
 
                     <label>Vencimiento</label>
-                    <input type="text" id="vencimiento" class="form-control extra-inputs" readonly> <!-- Campo solo para mostrar la fecha -->
+                    <input type="text" id="vencimiento" class="form-control extra-inputs" readonly>
 
                     <label>Descripcion</label>
-                    <textarea id="descripcion" class="form-control extra-inputs" readonly></textarea> <!-- Campo no editable -->
+                    <textarea id="descripcion" class="form-control extra-inputs" readonly></textarea>
 
                     <label>Descuento</label>
                     <input type="text" id="descuento" class="form-control extra-inputs">
@@ -269,37 +270,36 @@ include_once "Ctrl/head.php";
                 <!-- Sección de clientes -->
                 <div class="col-md-5">
                     <h4>Buscar Cliente</h4>
-                    <div class="d-flex align-items-center">
-                        <!-- Checkbox para seleccionar cliente aleatorio -->
-                        <div class="form-check ms-2">
+
+                    <div class="d-flex align-items-center mb-3">
+                        <!-- Checkbox cliente aleatorio -->
+                        <div class="form-check me-3">
                             <input class="form-check-input" type="checkbox" id="clienteAleatorio">
                             <label class="form-check-label" for="clienteAleatorio">Cliente Aleatorio</label>
                         </div>
 
-                        <!-- Botón con ícono de búsqueda para abrir el cuadro de búsqueda de cliente -->
-                        <button type="button" id="btnBuscarCliente" class="btn btn-info form-control me-2" onclick="abrirBusquedaCliente()">
-                            <i class="fas fa-search"></i> Buscar Cliente
+                        <!-- Botón agregar cliente -->
+                        <button type="button" id="btnAgregarCliente" class="btn btn-info me-2" onclick="abrirModalAgregarCliente()">
+                            <i class="fa-solid fa-user-plus"></i>
                         </button>
                     </div>
 
-                    <label>Nombre del Cliente</label>
+                    <input type="text" id="buscarCliente" class="form-control" placeholder="Escriba el nombre del cliente...">
+
+                    <label for="nombreCliente">Nombre del Cliente</label>
                     <input type="text" id="nombreCliente" class="form-control" readonly>
 
-                    <label>Cédula</label>
+                    <label for="cedulaCliente">Cédula</label>
                     <input type="text" id="cedulaCliente" class="form-control" readonly>
 
-                    <label>Sexo</label>
-                    <input type="text" id="generoCliente" class="form-control" readonly>
-
-                    <label>Teléfono</label>
-                    <input type="text" id="telefonoCliente" class="form-control">
-
-                    <label>Dirección</label>
-                    <textarea id="direccionCliente" class="form-control"></textarea>
+                    <!-- Imagen del cliente -->
+                    <div class="img mt-3">
+                        <img id="fotoCliente" src="../../dist/assets/img/logologin2.png">
+                    </div>
                 </div>
             </div>
 
-            <!-- Botón de agregar al carrito -->
+            <!-- Botón de agregar al carrito (AHORA DENTRO del contenedor y CENTRADO) -->
             <button class="btn btn-primary d-block mx-auto mt-4" id="btnAgregar">Agregar al Carrito</button>
         </div>
 

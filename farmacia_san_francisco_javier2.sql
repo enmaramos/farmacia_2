@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-04-2025 a las 01:23:26
+-- Tiempo de generación: 05-04-2025 a las 00:56:00
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -152,6 +152,31 @@ CREATE TABLE `factura_venta` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `forma_farmaceutica_dosis`
+--
+
+CREATE TABLE `forma_farmaceutica_dosis` (
+  `ID` int(11) NOT NULL,
+  `ID_Forma_Farmaceutica` int(11) NOT NULL,
+  `ID_Dosis` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `forma_farmaceutica_dosis`
+--
+
+INSERT INTO `forma_farmaceutica_dosis` (`ID`, `ID_Forma_Farmaceutica`, `ID_Dosis`) VALUES
+(1, 1, 8),
+(2, 2, 9),
+(3, 6, 8),
+(4, 7, 9),
+(5, 8, 9),
+(6, 9, 8),
+(8, 1, 9);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `lote`
 --
 
@@ -272,7 +297,6 @@ INSERT INTO `medicamento` (`ID_Medicamento`, `Nombre_Medicamento`, `LAB_o_MARCA`
 
 CREATE TABLE `medicamento_dosis` (
   `ID_Dosis` int(11) NOT NULL,
-  `ID_Medicamento` int(11) NOT NULL,
   `Dosis` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -280,9 +304,9 @@ CREATE TABLE `medicamento_dosis` (
 -- Volcado de datos para la tabla `medicamento_dosis`
 --
 
-INSERT INTO `medicamento_dosis` (`ID_Dosis`, `ID_Medicamento`, `Dosis`) VALUES
-(8, 1, '250mg'),
-(9, 1, '500mg');
+INSERT INTO `medicamento_dosis` (`ID_Dosis`, `Dosis`) VALUES
+(8, '250mg'),
+(9, '500mg');
 
 -- --------------------------------------------------------
 
@@ -584,6 +608,14 @@ ALTER TABLE `factura_venta`
   ADD KEY `fk_factura_venta_vendedor` (`ID_Vendedor`);
 
 --
+-- Indices de la tabla `forma_farmaceutica_dosis`
+--
+ALTER TABLE `forma_farmaceutica_dosis`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `ID_Forma_Farmaceutica` (`ID_Forma_Farmaceutica`),
+  ADD KEY `ID_Dosis` (`ID_Dosis`);
+
+--
 -- Indices de la tabla `lote`
 --
 ALTER TABLE `lote`
@@ -617,8 +649,7 @@ ALTER TABLE `medicamento`
 -- Indices de la tabla `medicamento_dosis`
 --
 ALTER TABLE `medicamento_dosis`
-  ADD PRIMARY KEY (`ID_Dosis`),
-  ADD KEY `ID_Medicamento` (`ID_Medicamento`);
+  ADD PRIMARY KEY (`ID_Dosis`);
 
 --
 -- Indices de la tabla `medicamento_forma_farmaceutica`
@@ -736,6 +767,12 @@ ALTER TABLE `factura_venta`
   MODIFY `ID_FacturaV` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `forma_farmaceutica_dosis`
+--
+ALTER TABLE `forma_farmaceutica_dosis`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT de la tabla `lote`
 --
 ALTER TABLE `lote`
@@ -829,6 +866,13 @@ ALTER TABLE `factura_venta`
   ADD CONSTRAINT `fk_factura_venta_vendedor` FOREIGN KEY (`ID_Vendedor`) REFERENCES `usuarios` (`ID_Usuario`);
 
 --
+-- Filtros para la tabla `forma_farmaceutica_dosis`
+--
+ALTER TABLE `forma_farmaceutica_dosis`
+  ADD CONSTRAINT `forma_farmaceutica_dosis_ibfk_1` FOREIGN KEY (`ID_Forma_Farmaceutica`) REFERENCES `medicamento_forma_farmaceutica` (`ID_Forma_Farmaceutica`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `forma_farmaceutica_dosis_ibfk_2` FOREIGN KEY (`ID_Dosis`) REFERENCES `medicamento_dosis` (`ID_Dosis`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Filtros para la tabla `lote`
 --
 ALTER TABLE `lote`
@@ -854,12 +898,6 @@ ALTER TABLE `lote_presentacion`
 ALTER TABLE `medicamento`
   ADD CONSTRAINT `fk_proveedor` FOREIGN KEY (`Id_Proveedor`) REFERENCES `proveedor` (`ID_Proveedor`),
   ADD CONSTRAINT `medicamento_ibfk_1` FOREIGN KEY (`IdCategoria`) REFERENCES `categoria` (`ID_Categoria`) ON DELETE SET NULL ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `medicamento_dosis`
---
-ALTER TABLE `medicamento_dosis`
-  ADD CONSTRAINT `medicamento_dosis_ibfk_1` FOREIGN KEY (`ID_Medicamento`) REFERENCES `medicamento` (`ID_Medicamento`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `medicamento_forma_farmaceutica`

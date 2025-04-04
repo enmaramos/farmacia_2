@@ -30,7 +30,7 @@
                         <li class="nav-item">
                             <a href="./caja.php" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
-                                <p>Caja</p>
+                                <p>Facturacion</p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -42,9 +42,16 @@
                         <li class="nav-item">
                             <a href="./cliente.php" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
+                                <p>Caja</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="./cliente.php" class="nav-link">
+                                <i class="nav-icon bi bi-circle"></i>
                                 <p>Cliente</p>
                             </a>
                         </li>
+                        
                     </ul>
                 </li>
                     <!------------------------------ ABMINISTRACION ------------------------------>

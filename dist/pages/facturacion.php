@@ -206,7 +206,7 @@ include_once "Ctrl/head.php";
             <div class="d-flex justify-content-between align-items-center">
                 <div class="carrito-container">
                     <div class="carrito-contenedor" id="contadorCarrito">0</div>
-                    <div class="carrito-icono" onclick="mostrarCarrito()">🛒</div>
+                    <div id="abircarrirto" class="carrito-icono" onclick="mostrarCarrito()">🛒</div>
                 </div>
             </div>
 
@@ -262,9 +262,6 @@ include_once "Ctrl/head.php";
 
                     <label>Descripcion</label>
                     <textarea id="descripcion" class="form-control extra-inputs" readonly></textarea>
-
-                    <label>Descuento</label>
-                    <input type="text" id="descuento" class="form-control extra-inputs">
                 </div>
 
                 <!-- Sección de clientes -->
@@ -279,12 +276,22 @@ include_once "Ctrl/head.php";
                         </div>
 
                         <!-- Botón agregar cliente -->
-                        <button type="button" id="btnAgregarCliente" class="btn btn-info me-2" onclick="abrirModalAgregarCliente()">
+                        <button type="button" id="btnAgregarCliente" class="btn btn-info me-2" data-bs-toggle="modal" data-bs-target="#modalAgregarCliente">
                             <i class="fa-solid fa-user-plus"></i>
                         </button>
                     </div>
 
-                    <input type="text" id="buscarCliente" class="form-control" placeholder="Escriba el nombre del cliente...">
+                    <!-- Input con icono de búsqueda -->
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="buscarClienteIcon" style="height: calc(2.25rem + 2px); padding-top: 0.375rem; padding-bottom: 0.375rem;">
+                            <i class="fa-solid fa-magnifying-glass" style="font-size: 16px;"></i>
+                        </span>
+                        <input type="text" id="buscarCliente" class="form-control" placeholder="Escriba el nombre del cliente..." style="height: calc(2.25rem + 2px); padding-left: 5px;">
+                    </div>
+
+                    <!-- Contenedor para mostrar los resultados de la búsqueda -->
+                    <div id="resultadosBusqueda" class="list-group" style="max-height: 150px; overflow-y: auto; display: none;"></div>
+
 
                     <label for="nombreCliente">Nombre del Cliente</label>
                     <input type="text" id="nombreCliente" class="form-control" readonly>
@@ -297,12 +304,13 @@ include_once "Ctrl/head.php";
                         <img id="fotoCliente" src="../../dist/assets/img/logologin2.png">
                     </div>
                 </div>
+
+                <!-- Botón de agregar al carrito (AHORA DENTRO del contenedor y CENTRADO) -->
+                <button class="btn btn-primary d-block mx-auto mt-4" id="btnAgregar">Agregar al Carrito</button>
+
             </div>
 
-            <!-- Botón de agregar al carrito (AHORA DENTRO del contenedor y CENTRADO) -->
-            <button class="btn btn-primary d-block mx-auto mt-4" id="btnAgregar">Agregar al Carrito</button>
         </div>
-
 
 
         <script>
@@ -342,6 +350,108 @@ include_once "Ctrl/head.php";
                 </div>
             </div>
         </div>
+
+        <!-- Modal para agregar cliente en el archivo caja.php-->
+        <div class="modal fade" id="modalAgregarCliente" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog" style="max-width: 500px; margin: 0 auto;"> <!-- Estilo para controlar el tamaño y centrar -->
+                <div class="modal-content">
+                    <form action="../pages/Ctrl/agregar_cliente.php" method="POST">
+                        <!-- Campo oculto para identificar que proviene de caja.php -->
+                        <input type="hidden" name="origen" value="facturacion.php">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabel">Agregar Cliente</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <!-- Nombre -->
+                            <div class="mb-3">
+                                <label for="nombreCliente" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" name="nombreCliente" id="nombreCliente" placeholder="Ingrese el primer y segundo nombre" required>
+                            </div>
+
+                            <!-- Apellido -->
+                            <div class="mb-3">
+                                <label for="apellidoCliente" class="form-label">Apellido</label>
+                                <input type="text" class="form-control" name="apellidoCliente" id="apellidoCliente" placeholder="Ingrese el primer y segundo apellido" required>
+                            </div>
+
+                            <!-- Cédula -->
+                            <div class="mb-3">
+                                <label for="cedulaCliente" class="form-label">Cédula</label>
+                                <input type="text" class="form-control" name="cedulaCliente" id="cedulaCliente" placeholder="000-000000-0000X" pattern="[0-9]{3}-[0-9]{6}-[0-9]{4}[A-Z]{1}" title="Formato: 000-000000-0000X" required>
+                            </div>
+
+                            <!-- Género -->
+                            <div class="mb-3">
+                                <label for="generoCliente" class="form-label">Género</label>
+                                <select class="form-select" name="generoCliente" id="generoCliente" required>
+                                    <option value="">Seleccione género</option>
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Femenino">Femenino</option>
+                                </select>
+                            </div>
+
+                            <!-- Dirección -->
+                            <div class="mb-3">
+                                <label for="direccionCliente" class="form-label">Dirección</label>
+                                <input type="text" class="form-control" name="direccionCliente" id="direccionCliente" placeholder="Ingrese dirección" required>
+                            </div>
+
+                            <!-- Teléfono -->
+                            <div class="mb-3">
+                                <label for="telefonoCliente" class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" name="telefonoCliente" id="telefonoCliente" placeholder="8888-8888" pattern="[0-9]{4}-[0-9]{4}" title="Formato: 8888-8888" required>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="mb-3">
+                                <label for="emailCliente" class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" name="emailCliente" id="emailCliente" placeholder="ejemplo@correo.com" required>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cliente</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal del Carrito -->
+        <div class="modal fade" id="mostarCarrito" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Tu Carrito</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Aquí se agregarán los productos dinámicamente -->
+                    </div>
+                    <div class="modal-footer">
+                        <h4 id="grandTotal">Total: C$0.00</h4>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" onclick="realizarCompra()">Realizar Compra</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal del Carrito estilos -->
+        <style>
+            .modal-dialog {
+                width: 900px !important;
+                /* Ajusta el ancho */
+                margin: auto;
+                /* Centra el modal */
+            }
+        </style>
+
+
+
 
 
         <?php
@@ -402,10 +512,12 @@ include_once "Ctrl/head.php";
 
 
 
-        <script src="../js/carrito_caja.js?2345"></script>
+
         <script src="../js/modal_medicamento.js?12345"></script>
         <script src="../js/seleccionar_medicamento.js?12345"></script>
-        <script src="../js/buscar_cliente.js?12345"></script>
+        <script src="../js/mostar_clientes_chexbox.js?1234"></script>
+        <script src="../js/buscar_clientes.js?1234"></script>
+        <script src="../js/carrito_caja.js?12345"></script>
 
         <?php
 

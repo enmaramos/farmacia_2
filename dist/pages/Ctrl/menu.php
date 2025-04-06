@@ -28,7 +28,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="./caja.php" class="nav-link">
+                            <a href="./facturacion.php" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Facturacion</p>
                             </a>

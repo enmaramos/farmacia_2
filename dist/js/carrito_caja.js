@@ -1,39 +1,46 @@
 // Arreglo para almacenar los productos del carrito
 let carrito = [];
 
-// Función para agregar productos al carrito
 function agregarAlCarrito() {
-    // Obtener los valores del formulario de producto
     const nombreProducto = document.querySelector('#nombreProducto').value;
     const laboratorio = document.querySelector('#laboratorio').value;
-    const unidad = document.querySelector('#unidad').value;
+    const unidad = document.querySelector('#unidad').value; // Formato
     const presentacion = document.querySelector('#presentacion').value;
     const dosis = document.querySelector('#dosis').value;
     const precio = parseFloat(document.querySelector('#precio').value);
     const cantidad = parseInt(document.querySelector('#cantidad').value);
 
-    // Obtener la imagen del producto y generar la ruta completa
-    const imagenProducto = document.querySelector('#imagenProducto').src; // Obtiene la URL completa de la imagen mostrada en el HTML
-    const nombreImagen = imagenProducto.split('/').pop();  // Extrae solo el nombre del archivo de imagen
-    const rutaImagen = '../../dist/assets/img/' + nombreImagen;  // Genera la ruta completa de la imagen
+    const imagenProducto = document.querySelector('#imagenProducto').src;
+    const nombreImagen = imagenProducto.split('/').pop();
+    const rutaImagen = '../../dist/assets/img/' + nombreImagen;
 
-    // Obtener los valores del formulario de cliente
     const nombreCliente = document.querySelector('#nombreCliente').value;
     const cedulaCliente = document.querySelector('#cedulaCliente').value;
 
-    // Verificar que todos los campos de producto estén completos
+    // Validación básica
     if (!nombreProducto || !laboratorio || !unidad || !presentacion || !dosis || !precio || !cantidad) {
         alert('Por favor, complete todos los campos del producto.');
         return;
     }
 
-    // Verificar que los campos de cliente estén completos
     if (!nombreCliente || !cedulaCliente) {
         alert('Por favor, complete los campos del cliente.');
         return;
     }
 
-    // Crear un objeto con los datos del producto
+    // 🔒 Verificar si ya existe un producto con misma presentación, dosis y unidad
+    const yaExiste = carrito.some(producto =>
+        producto.presentacion.trim().toLowerCase() === presentacion.trim().toLowerCase() &&
+        producto.dosis.trim().toLowerCase() === dosis.trim().toLowerCase() &&
+        producto.unidad.trim().toLowerCase() === unidad.trim().toLowerCase()
+    );
+
+    if (yaExiste) {
+        alert('Ya existe un producto con la misma presentación, dosis y formato en el carrito.');
+        return;
+    }
+
+    // Crear el objeto producto
     const producto = {
         nombreProducto,
         laboratorio,
@@ -42,13 +49,14 @@ function agregarAlCarrito() {
         dosis,
         precio,
         cantidad,
-        imagen: rutaImagen,  // Usamos la ruta completa de la imagen
+        imagen: rutaImagen,
         clienteNombre: nombreCliente,
         clienteCedula: cedulaCliente
     };
 
-    // Agregar el producto al carrito
+    // Agregar al carrito
     carrito.push(producto);
+
 
     // Actualizar el contador del carrito
     actualizarContador();
@@ -65,7 +73,7 @@ function mostrarNotificacion(imagen, nombreProducto) {
 
     // Establecemos la imagen del producto en el icono
     icono.src = imagen;
-    texto.textContent = `El producto "${nombreProducto}" se agregó al carrito de compras.`;  // Cambiamos el texto
+    texto.textContent = `El producto "${nombreProducto}" se agregó al carrito de Ventas.`;  // Cambiamos el texto
 
     // Mostrar la notificación
     notificacion.classList.add('show');
@@ -146,27 +154,118 @@ function mostrarCarrito() {
 
 }
 
-// Función para actualizar la cantidad de un producto en el carrito
+// Actualizar cantidad del producto en el carrito
 function updateQuantity(index, cantidadCambio) {
     const producto = carrito[index];
     producto.cantidad += cantidadCambio;
-
-    // Evitar que la cantidad sea menor a 1
     if (producto.cantidad < 1) producto.cantidad = 1;
-
-    // Volver a mostrar el carrito
     mostrarCarrito();
 }
 
-// Función para eliminar un producto del carrito
+// Eliminar un producto del carrito
 function removeProduct(index) {
-    carrito.splice(index, 1); // Eliminar el producto del carrito
-    actualizarContador(); // Actualizar el contador
-    mostrarCarrito(); // Volver a mostrar el carrito
+    carrito.splice(index, 1);
+    actualizarContador();
+    mostrarCarrito();
 }
 
-// Event Listener para el botón de agregar al carrito
-document.querySelector('#btnAgregar').addEventListener('click', agregarAlCarrito);
+// Abrir modal de método de pago
+function abrirModalPago() {
+    const total = carrito.reduce((sum, p) => sum + (p.precio * p.cantidad), 0);
+    document.getElementById('totalPagar').value = `C$${total.toFixed(2)}`;
+    document.getElementById('montoRecibido').value = '';
+    document.getElementById('vueltoCliente').value = '';
 
-// Event Listener para el ícono del carrito
-document.querySelector('.carrito-icono').addEventListener('click', mostrarCarrito);
+    const modalPago = new bootstrap.Modal(document.getElementById('modalMetodoPago'));
+    modalPago.show();
+}
+
+// Calcular vuelto
+function calcularVuelto() {
+    const total = parseFloat(document.getElementById('totalPagar').value.replace('C$', '').trim());
+    const recibido = parseFloat(document.getElementById('montoRecibido').value);
+
+    if (!isNaN(total) && !isNaN(recibido)) {
+        const vuelto = recibido - total;
+        document.getElementById('vueltoCliente').value = vuelto >= 0 ? `C$${vuelto.toFixed(2)}` : 'C$0.00';
+    }
+}
+
+function confirmarPago() {
+    const recibido = parseFloat(document.getElementById('montoRecibido').value);
+    const total = parseFloat(document.getElementById('totalPagar').value.replace('C$', '').trim());
+
+    if (isNaN(recibido) || recibido < total) {
+        alert("El monto recibido es insuficiente.");
+        return;
+    }
+
+    // Obtener solo el nombre y cédula del cliente desde el formulario
+    const nombreCliente = document.getElementById('nombreCliente').value || 'Cliente Genérico';
+    const cedulaCliente = document.getElementById('cedulaCliente').value || 'Cédula no registrada';
+
+    // Si no tienes dirección o teléfono en tu formulario, no hace falta asignar valores por defecto
+    // Los valores se dejarán vacíos o nulos
+    const direccionCliente = ''; // Sin dirección
+    const telefonoCliente = ''; // Sin teléfono
+
+    // Insertar los datos en la factura
+    document.getElementById('clienteNombre').textContent = nombreCliente;
+    document.getElementById('clienteCedula').textContent = cedulaCliente;
+    document.getElementById('clienteDireccion').textContent = direccionCliente || 'Dirección no registrada'; // Este campo no se utilizará en este caso
+    document.getElementById('clienteTelefono').textContent = telefonoCliente || '---'; // Este campo tampoco
+
+    // Insertar fecha actual
+    const fechaActual = new Date().toLocaleDateString('es-ES');
+    document.getElementById('fechaFactura').textContent = fechaActual;
+
+    // Número de factura aleatorio
+    const numeroFactura = Math.floor(10000 + Math.random() * 90000);
+    document.getElementById('numeroFactura').textContent = numeroFactura;
+
+    // Obtener productos del carrito
+    const filasCarrito = document.querySelectorAll('#tablaCarrito tbody tr');
+    const cuerpoFactura = document.getElementById('detalleFactura');
+    cuerpoFactura.innerHTML = '';
+
+    let totalFactura = 0;
+
+    filasCarrito.forEach(fila => {
+        const columnas = fila.querySelectorAll('td');
+        const nombreProducto = columnas[0].textContent;
+        const cantidad = columnas[1].textContent;
+        const precio = columnas[2].textContent.replace('$', '').replace(',', '');
+        const subtotal = columnas[4].textContent.replace('$', '').replace(',', '');
+
+        totalFactura += parseFloat(subtotal);
+
+        const filaFactura = document.createElement('tr');
+        filaFactura.innerHTML = `
+            <td>${nombreProducto}</td>
+            <td>${cantidad}</td>
+            <td>$${parseFloat(precio).toFixed(2)}</td>
+            <td>$${parseFloat(subtotal).toFixed(2)}</td>
+        `;
+        cuerpoFactura.appendChild(filaFactura);
+    });
+
+    document.getElementById('totalFactura').textContent = totalFactura.toFixed(2);
+
+    // Mostrar factura final
+    document.getElementById('facturaFinal').style.display = 'block';
+
+    // Confirmación visual
+    alert("✅ Pago procesado con éxito. ¡Gracias por su compra!");
+
+    // Limpiar carrito
+    carrito = [];
+    actualizarContador();
+
+    // Cerrar modales
+    const modalPago = bootstrap.Modal.getInstance(document.getElementById('modalMetodoPago'));
+    modalPago.hide();
+    const modalCarrito = bootstrap.Modal.getInstance(document.getElementById('mostarCarrito'));
+    modalCarrito.hide();
+}
+
+  

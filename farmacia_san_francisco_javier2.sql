@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-04-2025 a las 00:56:00
+-- Tiempo de generación: 08-04-2025 a las 00:10:01
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -107,7 +107,26 @@ INSERT INTO `clientes` (`ID_Cliente`, `Nombre`, `Apellido`, `Genero`, `Direccion
 (68, 'Andres', 'Martinez', 'Masculino', 'Calle 7, No. 70', '78901234', 'andres.martinez@email.com', '1980-12-05', '2025-03-31 18:36:54', '001-789012-1070Y', 1),
 (69, 'Lucia', 'Hernandez', 'Femenino', 'Calle 8, No. 80', '89012345', 'lucia.hernandez@email.com', '1992-06-18', '2025-03-31 18:36:54', '001-890123-1080Z', 1),
 (70, 'Ricardo', 'Lopez', 'Masculino', 'Calle 9, No. 90', '90123456', 'ricardo.lopez@email.com', '1987-01-30', '2025-03-31 18:36:54', '001-901234-1090W', 1),
-(71, 'Valentina', 'Garcia', 'Femenino', 'Calle 10, No. 100', '11223344', 'valentina.garcia@email.com', '2000-04-25', '2025-03-31 18:36:54', '001-112233-1100X', 1);
+(71, 'Valentina', 'Garcia', 'Femenino', 'Calle 10, No. 100', '11223344', 'valentina.garcia@email.com', '2000-04-25', '2025-03-31 18:36:54', '001-112233-1100X', 1),
+(89, 'Cliente ', 'Aleatorio', 'Masculino', 'Batahola', '00000000', 'Batahola@gmail.com', NULL, '2025-03-31 00:00:00', '000-000000-0000X', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalle_factura_venta`
+--
+
+CREATE TABLE `detalle_factura_venta` (
+  `ID_Detalle_FV` int(11) NOT NULL,
+  `ID_FacturaV` int(11) NOT NULL,
+  `ID_Medicamento` int(11) NOT NULL,
+  `Cantidad` int(11) NOT NULL,
+  `Precio_Unitario` decimal(10,2) DEFAULT NULL,
+  `Subtotal` decimal(10,2) DEFAULT NULL,
+  `ID_Forma_Farmaceutica` int(11) DEFAULT NULL,
+  `ID_Dosis` int(11) DEFAULT NULL,
+  `ID_Presentacion` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -135,16 +154,13 @@ CREATE TABLE `factura_compra` (
 
 CREATE TABLE `factura_venta` (
   `ID_FacturaV` int(11) NOT NULL,
-  `Descripcion` varchar(200) DEFAULT NULL,
-  `Cantidad_Vendida` int(11) DEFAULT NULL,
-  `Descuento` float DEFAULT NULL,
-  `Precio_Por_Unidad` float DEFAULT NULL,
-  `Precio_Sobre` float DEFAULT NULL,
-  `Precio_Caja` float DEFAULT NULL,
+  `Numero_Factura` varchar(10) NOT NULL,
   `Fecha` datetime DEFAULT NULL,
+  `Metodo_Pago` varchar(50) DEFAULT 'Efectivo',
   `Subtotal` double DEFAULT NULL,
-  `Iva` double DEFAULT NULL,
   `Total` double DEFAULT NULL,
+  `Monto_Pagado` decimal(10,2) DEFAULT NULL,
+  `Cambio` decimal(10,2) DEFAULT NULL,
   `IdCliente` int(11) NOT NULL,
   `ID_Vendedor` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -592,6 +608,17 @@ ALTER TABLE `clientes`
   ADD PRIMARY KEY (`ID_Cliente`);
 
 --
+-- Indices de la tabla `detalle_factura_venta`
+--
+ALTER TABLE `detalle_factura_venta`
+  ADD PRIMARY KEY (`ID_Detalle_FV`),
+  ADD KEY `ID_FacturaV` (`ID_FacturaV`),
+  ADD KEY `ID_Medicamento` (`ID_Medicamento`),
+  ADD KEY `ID_Forma_Farmaceutica` (`ID_Forma_Farmaceutica`),
+  ADD KEY `ID_Dosis` (`ID_Dosis`),
+  ADD KEY `ID_Presentacion` (`ID_Presentacion`);
+
+--
 -- Indices de la tabla `factura_compra`
 --
 ALTER TABLE `factura_compra`
@@ -604,6 +631,7 @@ ALTER TABLE `factura_compra`
 --
 ALTER TABLE `factura_venta`
   ADD PRIMARY KEY (`ID_FacturaV`),
+  ADD UNIQUE KEY `Numero_Factura` (`Numero_Factura`),
   ADD KEY `IdCliente` (`IdCliente`),
   ADD KEY `fk_factura_venta_vendedor` (`ID_Vendedor`);
 
@@ -752,7 +780,13 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `ID_Cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `ID_Cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle_factura_venta`
+--
+ALTER TABLE `detalle_factura_venta`
+  MODIFY `ID_Detalle_FV` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `factura_compra`
@@ -850,6 +884,16 @@ ALTER TABLE `almacen`
   ADD CONSTRAINT `almacen_ibfk_2` FOREIGN KEY (`IdBodega`) REFERENCES `bodega` (`ID_Bodega`),
   ADD CONSTRAINT `fk_almacen_bodega` FOREIGN KEY (`IdBodega`) REFERENCES `bodega` (`ID_Bodega`),
   ADD CONSTRAINT `fk_almacen_medicamento` FOREIGN KEY (`ID_Medicamento`) REFERENCES `medicamento` (`ID_Medicamento`);
+
+--
+-- Filtros para la tabla `detalle_factura_venta`
+--
+ALTER TABLE `detalle_factura_venta`
+  ADD CONSTRAINT `detalle_factura_venta_ibfk_1` FOREIGN KEY (`ID_FacturaV`) REFERENCES `factura_venta` (`ID_FacturaV`),
+  ADD CONSTRAINT `detalle_factura_venta_ibfk_2` FOREIGN KEY (`ID_Medicamento`) REFERENCES `medicamento` (`ID_Medicamento`),
+  ADD CONSTRAINT `detalle_factura_venta_ibfk_3` FOREIGN KEY (`ID_Forma_Farmaceutica`) REFERENCES `medicamento_forma_farmaceutica` (`ID_Forma_Farmaceutica`),
+  ADD CONSTRAINT `detalle_factura_venta_ibfk_4` FOREIGN KEY (`ID_Dosis`) REFERENCES `medicamento_dosis` (`ID_Dosis`),
+  ADD CONSTRAINT `detalle_factura_venta_ibfk_5` FOREIGN KEY (`ID_Presentacion`) REFERENCES `medicamento_presentacion` (`ID_Presentacion`);
 
 --
 -- Filtros para la tabla `factura_compra`

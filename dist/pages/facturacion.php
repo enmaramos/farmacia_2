@@ -420,24 +420,45 @@ include_once "Ctrl/head.php";
             </div>
         </div>
 
-        <!-- Modal del Carrito -->
-        <div class="modal fade" id="mostarCarrito" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Tu Carrito</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- Modal del Carrito Mejorado -->
+        <div class="modal fade" id="mostarCarrito" tabindex="-1" aria-labelledby="modalCarritoLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-md">
+                <div class="modal-content rounded-4 shadow">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title fw-bold" id="modalCarritoLabel">🛒 Tu Carrito de Ventas</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
+
                     <div class="modal-body">
-                        <!-- Aquí se agregarán los productos dinámicamente -->
+                        <!-- Aquí se agregan los productos dinámicamente -->
                     </div>
-                    <div class="modal-footer">
-                        <h4 id="grandTotal">Total: C$0.00</h4>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary" onclick="realizarCompra()">Realizar Compra</button>
+
+                    <div class="modal-footer flex-column text-start">
+                        <div class="w-100 mb-2">
+                            <h5 class="text-end fw-bold text-success">
+                                Total General: <span id="grandTotal">C$0.00</span>
+                            </h5>
+                            <p class="text-muted text-end">Incluye todos los productos con descuento aplicado.</p>
+                        </div>
+
+                        <div class="w-100 d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                ✖ Cerrar
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="realizarCompra()">
+                                💳 Facturar
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- notificación de agregar al carrito -->
+        <div id="notificacion" class="notificacion">
+            <i class="icono">i</i>
+            <span>El producto se agregó al carrito de Ventas.</span>
+            <img src="" alt="Producto" class="imagen-icono" />
         </div>
 
         <!-- Modal del Carrito estilos -->
@@ -448,7 +469,75 @@ include_once "Ctrl/head.php";
                 margin: auto;
                 /* Centra el modal */
             }
+
+            /* Estilo de la notificación */
+            .notificacion {
+                display: none;
+                /* Inicialmente oculta */
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: #4CAF50;
+                /* Fondo verde */
+                color: white;
+                border-radius: 8px;
+                padding: 15px 20px;
+                width: auto;
+                max-width: 350px;
+                /* Hacemos que sea más estrecha */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+                z-index: 9999;
+                transition: opacity 0.5s ease;
+                /* Animación suave */
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .notificacion .imagen-icono {
+                width: 50px;
+                /* Imagen más grande */
+                height: 50px;
+                object-fit: cover;
+                /* Mantiene la proporción de la imagen */
+                margin-right: 10px;
+                /* Espacio entre la imagen y el texto */
+                border-radius: 5px;
+                /* Redondeamos la imagen */
+            }
+
+            .notificacion .icono {
+                display: none;
+                /* Ocultamos el icono de la 'i' */
+            }
+
+            .notificacion span {
+                flex-grow: 1;
+                /* Ocupa el espacio restante */
+                font-weight: bold;
+            }
+
+            /* Transición suave para la aparición y desaparición */
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateX(100%);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            .notificacion.show {
+                animation: slideIn 0.5s ease-in-out;
+            }
         </style>
+
+
+
 
 
 

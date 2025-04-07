@@ -54,8 +54,30 @@ function agregarAlCarrito() {
     actualizarContador();
 
     // Mostrar mensaje de éxito
-    alert('Producto agregado al carrito.');
+    mostrarNotificacion(rutaImagen, nombreProducto);  // Pasamos la imagen y el nombre del producto
 }
+
+// Función para mostrar la notificación de producto agregado
+function mostrarNotificacion(imagen, nombreProducto) {
+    const notificacion = document.getElementById('notificacion');
+    const icono = notificacion.querySelector('.imagen-icono'); // Seleccionamos el elemento donde se mostrará la imagen
+    const texto = notificacion.querySelector('span'); // Seleccionamos el texto de la notificación
+
+    // Establecemos la imagen del producto en el icono
+    icono.src = imagen;
+    texto.textContent = `El producto "${nombreProducto}" se agregó al carrito de compras.`;  // Cambiamos el texto
+
+    // Mostrar la notificación
+    notificacion.classList.add('show');
+    notificacion.style.display = 'flex';
+
+    // Ocultar la notificación después de 3 segundos
+    setTimeout(function() {
+        notificacion.classList.remove('show'); // Remover la animación
+        notificacion.style.display = 'none';
+    }, 4000);
+}
+
 
 // Función para actualizar el contador del carrito
 function actualizarContador() {
@@ -75,27 +97,43 @@ function mostrarCarrito() {
         totalGeneral += totalProducto;
 
         const productoHTML = `
-   <div class="d-flex justify-content-between align-items-center">
-                <!-- Mostrar la imagen del producto -->
-                <img src="${producto.imagen}" alt="${producto.nombreProducto}" class="img-fluid" style="width: 100px;">
-                <div class="flex-grow-1 ms-3">
-                    <h5 class="fw-bold text-primary">${producto.nombreProducto}</h5>
+        <div class="d-flex justify-content-between align-items-center">
+            <!-- Imagen del producto -->
+            <img src="${producto.imagen}" alt="${producto.nombreProducto}" class="img-fluid" style="width: 100px;">
+            
+            <div class="flex-grow-1 ms-3">
+                <h5 class="fw-bold text-primary mb-1">${producto.nombreProducto}</h5>
 
-                    <h4 class="fw-bold text-primary">C$${totalProducto.toFixed(2)}</h4>
-                    <p class="text-muted">Descuento Incluido</p>
-                    <div class="d-flex align-items-center">
-                        <button class="btn btn-outline-primary btn-sm" onclick="updateQuantity(${index}, -1)">-</button>
-                        <input type="text" class="form-control mx-2 text-center" value="${producto.cantidad}" style="width: 40px;" readonly>
-                        <button class="btn btn-outline-primary btn-sm" onclick="updateQuantity(${index}, 1)">+</button>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center">
-                    <span class="fw-bold me-3">C$${totalProducto.toFixed(2)}</span>
-                    <button class="btn btn-danger btn-sm" onclick="removeProduct(${index})">🗑</button>
+                <h6 class="fw-bold text-primary">Precio unitario: C$${producto.precio.toFixed(2)}</h6>
+    
+                <!-- Solo muestra Presentación si tiene un valor válido -->
+                ${producto.presentacion && producto.presentacion !== "Seleccione una opción" ? 
+                    `<p class="mb-1"><strong>Presentación:</strong> ${producto.presentacion}</p>` : ''}
+                
+                <!-- Solo muestra Dosis si tiene un valor válido -->
+                ${producto.dosis && producto.dosis !== "Seleccione una opción" ? 
+                    `<p class="mb-1"><strong>Dosis:</strong> ${producto.dosis}</p>` : ''}
+                
+                <!-- Solo muestra Formato si tiene un valor válido -->
+                ${producto.unidad && producto.unidad !== "Seleccione una opción" ? 
+                    `<p class="mb-1"><strong>Formato:</strong> ${producto.unidad}</p>` : ''}
+
+                <div class="d-flex align-items-center mt-1">
+                    <button class="btn btn-outline-primary btn-sm" onclick="updateQuantity(${index}, -1)">-</button>
+                    <input type="text" class="form-control mx-2 text-center" value="${producto.cantidad}" style="width: 40px;" readonly>
+                    <button class="btn btn-outline-primary btn-sm" onclick="updateQuantity(${index}, 1)">+</button>
                 </div>
             </div>
-            <hr>
-        `;
+    
+            <div class="d-flex flex-column align-items-end">
+                <span class="fw-bold text-success mb-2">Subtotal: C$${totalProducto.toFixed(2)}</span>
+                <button class="btn btn-danger btn-sm" onclick="removeProduct(${index})">🗑</button>
+            </div>
+        </div>
+        <hr>
+    `;
+    
+    
 
         contenidoCarrito.insertAdjacentHTML('beforeend', productoHTML);
     });
@@ -103,18 +141,10 @@ function mostrarCarrito() {
     document.getElementById('grandTotal').textContent = `C$${totalGeneral.toFixed(2)}`;
 
     // Mostrar el modal
-    new bootstrap.Modal(modalCarrito).show();
+    const modal = bootstrap.Modal.getOrCreateInstance(modalCarrito);
+    modal.show();
+
 }
-
-// Elimina el fondo oscuro del modal si se queda pegado
-document.getElementById('mostarCarrito').addEventListener('hidden.bs.modal', function () {
-    document.body.classList.remove('modal-open');
-    const backdrop = document.querySelector('.modal-backdrop');
-    if (backdrop) {
-        backdrop.remove();
-    }
-});
-
 
 // Función para actualizar la cantidad de un producto en el carrito
 function updateQuantity(index, cantidadCambio) {

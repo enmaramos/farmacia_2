@@ -89,7 +89,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="./categoria.php" class="nav-link">
+                            <a href="./compra.php" class="nav-link">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Compra de Productos</p>
                             </a>

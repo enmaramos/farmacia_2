@@ -56,7 +56,7 @@ function agregarAlCarrito() {
 
     // Agregar al carrito
     carrito.push(producto);
-    
+
 
 
     // Actualizar el contador del carrito
@@ -81,7 +81,7 @@ function mostrarNotificacion(imagen, nombreProducto) {
     notificacion.style.display = 'flex';
 
     // Ocultar la notificación después de 3 segundos
-    setTimeout(function() {
+    setTimeout(function () {
         notificacion.classList.remove('show'); // Remover la animación
         notificacion.style.display = 'none';
     }, 4000);
@@ -116,16 +116,16 @@ function mostrarCarrito() {
                 <h6 class="fw-bold text-primary">Precio unitario: C$${producto.precio.toFixed(2)}</h6>
     
                 <!-- Solo muestra Presentación si tiene un valor válido -->
-                ${producto.presentacion && producto.presentacion !== "Seleccione una opción" ? 
-                    `<p class="mb-1"><strong>Presentación:</strong> ${producto.presentacion}</p>` : ''}
+                ${producto.presentacion && producto.presentacion !== "Seleccione una opción" ?
+                `<p class="mb-1"><strong>Presentación:</strong> ${producto.presentacion}</p>` : ''}
                 
                 <!-- Solo muestra Dosis si tiene un valor válido -->
-                ${producto.dosis && producto.dosis !== "Seleccione una opción" ? 
-                    `<p class="mb-1"><strong>Dosis:</strong> ${producto.dosis}</p>` : ''}
+                ${producto.dosis && producto.dosis !== "Seleccione una opción" ?
+                `<p class="mb-1"><strong>Dosis:</strong> ${producto.dosis}</p>` : ''}
                 
                 <!-- Solo muestra Formato si tiene un valor válido -->
-                ${producto.unidad && producto.unidad !== "Seleccione una opción" ? 
-                    `<p class="mb-1"><strong>Formato:</strong> ${producto.unidad}</p>` : ''}
+                ${producto.unidad && producto.unidad !== "Seleccione una opción" ?
+                `<p class="mb-1"><strong>Formato:</strong> ${producto.unidad}</p>` : ''}
 
                 <div class="d-flex align-items-center mt-1">
                     <button class="btn btn-outline-primary btn-sm" onclick="updateQuantity(${index}, -1)">-</button>
@@ -141,8 +141,8 @@ function mostrarCarrito() {
         </div>
         <hr>
     `;
-    
-    
+
+
 
         contenidoCarrito.insertAdjacentHTML('beforeend', productoHTML);
     });
@@ -181,7 +181,7 @@ document.querySelector('#btnAgregar').addEventListener('click', agregarAlCarrito
 document.querySelector('.carrito-icono').addEventListener('click', mostrarCarrito);
 
 
- ////////////////////////////////////////////////////////AQUI INICIA MODAL POGOS/////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////AQUI INICIA MODAL POGOS/////////////////////////////////////////////////////////////////////
 
 // Función para realizar la compra
 function realizarCompra() {
@@ -268,16 +268,20 @@ function realizarCompra() {
     modalMetodoPago.show();
 
     // Botón de "Pagar" en el modal de pago
-    document.getElementById('btnPagar').addEventListener('click', function() {
+    document.getElementById('btnPagar').addEventListener('click', function () {
         generarFactura(totalGeneral); // Llamamos a la función para generar la factura después del pago
+
+        // Cerrar el modal de método de pago después de realizar el pago
+        modalMetodoPago.hide();
     });
+
 }
 
 // Función para generar la factura
 function generarFactura(totalGeneral) {
     let facturaHTML = `
         <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ccc;">
-            <h2 style="text-align: center;">Factura de Compra</h2>
+            <h2 style="text-align: center;">Factura de Venta</h2>
             <hr>
             <p><strong>Fecha:</strong> ${new Date().toLocaleString()}</p>
             <p><strong>Cliente:</strong> ${carrito[0].clienteNombre} (Cédula: ${carrito[0].clienteCedula})</p>
@@ -320,6 +324,11 @@ function generarFactura(totalGeneral) {
 
     // Mostramos la factura en un modal o ventana emergente
     const facturaModal = new bootstrap.Modal(document.getElementById('modalFactura'));
+
+    // Cambiar el estilo para asegurar que el modal se muestre por encima de todo
+    const modalElement = document.getElementById('modalFactura');
+    modalElement.style.zIndex = 1051;  // Asegúrate de que este valor sea mayor que el de otros elementos (como 1050 para los modales de Bootstrap).
+
     document.getElementById('modalFacturaBody').innerHTML = facturaHTML;
     facturaModal.show();
 }
@@ -337,10 +346,41 @@ function calcularVuelto() {
     }
 }
 
-function imprimirFactura() {
+function imprimirFactura(event) {
+    // Prevenir la acción predeterminada
+    event.preventDefault();
+
+    // Cerrar el modal de la factura antes de imprimir
+    const facturaModal = bootstrap.Modal.getInstance(document.getElementById('modalFactura'));
+    facturaModal.hide();
+
+    // Eliminar el fondo oscuro (backdrop) de Bootstrap
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+        backdrop.remove();
+    }
+
+    // Obtener el contenido de la factura
     const facturaContenido = document.getElementById('modalFacturaBody').innerHTML;
+
+    // Abrir una ventana de impresión
     const ventanaImpresion = window.open('', '', 'width=800,height=600');
     ventanaImpresion.document.write(facturaContenido);
     ventanaImpresion.document.close();
+
+    // Imprimir la factura
     ventanaImpresion.print();
+
+    // Monitorear el estado de la ventana de impresión para detectar cuando se cierre
+    const intervalo = setInterval(function () {
+        if (ventanaImpresion.closed) {
+            clearInterval(intervalo);  // Detener el intervalo una vez que la ventana esté cerrada
+            window.location.reload();  // Recargar la página
+        }
+    }, 100); // Verifica cada 100 ms
 }
+
+
+
+
+

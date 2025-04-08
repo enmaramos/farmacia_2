@@ -625,15 +625,14 @@ include_once "Ctrl/head.php";
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-info text-white">
-                        <h5 class="modal-title" id="modalFacturaLabel">🧾 Factura de Compra</h5>
+                        <h5 class="modal-title" id="modalFacturaLabel">🧾 Factura de Venta</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body" id="modalFacturaBody">
                         <!-- Aquí se generará el contenido de la factura -->
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary" onclick="imprimirFactura()">Imprimir</button>
+                        <button type="button" class="btn btn-primary" onclick="imprimirFactura(event)">Imprimir</button>
                     </div>
                 </div>
             </div>
@@ -699,7 +698,7 @@ include_once "Ctrl/head.php";
         <script src="../js/seleccionar_medicamento.js?12345"></script>
         <script src="../js/mostar_clientes_chexbox.js?1234"></script>
         <script src="../js/buscar_clientes.js?1234"></script>
-        <script src="../js/carrito_caja.js?123458"></script>
+        <script src="../js/carrito_caja.js?123457"></script>
 
         <?php
 

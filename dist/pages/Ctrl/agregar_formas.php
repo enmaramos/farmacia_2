@@ -1,25 +1,25 @@
 <?php
 include('../pages/Cnx/conexion.php');
 
-if (isset($_POST['nombre'])) {
-    $nombre = trim($_POST['nombre']);
+$data = json_decode(file_get_contents("php://input"), true);
 
-    // Verificar si ya existe
-    $stmt = $conn->prepare("SELECT * FROM medicamento_forma_farmaceutica WHERE Forma_Farmaceutica = ?");
-    $stmt->bind_param("s", $nombre);
-    $stmt->execute();
-    $result = $stmt->get_result();
+$forma = trim($data['forma']);
 
-    if ($result->num_rows > 0) {
-        echo json_encode(["success" => false, "message" => "Ya existe esa forma."]);
-    } else {
+if ($forma !== "") {
+    $check = $conn->prepare("SELECT * FROM medicamento_forma_farmaceutica WHERE Forma_Farmaceutica = ?");
+    $check->bind_param("s", $forma);
+    $check->execute();
+    $res = $check->get_result();
+
+    if ($res->num_rows === 0) {
         $insert = $conn->prepare("INSERT INTO medicamento_forma_farmaceutica (Forma_Farmaceutica) VALUES (?)");
-        $insert->bind_param("s", $nombre);
-        if ($insert->execute()) {
-            echo json_encode(["success" => true]);
-        } else {
-            echo json_encode(["success" => false, "message" => "Error al guardar."]);
-        }
+        $insert->bind_param("s", $forma);
+        $insert->execute();
+        echo json_encode(["exito" => true]);
+    } else {
+        echo json_encode(["exito" => false, "mensaje" => "Ya existe"]);
     }
+} else {
+    echo json_encode(["exito" => false, "mensaje" => "Campo vacío"]);
 }
 ?>

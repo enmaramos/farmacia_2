@@ -123,154 +123,185 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 <div class="container-fluid bg-white p-4 rounded shadow">
-
-<!-- Título principal -->
-<div class="bg-primary text-white p-3 rounded mb-4">
     <h4 class="mb-0">🧾 Registro de Compras</h4>
-    <p class="mb-0 small">Llene los datos con cuidado</p>
-</div>
 
-<div class="row">
-    <!-- SECCIÓN IZQUIERDA -->
-    <div class="col-md-8">
+    <div class="row">
+        <!-- SECCIÓN IZQUIERDA -->
+        <div class="col-md-8">
 
-        <!-- PRODUCTO -->
-        <div class="border rounded p-3 mb-4 shadow-sm">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h5 class="text-primary">🧪 Datos del Producto</h5>
-                <button class="btn btn-sm btn-outline-primary">🔍 Buscar Producto</button>
+            <!-- PRODUCTO -->
+            <div class="border rounded p-3 mb-4 shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="text-primary">🧪 Datos del Producto</h5>
+                    <!-- Botón para abrir cuadro de búsqueda -->
+                    <button type="button" id="btnBuscarProducto" class="btn btn-info">
+                        <i class="fas fa-search"></i> Buscar Producto
+                    </button>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <label>Nombre:</label>
+                        <input type="text" class="form-control" id="nombreMedicamento" readonly>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label>Laboratorio/Marca:</label>
+                        <input type="text" class="form-control" id="marcaMedicamento" readonly>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label>Imagen:</label>
+                        <input type="text" class="form-control" id="imagenMedicamento" readonly>
+                    </div>
+                    <div class="col-md-12 mb-2">
+                        <label>Descripción:</label>
+                        <textarea class="form-control" id="descripcionMedicamento" rows="2" readonly></textarea>
+                    </div>
+                </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-3 mb-2">
-                    <label>Código:</label>
-                    <input type="text" class="form-control" id="codigoMedicamento" readonly>
+            <!-- LOTE -->
+            <div class="border rounded p-3 mb-4 shadow-sm">
+                <h5 class="text-primary mb-3">📦 Datos del Lote</h5>
+
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <label>Descripción del Lote:</label>
+                        <input type="text" class="form-control" id="descripcionLote">
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label>Cantidad del Lote:</label>
+                        <input type="number" class="form-control bg-warning" id="cantidadLote">
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label>F. Fabricación:</label>
+                        <input type="date" class="form-control" id="fechaFabLote">
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label>F. Caducidad:</label>
+                        <input type="date" class="form-control" id="fechaCadLote">
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label>F. Recibido:</label>
+                        <input type="date" class="form-control" id="fechaRecibidoLote">
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label>Precio por Unidad:</label>
+                        <input type="text" class="form-control" id="precioUnidadLote">
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label>Precio Total del Lote:</label>
+                        <input type="text" class="form-control" id="precioTotalLote" readonly>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label>Stock Mín:</label>
+                        <input type="number" class="form-control" id="stockMinimo">
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label>Stock Máx:</label>
+                        <input type="number" class="form-control" id="stockMaximo">
+                    </div>
                 </div>
-                <div class="col-md-3 mb-2">
-                    <label>Nombre:</label>
-                    <input type="text" class="form-control" id="nombreMedicamento" readonly>
+            </div>
+
+            <!-- PROVEEDOR -->
+            <div class="border rounded p-3 mb-4 shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="text-primary">🚚 Datos del Proveedor</h5>
+                    <button class="btn btn-sm btn-outline-primary">🔍 Buscar Proveedor</button>
                 </div>
-                <div class="col-md-3 mb-2">
-                    <label>Marca:</label>
-                    <input type="text" class="form-control" id="marcaMedicamento" readonly>
+
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <label>Nombre:</label>
+                        <input type="text" class="form-control" id="nombreProveedor" readonly>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label>Teléfono:</label>
+                        <input type="text" class="form-control" id="telefonoProveedor" readonly>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label>Email:</label>
+                        <input type="email" class="form-control" id="emailProveedor" readonly>
+                    </div>
                 </div>
-                <div class="col-md-3 mb-2">
-                    <label>Imagen:</label>
-                    <input type="text" class="form-control" id="imagenMedicamento" readonly>
+            </div>
+
+        </div>
+
+        <!-- SECCIÓN DERECHA: COMPRA -->
+        <div class="col-md-4">
+            <div class="border rounded p-3 shadow-sm">
+                <h5 class="text-success">💰 Detalles de la Compra</h5>
+
+                <div class="mb-2">
+                    <label>Número de Compra:</label>
+                    <input type="text" class="form-control" id="numeroCompra">
                 </div>
-                <div class="col-md-12 mb-2">
+                <div class="mb-2">
+                    <label>Estado del Pedido:</label>
+                    <input type="text" class="form-control" id="estadoPedido">
+                </div>
+                <div class="mb-2">
+                    <label>Fecha:</label>
+                    <input type="date" class="form-control" id="fechaCompra">
+                </div>
+                <div class="mb-2">
                     <label>Descripción:</label>
-                    <textarea class="form-control" id="descripcionMedicamento" rows="2" readonly></textarea>
+                    <textarea class="form-control" id="descripcionCompra" rows="2"></textarea>
                 </div>
-            </div>
-        </div>
+                <div class="mb-2">
+                    <label>Subtotal:</label>
+                    <input type="text" class="form-control" id="subtotalCompra">
+                </div>
+                <div class="mb-2">
+                    <label>IVA:</label>
+                    <input type="text" class="form-control" id="ivaCompra">
+                </div>
+                <div class="mb-2">
+                    <label>Total:</label>
+                    <input type="text" class="form-control" id="totalCompra" readonly>
+                </div>
+                <div class="mb-2">
+                    <label>Cantidad a Comprar:</label>
+                    <input type="number" class="form-control" id="cantidadCompra">
+                </div>
 
-        <!-- LOTE -->
-        <div class="border rounded p-3 mb-4 shadow-sm">
-            <h5 class="text-primary mb-3">📦 Datos del Lote</h5>
-
-            <div class="row">
-                <div class="col-md-2 mb-2">
-                    <label>Stock:</label>
-                    <input type="number" class="form-control bg-warning" id="cantidadLote" readonly>
+                <div class="d-grid mt-3">
+                    <button class="btn btn-success">💾 Guardar Compra</button>
                 </div>
-                <div class="col-md-2 mb-2">
-                    <label>Stock Min:</label>
-                    <input type="number" class="form-control" id="stockMinimo" readonly>
-                </div>
-                <div class="col-md-2 mb-2">
-                    <label>Stock Max:</label>
-                    <input type="number" class="form-control" id="stockMaximo" readonly>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <label>Precio Compra:</label>
-                    <input type="text" class="form-control" id="precioCompraLote" readonly>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <label>Precio Total:</label>
-                    <input type="text" class="form-control" id="precioTotalLote" readonly>
-                </div>
-                <div class="col-md-4 mb-2">
-                    <label>F. Fabricación:</label>
-                    <input type="date" class="form-control" id="fechaFabLote" readonly>
-                </div>
-                <div class="col-md-4 mb-2">
-                    <label>F. Caducidad:</label>
-                    <input type="date" class="form-control" id="fechaCadLote" readonly>
-                </div>
-                <div class="col-md-4 mb-2">
-                    <label>F. Recibido:</label>
-                    <input type="date" class="form-control" id="fechaRecibidoLote" readonly>
-                </div>
-            </div>
-        </div>
-
-        <!-- PROVEEDOR -->
-        <div class="border rounded p-3 mb-4 shadow-sm">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h5 class="text-primary">🚚 Datos del Proveedor</h5>
-                <button class="btn btn-sm btn-outline-primary">🔍 Buscar Proveedor</button>
-            </div>
-
-            <div class="row">
-                <div class="col-md-4 mb-2">
-                    <label>Nombre:</label>
-                    <input type="text" class="form-control" id="nombreProveedor" readonly>
-                </div>
-                <div class="col-md-4 mb-2">
-                    <label>Teléfono:</label>
-                    <input type="text" class="form-control" id="telefonoProveedor" readonly>
-                </div>
-                <div class="col-md-4 mb-2">
-                    <label>Email:</label>
-                    <input type="email" class="form-control" id="emailProveedor" readonly>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- SECCIÓN DERECHA: COMPRA -->
-    <div class="col-md-4">
-        <div class="border rounded p-3 shadow-sm">
-            <h5 class="text-success">💰 Detalles de la Compra</h5>
-
-            <div class="mb-2">
-                <label>ID Compra:</label>
-                <input type="text" class="form-control" id="idFactura" readonly>
-            </div>
-            <div class="mb-2">
-                <label>Fecha:</label>
-                <input type="date" class="form-control" id="fechaCompra">
-            </div>
-            <div class="mb-2">
-                <label>Descripción:</label>
-                <textarea class="form-control" id="descripcionCompra" rows="2"></textarea>
-            </div>
-            <div class="mb-2">
-                <label>Subtotal:</label>
-                <input type="text" class="form-control" id="subtotalCompra">
-            </div>
-            <div class="mb-2">
-                <label>IVA:</label>
-                <input type="text" class="form-control" id="ivaCompra">
-            </div>
-            <div class="mb-2">
-                <label>Total:</label>
-                <input type="text" class="form-control" id="totalCompra" readonly>
-            </div>
-            <div class="mb-2">
-                <label>Cantidad a Comprar:</label>
-                <input type="number" class="form-control" id="cantidadCompra">
-            </div>
-
-            <div class="d-grid mt-3">
-                <button class="btn btn-success">💾 Guardar Compra</button>
             </div>
         </div>
     </div>
 </div>
+
+<!-- MODAL BUSQUEDA PRODUCTO -->
+<div class="modal fade" id="modalBusquedaProducto" tabindex="-1" aria-labelledby="modalBusquedaProductoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalBusquedaProductoLabel">Buscar Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <table id="tablaProducto" class="table table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Laboratorio o Marca</th>
+                            <th>Descripción</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Productos dinámicos aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 
 <script>
@@ -280,6 +311,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         window.location.href = 'vendedor.php?estado=' + estado; // Recargar la página con el filtro en la URL
     }
 </script>
+
+
 
 
         <!-- Modal para agregar vendedor -->
@@ -643,10 +676,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-        <script src="../js/editar_vendedor.js?123456"></script>
-        <script src="../js/baja_vendedor.js?1234"></script>
-        <script src="../js/ver_vendedor.js?12345"></script>
-        <script src="../js/reactivar_vendedor.js?12345"></script>
+<script src="../js/modal_medicamento.js?12345"></script>
+<script src="../js/seleccionar_medicamento.js?12345"></script>
 
         <?php
         $conn->close();

@@ -363,7 +363,7 @@ $result = $conn->query($query);
                             </div>
                         </div>
 
-                        <!-- Pestaña FORMAS FARMACÉUTICAS -->
+                       <!-- Pestaña FORMAS FARMACÉUTICAS -->
 <div class="tab-pane fade" id="forma" role="tabpanel">
   <div class="mt-3">
     <!-- INPUT para agregar nueva forma -->
@@ -380,6 +380,8 @@ $result = $conn->query($query);
     </div>
   </div>
 </div>
+
+
 
 
                         <!-- Presentación -->
@@ -421,51 +423,6 @@ $result = $conn->query($query);
         </div>
     </div>
 </div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  cargarFormas();
-
-  document.getElementById("btnAgregarForma").addEventListener("click", function () {
-    const nuevaForma = document.getElementById("nuevaForma").value.trim();
-    if (nuevaForma !== "") {
-      fetch("../pages/Ctrl/agregar_fornas.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `nombre=${encodeURIComponent(nuevaForma)}`
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          document.getElementById("nuevaForma").value = "";
-          cargarFormas(); // recarga los checkboxes
-        } else {
-          alert("Error: " + data.message);
-        }
-      });
-    }
-  });
-
-  function cargarFormas() {
-    fetch("../pages/Ctrl/listar_formas.php")
-      .then(response => response.json())
-      .then(data => {
-        const contenedor = document.getElementById("checkboxFormas");
-        contenedor.innerHTML = "";
-        data.forEach(forma => {
-          const id = "forma_" + forma.ID_Forma_Farmaceutica;
-          contenedor.innerHTML += `
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="formasFarmaceuticas[]" value="${forma.ID_Forma_Farmaceutica}" id="${id}">
-              <label class="form-check-label" for="${id}">${forma.Nombre_Forma}</label>
-            </div>`;
-        });
-      });
-  }
-});
-</script>
-
-
 
 <script>
 // Función para mostrar la vista previa de la imagen seleccionada
@@ -730,7 +687,7 @@ document.addEventListener("DOMContentLoaded", function() {
         <script src="../js/baja_vendedor.js?1234"></script>
         <script src="../js/ver_vendedor.js?12345"></script>
         <script src="../js/reactivar_vendedor.js?12345"></script>
-
+        
         <?php
         $conn->close();
         ?>

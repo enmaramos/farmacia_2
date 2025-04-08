@@ -698,7 +698,7 @@ include_once "Ctrl/head.php";
         <script src="../js/seleccionar_medicamento.js?12345"></script>
         <script src="../js/mostar_clientes_chexbox.js?1234"></script>
         <script src="../js/buscar_clientes.js?1234"></script>
-        <script src="../js/carrito_caja.js?123457"></script>
+        <script src="../js/carrito_caja.js?123458"></script>
 
         <?php
 

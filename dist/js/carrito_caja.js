@@ -380,7 +380,7 @@ function imprimirFactura(event) {
     }, 100); // Verifica cada 100 ms
 }
 
-
+//////////////////////////////////////////////
 
 
 

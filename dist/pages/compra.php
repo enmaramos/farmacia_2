@@ -5,22 +5,6 @@ include_once "Ctrl/head.php";
 <?php
 include('../pages/Cnx/conexion.php');
 
-// Definir el estado por defecto (vacío significa mostrar todos)
-$estadoFiltro = isset($_GET['estado']) ? $_GET['estado'] : '1'; // Por defecto, mostrar solo activos
-
-// Consulta dependiendo del estado seleccionado
-if ($estadoFiltro == '1') {
-    // Vendedores activos
-    $query = "SELECT * FROM vendedor WHERE Estado = 1";
-} elseif ($estadoFiltro == '0') {
-    // Mostrar todos los vendedores inactivos
-    $query = "SELECT * FROM vendedor WHERE Estado = 0";
-} else {
-    // Vendedores activos e inactivos (por si alguien introduce algo inesperado)
-    $query = "SELECT * FROM vendedor";
-}
-
-$result = $conn->query($query);
 ?>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
@@ -274,12 +258,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 
-<!-- MODAL BUSQUEDA PRODUCTO -->
-<div class="modal fade" id="modalBusquedaProducto" tabindex="-1" aria-labelledby="modalBusquedaProductoLabel" aria-hidden="true">
+<!-- Modal para la búsqueda de producto -->
+<div class="modal fade" id="modal_medicamento" tabindex="-1" aria-labelledby="modal_medicamentoLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalBusquedaProductoLabel">Buscar Producto</h5>
+                <h5 class="modal-title" id="modal_medicamentoLabel">Buscar Producto</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
@@ -294,13 +278,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Productos dinámicos aquí -->
+                        <!-- Productos dinámicos se cargarán aquí -->
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+
 
 
 
@@ -676,12 +661,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-<script src="../js/modal_medicamento.js?12345"></script>
-<script src="../js/seleccionar_medicamento.js?12345"></script>
 
-        <?php
-        $conn->close();
-        ?>
+<script src="../js/seleccionar_medicamento_y_lote.js?12345"></script>
+
+       
 
 
 

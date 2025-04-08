@@ -23,20 +23,12 @@ SELECT
     l.Precio_Unidad,               -- Precio por Unidad
     l.Precio_Total_Lote,           -- Precio Total del Lote
     l.Stock_Min,                   -- Stock Mínimo
-    l.Stock_Max,                   -- Stock Máximo
-    m.Requiere_Receta,
-    GROUP_CONCAT(DISTINCT f.Forma_Farmaceutica ORDER BY f.Forma_Farmaceutica ASC SEPARATOR ', ') AS Forma_Farmaceutica,
-    GROUP_CONCAT(DISTINCT d.Dosis ORDER BY d.Dosis ASC SEPARATOR ', ') AS Dosis,
-    GROUP_CONCAT(DISTINCT CONCAT(p.Tipo_Presentacion, '|', p.Precio) ORDER BY p.Tipo_Presentacion ASC SEPARATOR ', ') AS Presentaciones,
-    GROUP_CONCAT(DISTINCT CONCAT(f.Forma_Farmaceutica, ':', d.Dosis) ORDER BY f.Forma_Farmaceutica ASC, d.Dosis ASC SEPARATOR '|') AS FormaFarmaceuticaDosis
-FROM medicamento m
-LEFT JOIN medicamento_forma_farmaceutica f ON m.ID_Medicamento = f.ID_Medicamento
-LEFT JOIN forma_farmaceutica_dosis fd ON f.ID_Forma_Farmaceutica = fd.ID_Forma_Farmaceutica
-LEFT JOIN medicamento_dosis d ON fd.ID_Dosis = d.ID_Dosis
-LEFT JOIN medicamento_presentacion p ON m.ID_Medicamento = p.ID_Medicamento
+    l.Stock_Max                    -- Stock Máximo
+
+    FROM medicamento m
 LEFT JOIN lote l ON m.ID_Medicamento = l.ID_Medicamento
 WHERE m.ID_Medicamento = ?
-GROUP BY m.ID_Medicamento
+LIMIT 1
 ";
 
 $stmt = $conn->prepare($query);

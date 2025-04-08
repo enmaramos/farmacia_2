@@ -436,18 +436,18 @@ include_once "Ctrl/head.php";
                     <div class="modal-footer flex-column text-start">
                         <div class="w-100 mb-2">
                             <h5 class="text-end fw-bold text-success">
-                                Total: <span id="grandTotal">C$0.00</span>
+                                Total General: <span id="grandTotal">C$0.00</span>
                             </h5>
+                            <p class="text-muted text-end">Incluye todos los productos con descuento aplicado.</p>
                         </div>
 
                         <div class="w-100 d-flex justify-content-between">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                 ✖ Cerrar
                             </button>
-                            <button type="button" class="btn btn-primary" onclick="abrirModalPago()">
+                            <button type="button" class="btn btn-primary" onclick="realizarCompra()">
                                 💳 Facturar
                             </button>
-
                         </div>
                     </div>
                 </div>
@@ -457,7 +457,7 @@ include_once "Ctrl/head.php";
         <!-- notificación de agregar al carrito -->
         <div id="notificacion" class="notificacion">
             <i class="icono">i</i>
-            <span>El producto se agregó al carrito de Ventas.</span>
+            <span>El producto se agregó al carrito de compras.</span>
             <img src="" alt="Producto" class="imagen-icono" />
         </div>
 
@@ -534,6 +534,48 @@ include_once "Ctrl/head.php";
             .notificacion.show {
                 animation: slideIn 0.5s ease-in-out;
             }
+
+            /* Estilos para el modal de factura */
+            #modalFactura {
+                display: none;
+                /* Ocultar el modal por defecto */
+                position: fixed;
+                z-index: 1050;
+                /* Asegúrate de que este modal esté por encima de los demás */
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.4);
+                /* Fondo oscuro con opacidad */
+                padding-top: 60px;
+            }
+
+            /* Estilos del contenido del modal de factura */
+            #modalFactura .modal-content {
+                background-color: #fefefe;
+                margin: 5% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%;
+                /* Tamaño del modal */
+                border-radius: 10px;
+            }
+
+            /* Estilo para el botón de cerrar del modal */
+            #modalFactura .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+            #modalFactura .close:hover,
+            #modalFactura .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
         </style>
 
         <!-- Modal de Método de Pago -->
@@ -555,7 +597,7 @@ include_once "Ctrl/head.php";
                             <label class="form-label fw-bold">Método de Pago</label>
                             <select class="form-select" id="metodoPago">
                                 <option value="efectivo" selected>Efectivo</option>
-                                <!-- Aquí puedes añadir otros métodos en el futuro -->
+                                <!-- Puedes añadir otros métodos de pago aquí si lo deseas -->
                             </select>
                         </div>
 
@@ -572,67 +614,30 @@ include_once "Ctrl/head.php";
 
                     <div class="modal-footer d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" id="btnPagar" class="btn btn-success" onclick="confirmarPago()">✅ Pagar</button>
+                        <button type="button" id="btnPagar" class="btn btn-success" onclick="realizarCompra()">✅ Pagar</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- FACTURA -->
-        <div id="facturaFinal" class="factura shadow p-4 mt-4" style="display: none; background: white; border-radius: 10px;">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div class="logo d-flex align-items-center">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Pharmacy_blue_icon.svg/768px-Pharmacy_blue_icon.svg.png" alt="Logo" class="me-2" width="60">
-                    <div>
-                        <h4 class="mb-0">Farmacia La Sierra</h4>
+        <!-- Modal de Factura -->
+        <div class="modal fade" id="modalFactura" tabindex="-1" aria-labelledby="modalFacturaLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-info text-white">
+                        <h5 class="modal-title" id="modalFacturaLabel">🧾 Factura de Compra</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body" id="modalFacturaBody">
+                        <!-- Aquí se generará el contenido de la factura -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" onclick="imprimirFactura()">Imprimir</button>
                     </div>
                 </div>
-                <div class="text-end">
-                    <h3 class="titulo">Factura</h3>
-                    <p><strong>N° de factura:</strong> <span id="numeroFactura">01234</span></p>
-                    <p><strong>Fecha:</strong> <span id="fechaFactura">--/--/----</span></p>
-                </div>
-            </div>
-
-            <div class="mb-4">
-                <h6><strong>Datos del cliente</strong></h6>
-                <p class="mb-0" id="clienteNombre">Nombre del cliente</p>
-                <p class="mb-0" id="clienteDireccion">Dirección del cliente</p>
-                <p id="clienteTelefono">Teléfono del cliente</p>
-            </div>
-
-            <table class="table text-center">
-                <thead class="encabezado-tabla">
-                    <tr>
-                        <th>PRODUCTO</th>
-                        <th>CANTIDAD</th>
-                        <th>PRECIO</th>
-                        <th>SUBTOTAL</th>
-                    </tr>
-                </thead>
-                <tbody id="detalleFactura">
-                    <!-- Aquí se insertarán los productos -->
-                </tbody>
-            </table>
-
-            <div class="total mt-3 text-end fs-5">
-                <strong>TOTAL: $<span id="totalFactura">0.00</span></strong>
-            </div>
-
-            <div class="pago-info mt-5">
-                <h6><strong>Información para el pago</strong></h6>
-                <p>Beneficiario: Farmacia La Sierra</p>
-                <p>Banco del Norte</p>
-                <p>Número de cuenta: 0123 4567 8901</p>
-            </div>
-
-            <div class="footer mt-4 d-flex justify-content-between small">
-                <span><i class="bi bi-telephone-fill"></i> 1234-5678</span>
-                <span><i class="bi bi-envelope-fill"></i> hola@sitioincreible.com</span>
-                <span><i class="bi bi-globe"></i> www.sitioincreible.com</span>
             </div>
         </div>
-
 
 
         <?php
@@ -690,15 +695,11 @@ include_once "Ctrl/head.php";
         </div>
 
 
-
-
-
-
         <script src="../js/modal_medicamento.js?12345"></script>
         <script src="../js/seleccionar_medicamento.js?12345"></script>
         <script src="../js/mostar_clientes_chexbox.js?1234"></script>
         <script src="../js/buscar_clientes.js?1234"></script>
-        <script src="../js/carrito_caja.js?123456"></script>
+        <script src="../js/carrito_caja.js?123458"></script>
 
         <?php
 

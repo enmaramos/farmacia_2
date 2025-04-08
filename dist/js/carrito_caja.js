@@ -56,6 +56,7 @@ function agregarAlCarrito() {
 
     // Agregar al carrito
     carrito.push(producto);
+    
 
 
     // Actualizar el contador del carrito
@@ -73,7 +74,7 @@ function mostrarNotificacion(imagen, nombreProducto) {
 
     // Establecemos la imagen del producto en el icono
     icono.src = imagen;
-    texto.textContent = `El producto "${nombreProducto}" se agregó al carrito de Ventas.`;  // Cambiamos el texto
+    texto.textContent = `El producto "${nombreProducto}" se agregó al carrito de compras.`;  // Cambiamos el texto
 
     // Mostrar la notificación
     notificacion.classList.add('show');
@@ -154,118 +155,192 @@ function mostrarCarrito() {
 
 }
 
-// Actualizar cantidad del producto en el carrito
+// Función para actualizar la cantidad de un producto en el carrito
 function updateQuantity(index, cantidadCambio) {
     const producto = carrito[index];
     producto.cantidad += cantidadCambio;
+
+    // Evitar que la cantidad sea menor a 1
     if (producto.cantidad < 1) producto.cantidad = 1;
+
+    // Volver a mostrar el carrito
     mostrarCarrito();
 }
 
-// Eliminar un producto del carrito
+// Función para eliminar un producto del carrito
 function removeProduct(index) {
-    carrito.splice(index, 1);
-    actualizarContador();
-    mostrarCarrito();
+    carrito.splice(index, 1); // Eliminar el producto del carrito
+    actualizarContador(); // Actualizar el contador
+    mostrarCarrito(); // Volver a mostrar el carrito
 }
 
-// Abrir modal de método de pago
-function abrirModalPago() {
-    const total = carrito.reduce((sum, p) => sum + (p.precio * p.cantidad), 0);
-    document.getElementById('totalPagar').value = `C$${total.toFixed(2)}`;
-    document.getElementById('montoRecibido').value = '';
-    document.getElementById('vueltoCliente').value = '';
+// Event Listener para el botón de agregar al carrito
+document.querySelector('#btnAgregar').addEventListener('click', agregarAlCarrito);
 
-    const modalPago = new bootstrap.Modal(document.getElementById('modalMetodoPago'));
-    modalPago.show();
+// Event Listener para el ícono del carrito
+document.querySelector('.carrito-icono').addEventListener('click', mostrarCarrito);
+
+
+ ////////////////////////////////////////////////////////AQUI INICIA MODAL POGOS/////////////////////////////////////////////////////////////////////
+
+// Función para realizar la compra
+function realizarCompra() {
+    // Obtener el total general de la compra
+    const totalGeneral = carrito.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
+
+    // Asignar el total general al campo "Total a Pagar" del modal de pago
+    document.getElementById('totalPagar').value = `C$${totalGeneral.toFixed(2)}`;
+
+    // Cerrar el modal del carrito
+    const modalCarrito = bootstrap.Modal.getOrCreateInstance(document.getElementById('mostarCarrito'));
+    modalCarrito.hide();
+
+    // Abrir el modal de método de pago
+    const modalMetodoPago = new bootstrap.Modal(document.getElementById('modalMetodoPago'));
+    modalMetodoPago.show();
 }
-
-// Calcular vuelto
+// Función para calcular el vuelto
 function calcularVuelto() {
-    const total = parseFloat(document.getElementById('totalPagar').value.replace('C$', '').trim());
-    const recibido = parseFloat(document.getElementById('montoRecibido').value);
+    const totalPagar = parseFloat(document.getElementById('totalPagar').value.replace('C$', '').trim());
+    const montoRecibido = parseFloat(document.getElementById('montoRecibido').value);
 
-    if (!isNaN(total) && !isNaN(recibido)) {
-        const vuelto = recibido - total;
-        document.getElementById('vueltoCliente').value = vuelto >= 0 ? `C$${vuelto.toFixed(2)}` : 'C$0.00';
+    // Si el monto recibido es mayor o igual al total a pagar, calcular el vuelto
+    if (!isNaN(montoRecibido) && montoRecibido >= totalPagar) {
+        const vuelto = montoRecibido - totalPagar;
+        document.getElementById('vueltoCliente').value = `C$${vuelto.toFixed(2)}`;
+    } else {
+        // Si el monto recibido es menor, mostrar 0
+        document.getElementById('vueltoCliente').value = 'C$0.00';
     }
 }
 
-function confirmarPago() {
-    const recibido = parseFloat(document.getElementById('montoRecibido').value);
-    const total = parseFloat(document.getElementById('totalPagar').value.replace('C$', '').trim());
-
-    if (isNaN(recibido) || recibido < total) {
-        alert("El monto recibido es insuficiente.");
+// Función para manejar la acción de facturar
+function realizarCompra() {
+    // Verificar si el carrito está vacío
+    if (carrito.length === 0) {
+        alert('¡Tu carrito está vacío! Agrega productos antes de proceder con la compra.');
         return;
     }
 
-    // Obtener solo el nombre y cédula del cliente desde el formulario
-    const nombreCliente = document.getElementById('nombreCliente').value || 'Cliente Genérico';
-    const cedulaCliente = document.getElementById('cedulaCliente').value || 'Cédula no registrada';
-
-    // Si no tienes dirección o teléfono en tu formulario, no hace falta asignar valores por defecto
-    // Los valores se dejarán vacíos o nulos
-    const direccionCliente = ''; // Sin dirección
-    const telefonoCliente = ''; // Sin teléfono
-
-    // Insertar los datos en la factura
-    document.getElementById('clienteNombre').textContent = nombreCliente;
-    document.getElementById('clienteCedula').textContent = cedulaCliente;
-    document.getElementById('clienteDireccion').textContent = direccionCliente || 'Dirección no registrada'; // Este campo no se utilizará en este caso
-    document.getElementById('clienteTelefono').textContent = telefonoCliente || '---'; // Este campo tampoco
-
-    // Insertar fecha actual
-    const fechaActual = new Date().toLocaleDateString('es-ES');
-    document.getElementById('fechaFactura').textContent = fechaActual;
-
-    // Número de factura aleatorio
-    const numeroFactura = Math.floor(10000 + Math.random() * 90000);
-    document.getElementById('numeroFactura').textContent = numeroFactura;
-
-    // Obtener productos del carrito
-    const filasCarrito = document.querySelectorAll('#tablaCarrito tbody tr');
-    const cuerpoFactura = document.getElementById('detalleFactura');
-    cuerpoFactura.innerHTML = '';
-
-    let totalFactura = 0;
-
-    filasCarrito.forEach(fila => {
-        const columnas = fila.querySelectorAll('td');
-        const nombreProducto = columnas[0].textContent;
-        const cantidad = columnas[1].textContent;
-        const precio = columnas[2].textContent.replace('$', '').replace(',', '');
-        const subtotal = columnas[4].textContent.replace('$', '').replace(',', '');
-
-        totalFactura += parseFloat(subtotal);
-
-        const filaFactura = document.createElement('tr');
-        filaFactura.innerHTML = `
-            <td>${nombreProducto}</td>
-            <td>${cantidad}</td>
-            <td>$${parseFloat(precio).toFixed(2)}</td>
-            <td>$${parseFloat(subtotal).toFixed(2)}</td>
-        `;
-        cuerpoFactura.appendChild(filaFactura);
+    // Calcular el total general del carrito
+    let totalGeneral = 0;
+    carrito.forEach(producto => {
+        totalGeneral += producto.precio * producto.cantidad;
     });
 
-    document.getElementById('totalFactura').textContent = totalFactura.toFixed(2);
+    // Mostrar el total en el modal de método de pago
+    document.getElementById('totalPagar').value = `C$${totalGeneral.toFixed(2)}`;
 
-    // Mostrar factura final
-    document.getElementById('facturaFinal').style.display = 'block';
-
-    // Confirmación visual
-    alert("✅ Pago procesado con éxito. ¡Gracias por su compra!");
-
-    // Limpiar carrito
-    carrito = [];
-    actualizarContador();
-
-    // Cerrar modales
-    const modalPago = bootstrap.Modal.getInstance(document.getElementById('modalMetodoPago'));
-    modalPago.hide();
+    // Cerrar el modal del carrito
     const modalCarrito = bootstrap.Modal.getInstance(document.getElementById('mostarCarrito'));
     modalCarrito.hide();
+
+    // Abrir el modal de método de pago
+    const modalMetodoPago = new bootstrap.Modal(document.getElementById('modalMetodoPago'));
+    modalMetodoPago.show();
 }
 
-  
+//////////////////////////////////////////////////AQUI INICIA FACTURA/////////////////////////////////////////////////////////////////
+
+// Función para realizar la compra y generar la factura
+function realizarCompra() {
+    // Verificar si el carrito está vacío
+    if (carrito.length === 0) {
+        alert('¡Tu carrito está vacío! Agrega productos antes de proceder con la compra.');
+        return;
+    }
+
+    // Calcular el total general del carrito
+    let totalGeneral = 0;
+    carrito.forEach(producto => {
+        totalGeneral += producto.precio * producto.cantidad;
+    });
+
+    // Asignar el total general al campo "Total a Pagar" del modal de pago
+    document.getElementById('totalPagar').value = `C$${totalGeneral.toFixed(2)}`;
+
+    // Cerrar el modal del carrito
+    const modalCarrito = bootstrap.Modal.getInstance(document.getElementById('mostarCarrito'));
+    modalCarrito.hide();
+
+    // Abrir el modal de método de pago
+    const modalMetodoPago = new bootstrap.Modal(document.getElementById('modalMetodoPago'));
+    modalMetodoPago.show();
+
+    // Botón de "Pagar" en el modal de pago
+    document.getElementById('btnPagar').addEventListener('click', function() {
+        generarFactura(totalGeneral); // Llamamos a la función para generar la factura después del pago
+    });
+}
+
+// Función para generar la factura
+function generarFactura(totalGeneral) {
+    let facturaHTML = `
+        <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ccc;">
+            <h2 style="text-align: center;">Factura de Compra</h2>
+            <hr>
+            <p><strong>Fecha:</strong> ${new Date().toLocaleString()}</p>
+            <p><strong>Cliente:</strong> ${carrito[0].clienteNombre} (Cédula: ${carrito[0].clienteCedula})</p>
+            <hr>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <thead>
+                    <tr>
+                        <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Producto</th>
+                        <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Cantidad</th>
+                        <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Precio Unitario</th>
+                        <th style="border: 1px solid #ccc; padding: 8px; text-align: left;">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    carrito.forEach(producto => {
+        const subtotal = producto.precio * producto.cantidad;
+        facturaHTML += `
+            <tr>
+                <td style="border: 1px solid #ccc; padding: 8px;">${producto.nombreProducto}</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">${producto.cantidad}</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">C$${producto.precio.toFixed(2)}</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">C$${subtotal.toFixed(2)}</td>
+            </tr>
+        `;
+    });
+
+    facturaHTML += `
+                </tbody>
+            </table>
+            <hr>
+            <p><strong>Total a Pagar:</strong> C$${totalGeneral.toFixed(2)}</p>
+            <p><strong>Pago con:</strong> ${document.getElementById('metodoPago').value}</p>
+            <p><strong>Vuelto:</strong> ${document.getElementById('vueltoCliente').value}</p>
+            <hr>
+            <p style="text-align: center;">¡Gracias por tu compra!</p>
+        </div>
+    `;
+
+    // Mostramos la factura en un modal o ventana emergente
+    const facturaModal = new bootstrap.Modal(document.getElementById('modalFactura'));
+    document.getElementById('modalFacturaBody').innerHTML = facturaHTML;
+    facturaModal.show();
+}
+
+// Función para calcular el vuelto (ya está definida en tu código original)
+function calcularVuelto() {
+    const totalPagar = parseFloat(document.getElementById('totalPagar').value.replace('C$', '').trim());
+    const montoRecibido = parseFloat(document.getElementById('montoRecibido').value);
+
+    if (!isNaN(montoRecibido) && montoRecibido >= totalPagar) {
+        const vuelto = montoRecibido - totalPagar;
+        document.getElementById('vueltoCliente').value = `C$${vuelto.toFixed(2)}`;
+    } else {
+        document.getElementById('vueltoCliente').value = 'C$0.00';
+    }
+}
+
+function imprimirFactura() {
+    const facturaContenido = document.getElementById('modalFacturaBody').innerHTML;
+    const ventanaImpresion = window.open('', '', 'width=800,height=600');
+    ventanaImpresion.document.write(facturaContenido);
+    ventanaImpresion.document.close();
+    ventanaImpresion.print();
+}

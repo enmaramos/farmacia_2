@@ -14,6 +14,14 @@ $resultProveedores = $conn->query($queryProveedores);
 // Definir el estado por defecto (vacío significa mostrar todos)
 $estadoFiltro = isset($_GET['estado']) ? $_GET['estado'] : '1'; // Por defecto, mostrar solo activos
 
+$sql = "SELECT DISTINCT Forma_Farmaceutica FROM medicamento_forma_farmaceutica";
+$resultado_formas = $conn->query($sql);
+
+// Validar errores en la consulta
+if (!$resultado_formas) {
+    die("Error en la consulta: " . $conn->error);
+}
+
 // Consulta dependiendo del estado seleccionado
 if ($estadoFiltro == '1') {
     // Vendedores activos
@@ -363,23 +371,30 @@ $result = $conn->query($query);
                             </div>
                         </div>
 
-                       <!-- Pestaña FORMAS FARMACÉUTICAS -->
+                      <!-- Pestaña FORMAS FARMACÉUTICAS -->
 <div class="tab-pane fade" id="forma" role="tabpanel">
-  <div class="mt-3">
-    <!-- INPUT para agregar nueva forma -->
-    <label class="form-label">Agregar nueva forma farmacéutica:</label>
-    <div class="input-group mb-3">
-      <input type="text" id="nuevaForma" class="form-control" placeholder="Ej: Tableta, Jarabe...">
-      <button type="button" class="btn btn-success" id="btnAgregarForma">Agregar forma</button>
-    </div>
+    <div class="form-group p-3">
+        <label><strong>Selecciona las formas farmacéuticas:</strong></label>
 
-    <!-- CHECKBOXES dinámicos -->
-    <label class="form-label">Selecciona las formas farmacéuticas:</label>
-    <div id="checkboxFormas" class="row">
-      <!-- Aquí van los checkboxes desde la base de datos -->
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; padding-top: 8px;">
+            <?php
+            if (isset($resultado_formas) && $resultado_formas->num_rows > 0) {
+                while ($row = $resultado_formas->fetch_assoc()) {
+                    $forma = htmlspecialchars($row['Forma_Farmaceutica']);
+                    echo '<label style="display: flex; align-items: center; gap: 6px;">';
+                    echo '  <input type="checkbox" name="formas_farmaceuticas[]" value="' . $forma . '" />';
+                    echo '  ' . $forma;
+                    echo '</label>';
+                }
+            } else {
+                echo "<p>No hay formas farmacéuticas registradas.</p>";
+            }
+            ?>
+        </div>
     </div>
-  </div>
 </div>
+
+
 
 
 
